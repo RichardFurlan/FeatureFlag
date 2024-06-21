@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "tBx37HXMR/tciZ/GRjH9mHk35UmyETk/UMcobX+onsV88Sx3RDi8fSh1A13Xizt+E0IYDDqxYzKJpAM3P570bQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\emsri\\RiderProjects\\FeatureFlag\\FeatureFlag.Api\\FeatureFlag.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\emsri\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\emsri\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\emsri\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
+    "C:\\Users\\emsri\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
+    "C:\\Users\\emsri\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
+    "C:\\Users\\emsri\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.4.0\\swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512"
+  ],
+  "logs": []
+}
