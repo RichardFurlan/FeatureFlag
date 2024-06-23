@@ -4,14 +4,14 @@ namespace FeatureFlag.Domain.Entities;
 
 public class RecursoConsumidor : BaseEntity
 {
-    public RecursoConsumidor(int idRecurso, int idConsumidor, EnumStatusRecursoConsumidor status)
+    public RecursoConsumidor(int codigoRecurso, int codigoConsumidor, EnumStatusRecursoConsumidor status)
     {
-        IdRecurso = idRecurso;
-        IdConsumidor = idConsumidor;
+        CodigoRecurso = codigoRecurso;
+        CodigoConsumidor = codigoConsumidor;
         Status = status;
     }
 
-    public int IdRecurso { get; private set; }
-    public int IdConsumidor { get; private set; }
+    public int CodigoRecurso { get; private set; }
+    public int CodigoConsumidor { get; private set; }
     public EnumStatusRecursoConsumidor Status { get; private set; }
 }
