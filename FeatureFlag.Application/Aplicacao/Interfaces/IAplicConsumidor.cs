@@ -1,13 +1,14 @@
 using FeatureFlag.Application.DTOs;
+using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;
 
 namespace FeatureFlag.Domain.Interefaces;
 
 public interface IAplicConsumidor
 {
-    List<ConsumidorViewModel> ListarTodos(string query);
-    ConsumidorViewModel ListarPorId(int id);
-    int Inserir(CreateConsumidorInputModel createConsumidorInputModel);
-    void Alterar(UpdateConsumidorInputModel updateConsumidorInputModel);
-    void Inativar(int id);
+    Task<List<ConsumidorViewModel>> ListarTodos(string query);
+    Task<ConsumidorViewModel> ListarPorId(int id);
+    Task<int> Inserir(CreateConsumidorInputModel createConsumidorInputModel);
+    Task Alterar(UpdateConsumidorInputModel updateConsumidorInputModel);
+    Task Inativar(int id);
 }

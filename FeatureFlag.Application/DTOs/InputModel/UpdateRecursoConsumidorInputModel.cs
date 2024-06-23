@@ -2,4 +2,4 @@ using FeatureFlag.Domain.Enums;
 
 namespace FeatureFlag.Application.DTOs;
 
-public record UpdateRecursoConsumidorInputModel(int? IdRecurso, int? IdConsumidor, EnumStatusRecursoConsumidor? Status);
+public record UpdateRecursoConsumidorInputModel(int? CodigoRecurso, int? CodigoConsumidor, EnumStatusRecursoConsumidor? Status);
