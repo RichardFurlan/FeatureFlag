@@ -1,0 +1,12 @@
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\bin\Debug\net8.0\FeatureFlag.Repository.deps.json
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\bin\Debug\net8.0\FeatureFlag.Repository.dll
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\bin\Debug\net8.0\FeatureFlag.Repository.pdb
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureFlag.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureFlag.Repository.AssemblyInfoInputs.cache
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureFlag.Repository.AssemblyInfo.cs
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureFlag.Repository.csproj.CoreCompileInputs.cache
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureFlag.Repository.sourcelink.json
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureFlag.Repository.dll
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\refint\FeatureFlag.Repository.dll
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureFlag.Repository.pdb
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\ref\FeatureFlag.Repository.dll
