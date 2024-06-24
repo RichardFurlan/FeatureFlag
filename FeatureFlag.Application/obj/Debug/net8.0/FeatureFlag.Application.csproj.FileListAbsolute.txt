@@ -10,3 +10,7 @@ C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Application\obj\Debug\net8.
 C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Application\obj\Debug\net8.0\refint\FeatureFlag.Application.dll
 C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Application\obj\Debug\net8.0\FeatureFlag.Application.pdb
 C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Application\obj\Debug\net8.0\ref\FeatureFlag.Application.dll
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Application\bin\Debug\net8.0\FeatureFlag.Domain.dll
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Application\bin\Debug\net8.0\FeatureFlag.Domain.pdb
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Application\obj\Debug\net8.0\FeatureFlag.Application.csproj.AssemblyReference.cache
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Application\obj\Debug\net8.0\FeatureF.267BA2D7.Up2Date

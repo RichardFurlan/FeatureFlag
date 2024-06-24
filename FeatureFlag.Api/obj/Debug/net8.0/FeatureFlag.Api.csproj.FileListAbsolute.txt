@@ -31,3 +31,7 @@ C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Api\obj\Debug\net8.0\refint
 C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Api\obj\Debug\net8.0\FeatureFlag.Api.pdb
 C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Api\obj\Debug\net8.0\FeatureFlag.Api.genruntimeconfig.cache
 C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Api\obj\Debug\net8.0\ref\FeatureFlag.Api.dll
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Api\bin\Debug\net8.0\FeatureFlag.Application.dll
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Api\bin\Debug\net8.0\FeatureFlag.Domain.dll
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Api\bin\Debug\net8.0\FeatureFlag.Application.pdb
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Api\bin\Debug\net8.0\FeatureFlag.Domain.pdb
