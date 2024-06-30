@@ -3,7 +3,7 @@ using FeatureFlag.Domain.Repositories;
 
 namespace Repository.Persistence.Repositories;
 
-public class RepConsumidor : IRepConsumidor
+public class RepConsumidor 
 {
     public Task<List<Consumidor>> ListarTodosAsync(string query)
     {
