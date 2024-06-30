@@ -1,3 +1,3 @@
 namespace FeatureFlag.Application.DTOs.InputModel;
 
-public record UpdateConsumidorInputModel(string? Identificacao, string? Descricao, List<UpdateRecursoInputModel>? Recursos);
+public record UpdateConsumidorInputModel(string? Identificacao, string? Descricao, List<UpdateRecursoInputModel>? Recursos, List<UpdateRecursoConsumidorInputModel>? RecursosConsumidores);

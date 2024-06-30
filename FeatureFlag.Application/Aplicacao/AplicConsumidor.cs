@@ -1,34 +1,57 @@
 using FeatureFlag.Application.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;
+using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Interefaces;
+using FeatureFlag.Domain.Repositories;
 
 namespace FeatureFlag.Application.Aplicacao;
 
 public class AplicConsumidor : IAplicConsumidor
 {
-    public async Task<List<ConsumidorViewModel>> ListarTodos(string query)
+    private readonly IRepConsumidor _repConsumidorMemory;
+
+    public AplicConsumidor(IRepConsumidor repConsumidorMemory)
     {
-        throw new NotImplementedException();
+        _repConsumidorMemory = repConsumidorMemory;
+    } 
+    
+    public async Task<List<ConsumidorViewModel>> ListarTodos()
+    {
+        var consumidores = await _repConsumidorMemory.ListarTodosAsync();
+        var viewModelList = consumidores.Select(c => new ConsumidorViewModel(c.Identificacao, c.Descricao)).ToList();
+        return viewModelList;
     }
 
     public async Task<ConsumidorViewModel> ListarPorId(int id)
     {
-        throw new NotImplementedException();
+        var consumidor = await _repConsumidorMemory.ListarPorIdAsync(id);
+        var viewModel = new ConsumidorViewModel(consumidor.Identificacao, consumidor.Descricao);
+        return viewModel;
     }
 
     public async Task<int> Inserir(CreateConsumidorInputModel createConsumidorInputModel)
     {
-        throw new NotImplementedException();
+        var consumidor = new Consumidor(
+            createConsumidorInputModel.Identificacao, 
+            createConsumidorInputModel.Descricao,
+            null,
+            null
+        );
+        var consumidorId = await _repConsumidorMemory.InserirAsync(consumidor);
+
+        return consumidorId;
     }
 
-    public async Task Alterar(UpdateConsumidorInputModel updateConsumidorInputModel)
+    public async Task Alterar(int id, UpdateConsumidorInputModel updateConsumidorInputModel)
     {
-        throw new NotImplementedException();
+        var consumidor = await _repConsumidorMemory.ListarPorIdAsync(id);
+        consumidor.Update(updateConsumidorInputModel.Identificacao, updateConsumidorInputModel.Descricao);
     }
 
     public async Task Inativar(int id)
     {
-        throw new NotImplementedException();
+        var consumidor = await _repConsumidorMemory.ListarPorIdAsync(id);
+        consumidor.Inativar();
     }
 }

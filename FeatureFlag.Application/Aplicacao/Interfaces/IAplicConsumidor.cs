@@ -6,9 +6,9 @@ namespace FeatureFlag.Domain.Interefaces;
 
 public interface IAplicConsumidor
 {
-    Task<List<ConsumidorViewModel>> ListarTodos(string query);
+    Task<List<ConsumidorViewModel>> ListarTodos();
     Task<ConsumidorViewModel> ListarPorId(int id);
     Task<int> Inserir(CreateConsumidorInputModel createConsumidorInputModel);
-    Task Alterar(UpdateConsumidorInputModel updateConsumidorInputModel);
+    Task Alterar(int id, UpdateConsumidorInputModel updateConsumidorInputModel);
     Task Inativar(int id);
 }
