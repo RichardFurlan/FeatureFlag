@@ -10,3 +10,9 @@ C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0
 C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\refint\FeatureFlag.Repository.dll
 C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureFlag.Repository.pdb
 C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\ref\FeatureFlag.Repository.dll
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\bin\Debug\net8.0\FeatureFlag.Repository.runtimeconfig.json
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\bin\Debug\net8.0\FeatureFlag.Domain.dll
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\bin\Debug\net8.0\FeatureFlag.Domain.pdb
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureFlag.Repository.csproj.AssemblyReference.cache
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureF.795D27C4.Up2Date
+C:\Users\emsri\RiderProjects\FeatureFlag\FeatureFlag.Repository\obj\Debug\net8.0\FeatureFlag.Repository.genruntimeconfig.cache
