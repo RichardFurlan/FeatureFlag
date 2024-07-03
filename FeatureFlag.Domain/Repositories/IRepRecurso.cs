@@ -4,9 +4,9 @@ namespace FeatureFlag.Domain.Repositories;
 
 public interface IRepRecurso
 {
-    Task<List<Recurso>> ListarTodosAsync(string query);
+    Task<List<Recurso>> ListarTodosAsync();
     Task<Recurso> ListarPorIdAsync(int id);
-    Task InserirAsync(Recurso recurso);
+    Task<int> InserirAsync(Recurso recurso);
     Task AlterarAsync(int id, Recurso recurso);
     Task InativarAsync(int id);
 }

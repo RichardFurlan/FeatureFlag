@@ -16,24 +16,19 @@ public class RepRecursoConsumidorMemory : IRepRecursoConsumidor
 
     public Task<RecursoConsumidor> ListarPorIdAsync(int id)
     {
-        var resultado = RecursosConsumidores.SingleOrDefault(rc => rc.Id == id);
-        return Task.FromResult(resultado);
+        var index = RecursosConsumidores.FindIndex(rc => rc.Id == id);
+        return Task.FromResult(RecursosConsumidores[index]);
     }
 
-    public Task InserirAsync(RecursoConsumidor recursoConsumidor)
+    public Task<int> InserirAsync(RecursoConsumidor recursoConsumidor)
     {
         RecursosConsumidores.Add(recursoConsumidor);
-        return Task.CompletedTask;
+        return Task.FromResult(recursoConsumidor.Id);
     }
 
     public Task AlterarAsync(int id, RecursoConsumidor recursoConsumidor)
     {
-        var index = RecursosConsumidores.FindIndex(rc => rc.Id == id);
-        if (index != -1)
-        {
-            RecursosConsumidores[index] = recursoConsumidor;
-        }
-        return Task.CompletedTask;
+        throw new NotImplementedException();
     }
 
     public Task InativarAsync(int id)
