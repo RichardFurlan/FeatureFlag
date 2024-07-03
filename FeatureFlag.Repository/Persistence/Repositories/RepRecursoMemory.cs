@@ -7,34 +7,28 @@ public class RepRecursoMemory : IRepRecurso
 {
     private static readonly List<Recurso> Recurso = new List<Recurso>();
 
-    public Task<List<Recurso>> ListarTodosAsync(string query)
+    public Task<List<Recurso>> ListarTodosAsync()
     {
         var resultado = Recurso
-            .Where(r => string.IsNullOrEmpty(query) || r.Identificacao.Contains(query) || r.Descricao.Contains(query))
             .ToList();
         return Task.FromResult(resultado);
     }
 
     public Task<Recurso> ListarPorIdAsync(int id)
     {
-        var resultado = Recurso.SingleOrDefault(rc => rc.Id == id);
-        return Task.FromResult(resultado);
+        var index = Recurso.FindIndex(r => r.Id == id);
+        return Task.FromResult(Recurso[index]);
     }
 
-    public Task InserirAsync(Recurso recurso)
+    public Task<int> InserirAsync(Recurso recurso)
     {
         Recurso.Add(recurso);
-        return Task.CompletedTask;
+        return Task.FromResult(recurso.Id);
     }
 
     public Task AlterarAsync(int id, Recurso recurso)
     {
-        var index = Recurso.FindIndex(rc => rc.Id == id);
-        if (index != -1)
-        {
-            Recurso[index] = recurso;
-        }
-        return Task.CompletedTask;
+        throw new NotImplementedException();
     }
 
     public Task InativarAsync(int id)
