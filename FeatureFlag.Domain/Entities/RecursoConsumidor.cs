@@ -14,4 +14,9 @@ public class RecursoConsumidor : BaseEntity
     public int CodigoRecurso { get; private set; }
     public int CodigoConsumidor { get; private set; }
     public EnumStatusRecursoConsumidor Status { get; private set; }
+
+    public void Update(EnumStatusRecursoConsumidor? status)
+    {
+        Status = status ?? Status;
+    }
 }
