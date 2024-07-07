@@ -8,7 +8,9 @@ public interface IAplicRecurso
 {
     Task<List<RecursoViewModel>> ListarTodos(string query);
     Task<RecursoViewModel> ListarPorId(int id);
+    Task<RecursoAtivoViewModel> VerificaRecurso(int recursoId, int cunsumidorId);
     Task<int> Inserir(CreateRecursoInputModel createRecursoInputModel);
-    Task Alterar(UpdateRecursoInputModel updateRecursoInputModel);
+    Task<int> InserirRecursoELiberacao(CreateRecursoELiberacaoInputModel createRecursoELiberacaoInputModel);
+    Task Alterar(int id, UpdateRecursoInputModel updateRecursoInputModel);
     Task Inativar(int id);
 }

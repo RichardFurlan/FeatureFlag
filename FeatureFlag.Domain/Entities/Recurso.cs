@@ -14,4 +14,10 @@ public class Recurso : BaseEntity
     public string Descricao { get; private set; }
     public List<Consumidor> Consumidores { get; private set; }
     public List<RecursoConsumidor> RecursoConsumidores { get; private set; }
+
+    public void Update(string identificacao, string descricao)
+    {
+        Identificacao = identificacao;
+        Descricao = descricao;
+    }
 }
