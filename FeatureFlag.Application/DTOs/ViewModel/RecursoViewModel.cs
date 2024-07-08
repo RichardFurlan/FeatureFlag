@@ -2,10 +2,6 @@ namespace FeatureFlag.Application.DTOs.ViewModel;
 
 public record RecursoViewModel
 {
-    public RecursoViewModel()
-    {
-        throw new NotImplementedException();
-    }
     
     public RecursoViewModel(string identificacao, string descricao)
     {

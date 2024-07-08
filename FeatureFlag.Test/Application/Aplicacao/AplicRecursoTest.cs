@@ -23,7 +23,7 @@ public class AplicRecursoTest
     }
     
     [Fact]
-    public async Task ListarTodos_ShouldReturnAllRecursos()
+    public async Task ListarTodos_DeveRetornarListaRecursoViewModel()
     {
         // Arrange
         var recursos = new List<Recurso>
@@ -43,7 +43,7 @@ public class AplicRecursoTest
     }
     
     [Fact]
-    public async Task ListarPorId_ShouldReturnRecurso()
+    public async Task ListarPorId_DeveRetornarRecursoViewModel()
     {
         // Arrange
         var recurso = new Recurso("Rec1", "Descricao1", null, null);
@@ -59,7 +59,7 @@ public class AplicRecursoTest
     }
     
     [Fact]
-    public async Task VerificaRecurso_ShouldReturnRecursoAtivoViewModel()
+    public async Task VerificaRecurso_DeveRetornarRecursoAtivoViewModel()
     {
         // Arrange
         var recursoId = 1;
@@ -88,7 +88,7 @@ public class AplicRecursoTest
     }
     
     [Fact]
-    public async Task InserirRecursoELiberacao_ShouldCreateRecursoAndAssociations()
+    public async Task InserirRecursoELiberacao_DeveCriarRecursoELiberarConformePercentual()
     {
         // Arrange
         var createRecursoELiberacaoInputModel = new CreateRecursoELiberacaoInputModel("Rec1", "Descricao1", 50);
