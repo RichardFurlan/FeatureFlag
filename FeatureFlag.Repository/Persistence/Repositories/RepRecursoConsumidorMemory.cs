@@ -14,6 +14,12 @@ public class RepRecursoConsumidorMemory : IRepRecursoConsumidor
         return Task.FromResult(resultado);
     }
 
+    public Task<List<RecursoConsumidor>> ListarTodosPorConsumidor(int id)
+    {
+        var resultado = RecursosConsumidores.FindAll(rc => rc.CodigoConsumidor == id);
+        return Task.FromResult(resultado);
+    }
+
     public Task<RecursoConsumidor> ListarPorIdAsync(int id)
     {
         var index = RecursosConsumidores.FindIndex(rc => rc.Id == id);
