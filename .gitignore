@@ -478,8 +478,9 @@ $RECYCLE.BIN/
 
 
 # Pastas e arquivos do Visual Studio
-obj/
-bin/
+# Ignore bin and obj folders in all projects
+**/bin/
+**/obj/
 v17/
 FileContentIndex/
 .vs/
