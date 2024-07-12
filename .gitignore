@@ -481,6 +481,16 @@ $RECYCLE.BIN/
 # Ignore bin and obj folders in all projects
 **/bin/
 **/obj/
+FeatureFlag.Api/bin
+FeatureFlag.Api/obj
+FeatureFlag.Application/bin
+FeatureFlag.Application/obj
+FeatureFlag.Domain/bin
+FeatureFlag.Domain/obj
+FeatureFlag.Repository/bin
+FeatureFlag.Repository/obj
+FeatureFlag.Test/bin
+FeatureFlag.Test/obj
 v17/
 FileContentIndex/
 .vs/
