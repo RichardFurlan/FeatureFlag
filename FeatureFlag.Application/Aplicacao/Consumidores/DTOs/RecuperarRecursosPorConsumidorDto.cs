@@ -3,17 +3,17 @@ using FeatureFlag.Domain.Enums;
 
 namespace FeatureFlag.Application.DTOs.ViewModel;
 
-public record RecursosPorConsumidorViewModel
+public record RecuperarRecursosPorConsumidorDto
 {
 
-    public RecursosPorConsumidorViewModel(string identificacaoConsumidor, List<RecursosStatusViewModel> recursosStatus)
+    public RecuperarRecursosPorConsumidorDto(string identificacaoConsumidor, List<RecuperarRecursosStatusDto> recursosStatus)
     {
         IdentificacaoConsumidor = identificacaoConsumidor;
         RecursosStatus = recursosStatus;
     }
 
     public string IdentificacaoConsumidor { get; init; }
-    public List<RecursosStatusViewModel> RecursosStatus { get; init; }
+    public List<RecuperarRecursosStatusDto> RecursosStatus { get; init; }
     
 };
 

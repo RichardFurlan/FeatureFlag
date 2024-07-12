@@ -24,37 +24,34 @@ public class AplicRecurso : IAplicRecurso
     }
     #endregion
     
-    #region ListaTodos
-    public async Task<List<RecursoViewModel>> ListarTodos(string query)
+    #region RecuperarTodosAsync
+    public async Task<List<RecuperarRecursoDto>> RecuperarTodosAsync(string query)
     {
-        var recursos = await _repRecursoMemory.ListarTodosAsync();
-        var viewModelList = recursos.Select(r => new RecursoViewModel(r.Identificacao, r.Descricao)).ToList();
+        var recursos = await _repRecursoMemory.RecuperarTodosAsync();
+        var viewModelList = recursos.Select(r => new RecuperarRecursoDto(r.Identificacao, r.Descricao)).ToList();
         return viewModelList;
     }
     #endregion
 
-    #region ListarPorId
-    public async Task<RecursoViewModel> ListarPorId(int id)
+    #region RecuperarPorIdAsync
+    public async Task<RecuperarRecursoDto> RecuperarPorIdAsync(int id)
     {
-        var recurso = await _repRecursoMemory.ListarPorIdAsync(id);
-        var viewModel = new RecursoViewModel(recurso.Identificacao, recurso.Descricao);
+        var recurso = await _repRecursoMemory.RecuperarPorIdAsync(id);
+        var viewModel = new RecuperarRecursoDto(recurso.Identificacao, recurso.Descricao);
         return viewModel;
     }
-    
-
     #endregion
 
     #region VerificaRecurso
-
-    public async Task<RecursoAtivoViewModel> VerificaRecurso(int recursoId, int consumidorId)
+    public async Task<RecuperarRecursoAtivoDto> VerificaRecursoAsync(int recursoId, int consumidorId)
     {
-        var recurso = await _repRecursoMemory.ListarPorIdAsync(recursoId);
+        var recurso = await _repRecursoMemory.RecuperarPorIdAsync(recursoId);
         if (recurso == null)
         {
             throw new Exception($"Recurso com ID {recursoId} não encontrado.");
         }
         
-        var consumidor = await _repConsumidoresMemory.ListarPorIdAsync(consumidorId);
+        var consumidor = await _repConsumidoresMemory.RecuperarPorIdAsync(consumidorId);
         if (consumidor == null)
         {
             throw new Exception($"Consumidor com identificação {consumidorId} não encontrado.");
@@ -67,7 +64,7 @@ public class AplicRecurso : IAplicRecurso
             throw new Exception($"Associação entre o recurso com ID {recursoId} e o consumidor com identificação {consumidorId} não encontrada.");
         }
         
-        var recursoAtivoViewModel = new RecursoAtivoViewModel(
+        var recursoAtivoViewModel = new RecuperarRecursoAtivoDto(
             recurso.Identificacao, 
             recurso.Descricao, 
             consumidor.Identificacao, 
@@ -79,12 +76,12 @@ public class AplicRecurso : IAplicRecurso
     }
     #endregion
 
-    #region Inserir
-    public Task<int> Inserir(CreateRecursoInputModel createRecursoInputModel)
+    #region InserirAsync
+    public Task<int> InserirAsync(CriarRecursoDto criarRecursoDto)
     {
         var recurso = new Recurso(
-            createRecursoInputModel.Identificacao, 
-            createRecursoInputModel.Descricao,
+            criarRecursoDto.Identificacao, 
+            criarRecursoDto.Descricao,
             null,
             null
         );
@@ -95,15 +92,15 @@ public class AplicRecurso : IAplicRecurso
     }
     #endregion
 
-    #region InserirRecursoELiberacao
-    public async Task<int> InserirRecursoELiberacao(CreateRecursoELiberacaoInputModel createRecursoELiberacaoInputModel)
+    #region InserirRecursoELiberacaoAsync
+    public async Task<int> InserirRecursoELiberacaoAsync(CriarRecursoELiberacaoDto criarRecursoELiberacaoDto)
     {
-        var recurso = new Recurso(createRecursoELiberacaoInputModel.Identificacao, createRecursoELiberacaoInputModel.Descricao, null, null);
+        var recurso = new Recurso(criarRecursoELiberacaoDto.Identificacao, criarRecursoELiberacaoDto.Descricao, null, null);
         await _repRecursoMemory.InserirAsync(recurso);
 
-        var todosConsumidores =  await _repConsumidoresMemory.ListarTodosAsync();
+        var todosConsumidores =  await _repConsumidoresMemory.RecuperarTodosAsync();
         var totalConsumidores = todosConsumidores.Count;
-        var quantidadeLiberada = (int)(totalConsumidores * createRecursoELiberacaoInputModel.PercentualLiberacao / 100);
+        var quantidadeLiberada = (int)(totalConsumidores * criarRecursoELiberacaoDto.PercentualLiberacao / 100);
 
         var random = new Random();
         var consumidoresLiberados = todosConsumidores.OrderBy(x => random.Next()).Take(quantidadeLiberada).ToList();
@@ -119,19 +116,18 @@ public class AplicRecurso : IAplicRecurso
     }
     #endregion
     
-    #region Alterar
-    public async Task Alterar(int id, UpdateRecursoInputModel updateRecursoInputModel)
+    #region AlterarAsync
+    public async Task AlterarAsync(int id, AlterarRecursoDto alterarRecursoDto)
     {
-        var recurso = await _repRecursoMemory.ListarPorIdAsync(id);
-        recurso.Update(updateRecursoInputModel.Identificacao, updateRecursoInputModel.Descricao);
+        var recurso = await _repRecursoMemory.RecuperarPorIdAsync(id);
+        recurso.Update(alterarRecursoDto.Identificacao, alterarRecursoDto.Descricao);
     }
     #endregion
 
-    #region Inativar
-
-    public async Task Inativar(int id)
+    #region InativarAsync
+    public async Task InativarAsync(int id)
     {
-        var recurso = await _repRecursoMemory.ListarPorIdAsync(id);
+        var recurso = await _repRecursoMemory.RecuperarPorIdAsync(id);
         recurso.Inativar();
     }
 

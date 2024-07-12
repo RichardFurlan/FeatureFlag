@@ -20,13 +20,13 @@ public class RecursosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Inserir([FromBody] CreateRecursoInputModel createRecursoInputModel)
+    public async Task<IActionResult> Inserir([FromBody] CriarRecursoDto criarRecursoDto)
     {
-        return CreatedAtAction(nameof(ListarPorId), new {id = 1}, createRecursoInputModel);
+        return CreatedAtAction(nameof(ListarPorId), new {id = 1}, criarRecursoDto);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Alterar(int id, [FromBody] UpdateRecursoInputModel updateRecursoInputModel)
+    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoDto alterarRecursoDto)
     {
         return NoContent();
     }

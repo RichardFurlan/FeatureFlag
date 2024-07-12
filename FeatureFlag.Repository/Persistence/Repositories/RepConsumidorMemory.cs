@@ -6,7 +6,7 @@ namespace Repository.Persistence.Repositories;
 public class RepConsumidorMemory : IRepConsumidor
 {
     private static readonly List<Consumidor> Consumidores = new List<Consumidor>();
-    public Task<List<Consumidor>> ListarTodosAsync()
+    public Task<List<Consumidor>> RecuperarTodosAsync()
     {
         var resultado = Consumidores
             .ToList();
@@ -14,7 +14,7 @@ public class RepConsumidorMemory : IRepConsumidor
         return Task.FromResult(resultado);
     }
 
-    public Task<Consumidor> ListarPorIdAsync(int id)
+    public Task<Consumidor> RecuperarPorIdAsync(int id)
     {
         var index = Consumidores.FindIndex(c => c.Id == id);
         return Task.FromResult(Consumidores[index]);
@@ -34,7 +34,7 @@ public class RepConsumidorMemory : IRepConsumidor
 
     public Task InativarAsync(int id)
     {
-        var consumidor = ListarPorIdAsync(id);
+        var consumidor = RecuperarPorIdAsync(id);
         consumidor.Result.Inativar();
         return Task.CompletedTask;
     }

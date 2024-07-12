@@ -2,9 +2,9 @@ using FeatureFlag.Domain.Enums;
 
 namespace FeatureFlag.Application.DTOs.ViewModel;
 
-public record RecursosStatusViewModel
+public record RecuperarRecursosStatusDto
 {
-    public RecursosStatusViewModel(string identificacaoRecurso, EnumStatusRecursoConsumidor status)
+    public RecuperarRecursosStatusDto(string identificacaoRecurso, EnumStatusRecursoConsumidor status)
     {
         IdentificacaoRecurso = identificacaoRecurso;
         Status = status;

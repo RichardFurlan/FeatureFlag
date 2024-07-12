@@ -7,14 +7,14 @@ public class RepRecursoMemory : IRepRecurso
 {
     private static readonly List<Recurso> Recurso = new List<Recurso>();
 
-    public Task<List<Recurso>> ListarTodosAsync()
+    public Task<List<Recurso>> RecuperarTodosAsync()
     {
         var resultado = Recurso
             .ToList();
         return Task.FromResult(resultado);
     }
 
-    public Task<Recurso> ListarPorIdAsync(int id)
+    public Task<Recurso> RecuperarPorIdAsync(int id)
     {
         var index = Recurso.FindIndex(r => r.Id == id);
         return Task.FromResult(Recurso[index]);
@@ -33,7 +33,7 @@ public class RepRecursoMemory : IRepRecurso
 
     public Task InativarAsync(int id)
     {
-        var recurso = ListarPorIdAsync(id);
+        var recurso = RecuperarPorIdAsync(id);
         recurso.Result.Inativar();
         return Task.CompletedTask;
     }
