@@ -2,6 +2,6 @@ namespace FeatureFlag.Domain.Enums;
 
 public enum EnumStatusRecursoConsumidor
 {
-    Habilitado,
-    Desabilitado
+    Habilitado = 1,
+    Desabilitado = 2
 }

@@ -7,20 +7,20 @@ public class RepRecursoConsumidorMemory : IRepRecursoConsumidor
 {
     private static readonly List<RecursoConsumidor> RecursosConsumidores = new List<RecursoConsumidor>();
     
-    public Task<List<RecursoConsumidor>> ListarTodosAsync(string query)
+    public Task<List<RecursoConsumidor>> RecuperarTodosAsync(string query)
     {
         var resultado = RecursosConsumidores
             .ToList();
         return Task.FromResult(resultado);
     }
 
-    public Task<List<RecursoConsumidor>> ListarTodosPorConsumidor(int id)
+    public Task<List<RecursoConsumidor>> RecuperarTodosPorConsumidor(int id)
     {
         var resultado = RecursosConsumidores.FindAll(rc => rc.CodigoConsumidor == id);
         return Task.FromResult(resultado);
     }
 
-    public Task<RecursoConsumidor> ListarPorIdAsync(int id)
+    public Task<RecursoConsumidor> RecuperarPorIdAsync(int id)
     {
         var index = RecursosConsumidores.FindIndex(rc => rc.Id == id);
         return Task.FromResult(RecursosConsumidores[index]);
@@ -39,7 +39,7 @@ public class RepRecursoConsumidorMemory : IRepRecursoConsumidor
 
     public Task InativarAsync(int id)
     {
-        var recursoConsumidor = ListarPorIdAsync(id);
+        var recursoConsumidor = RecuperarPorIdAsync(id);
         recursoConsumidor.Result.Inativar();
         return Task.CompletedTask;
     }

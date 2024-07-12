@@ -20,13 +20,13 @@ public class RecursosConsumidoresController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Inserir([FromBody] CreateRecursoConsumidorInputModel createRecursoConsumidorInputModel)
+    public async Task<IActionResult> Inserir([FromBody] CriarRecursoConsumidorDto criarRecursoConsumidorDto)
     {
-        return CreatedAtAction(nameof(ListarPorId), new {id = 1}, createRecursoConsumidorInputModel);
+        return CreatedAtAction(nameof(ListarPorId), new {id = 1}, criarRecursoConsumidorDto);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Alterar(int id, [FromBody] UpdateRecursoConsumidorInputModel updateRecursoConsumidorInputModel)
+    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoConsumidorDto alterarRecursoConsumidorDto)
     {
         return NoContent();
     }
