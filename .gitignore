@@ -489,8 +489,6 @@ FeatureFlag.Domain/bin
 FeatureFlag.Domain/obj
 FeatureFlag.Repository/bin
 FeatureFlag.Repository/obj
-FeatureFlag.Test/bin
-FeatureFlag.Test/obj
 v17/
 FileContentIndex/
 .vs/
