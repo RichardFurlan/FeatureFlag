@@ -26,21 +26,18 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #region RecuperarTodosAsync
     public async Task<List<RecuperarRecursoConsumidorDto>> RecuperarTodosAsync()
     {
-        var recursoConsumidor = await _repRecursoConsumidor.RecuperarTodosAsync();
+        var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosAsync();
+        var viewModelList = new List<RecuperarRecursoConsumidorDto>();
 
-        var recursoTasks = recursoConsumidor.Select(rc => _aplicRecurso.RecuperarPorIdAsync(rc.CodigoRecurso)).ToList();
-        var consumidorTasks = recursoConsumidor.Select(rc => _aplicConsumidor.RecuperarPorIdAsync(rc.CodigoConsumidor)).ToList();
-
-        var recursos = await Task.WhenAll(recursoTasks);
-        var consumidores = await Task.WhenAll(consumidorTasks);
-
-        var viewModelList = recursoConsumidor
-            .Select((rc, index) => new RecuperarRecursoConsumidorDto(
-                recursos[index],
-                consumidores[index],
-                rc.Status
-            )).ToList();
-
+        foreach (var recursoConsumidor in recursosConsumidores)
+        {
+            var recurso = await _aplicRecurso.RecuperarPorIdAsync(recursoConsumidor.CodigoRecurso);
+            var consumidor = await _aplicConsumidor.RecuperarPorIdAsync(recursoConsumidor.CodigoConsumidor);
+            
+            var viewModel = new RecuperarRecursoConsumidorDto(recurso, consumidor, recursoConsumidor.Status);
+            viewModelList.Add(viewModel);
+        }        
+        
         return viewModelList;
     }
     #endregion
@@ -84,6 +81,7 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     {
         var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorIdAsync(id);
         recursoConsumidor.Inativar();
+        await _repRecursoConsumidor.InativarAsync(id);
     }
     #endregion
 
