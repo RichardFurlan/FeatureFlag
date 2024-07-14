@@ -1,4 +1,5 @@
 using FeatureFlag.Application.Aplicacao.Interfaces;
+using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
 using FeatureFlag.Application.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;

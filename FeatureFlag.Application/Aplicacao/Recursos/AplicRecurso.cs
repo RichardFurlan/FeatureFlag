@@ -1,5 +1,6 @@
 using FeatureFlag.Application.Aplicacao.Interfaces;
 using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
+using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
 using FeatureFlag.Application.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;
@@ -16,12 +17,14 @@ public class AplicRecurso : IAplicRecurso
     private readonly IRepRecurso _repRecurso;
     private readonly IRepConsumidor _repConsumidores;
     private readonly IRepRecursoConsumidor _repRecursoConsumidor;
+    private readonly IAplicRecursoConsumidor _aplicRecursoConsumidor;
 
-    public AplicRecurso(IRepRecurso repRecurso, IRepConsumidor repConsumidor, IRepRecursoConsumidor repRecursoConsumidor)
+    public AplicRecurso(IRepRecurso repRecurso, IRepConsumidor repConsumidor, IRepRecursoConsumidor repRecursoConsumidor, IAplicRecursoConsumidor aplicRecursoConsumidor)
     {
         _repRecurso = repRecurso;
         _repConsumidores = repConsumidor;
         _repRecursoConsumidor = repRecursoConsumidor;
+        _aplicRecursoConsumidor = aplicRecursoConsumidor;
     }
     #endregion
     
@@ -106,11 +109,11 @@ public class AplicRecurso : IAplicRecurso
         var random = new Random();
         var consumidoresLiberados = todosConsumidores.OrderBy(x => random.Next()).Take(quantidadeLiberada).ToList();
         
-        todosConsumidores.ForEach( x =>
+        todosConsumidores.ForEach(async x =>
         {
             var status = consumidoresLiberados.Contains(x) ? EnumStatusRecursoConsumidor.Habilitado : EnumStatusRecursoConsumidor.Desabilitado;
-            var recursoConsumidor = new RecursoConsumidor(recurso.Id, x.Id, status);
-            _repRecursoConsumidor.InserirAsync(recursoConsumidor);
+            var recursoConsumidorDto = new CriarRecursoConsumidorDto(recurso.Id, x.Id, status);
+            await _aplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
         });
 
         return recurso.Id;
@@ -150,8 +153,8 @@ public class AplicRecurso : IAplicRecurso
 
             if (recursoConsumidor == null)
             {
-                recursoConsumidor = new RecursoConsumidor(recurso.Id, consumidor.Id, status);
-                await _repRecursoConsumidor.InserirAsync(recursoConsumidor);
+                var recursoConsumidorDto = new CriarRecursoConsumidorDto(recurso.Id, consumidor.Id, status);
+                await _aplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
             }
             else
             {
