@@ -2,10 +2,10 @@ namespace FeatureFlag.Domain.Entities;
 
 public class Consumidor : BaseEntity
 {
-    public Consumidor(string identificacao, string descricao, List<Recurso>? recursos, List<RecursoConsumidor>? recursoConsumidores)
+    public Consumidor(string identificacao, string descricao, List<Recurso>? recursos = null, List<RecursoConsumidor>? recursoConsumidores = null)
     {
-        Identificacao = identificacao;
-        Descricao = descricao;
+        Identificacao = identificacao ?? throw new ArgumentNullException(nameof(identificacao));
+        Descricao = descricao ?? throw new ArgumentNullException(nameof(descricao));
         Recursos = recursos ?? new List<Recurso>();
         RecursoConsumidores = recursoConsumidores ?? new List<RecursoConsumidor>();
     }
@@ -15,10 +15,12 @@ public class Consumidor : BaseEntity
     public List<Recurso> Recursos { get; private set; }
     public List<RecursoConsumidor> RecursoConsumidores { get; private set; }
 
-    public void Update(string identificacao, string descricao)
+    public void Update(Consumidor consumidor)
     {
-        Identificacao = identificacao;
-        Descricao = descricao;
+        Identificacao = consumidor.Identificacao;
+        Descricao = consumidor.Descricao;
+        Recursos = consumidor.Recursos;
+        RecursoConsumidores = consumidor.RecursoConsumidores;
     }
     
 }
