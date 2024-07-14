@@ -24,9 +24,9 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #endregion
 
     #region RecuperarTodosAsync
-    public async Task<List<RecuperarRecursoConsumidorDto>> RecuperarTodosAsync(string query)
+    public async Task<List<RecuperarRecursoConsumidorDto>> RecuperarTodosAsync()
     {
-        var recursoConsumidor = await _repRecursoConsumidor.RecuperarTodosAsync(query);
+        var recursoConsumidor = await _repRecursoConsumidor.RecuperarTodosAsync();
 
         var recursoTasks = recursoConsumidor.Select(rc => _aplicRecurso.RecuperarPorIdAsync(rc.CodigoRecurso)).ToList();
         var consumidorTasks = recursoConsumidor.Select(rc => _aplicConsumidor.RecuperarPorIdAsync(rc.CodigoConsumidor)).ToList();
@@ -69,8 +69,13 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #region AlterarAsync
     public async Task AlterarAsync(int id, AlterarRecursoConsumidorDto alterarConsumidorDto)
     {
-        var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorIdAsync(id);
-        recursoConsumidor.Update(alterarConsumidorDto.Status);
+        var recursoConsumidorExistente = await _repRecursoConsumidor.RecuperarPorIdAsync(id);
+        
+        var recursoConsumidor = new RecursoConsumidor(alterarConsumidorDto.CodigoRecurso,
+            alterarConsumidorDto.CodigoConsumidor, alterarConsumidorDto.Status);
+        recursoConsumidorExistente.Update(recursoConsumidor);
+        
+        await _repRecursoConsumidor.AlterarAsync(id, recursoConsumidor);
     }
     #endregion
 

@@ -16,11 +16,11 @@ public class RecursoConsumidor : BaseEntity
     public EnumStatusRecursoConsumidor Status { get; private set; }
 
 
-    public void Update(int codigoRecurso, int codigoConsumidor, EnumStatusRecursoConsumidor status)
+    public void Update(RecursoConsumidor recursoConsumidor)
     {
-        CodigoRecurso = codigoRecurso;
-        CodigoConsumidor = codigoConsumidor;
-        Status = status;
+        CodigoRecurso = recursoConsumidor.CodigoRecurso;
+        CodigoConsumidor = recursoConsumidor.CodigoConsumidor;
+        recursoConsumidor.DefinirStatus(recursoConsumidor.Status);
     }
 
     public void Desabilitar()

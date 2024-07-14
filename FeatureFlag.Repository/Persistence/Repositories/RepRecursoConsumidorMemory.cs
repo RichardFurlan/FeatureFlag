@@ -39,11 +39,7 @@ public class RepRecursoConsumidorMemory : IRepRecursoConsumidor
         {
             throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
         }
-        recursoConsumidorExistente.Update(
-            recursoConsumidor.CodigoRecurso,
-            recursoConsumidor.CodigoConsumidor,
-            recursoConsumidor.Status
-            );
+        recursoConsumidorExistente.Update(recursoConsumidor);
     }
 
     public Task InativarAsync(int id)
