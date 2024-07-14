@@ -26,15 +26,19 @@ public class RepRecursoMemory : IRepRecurso
         return Task.FromResult(recurso.Id);
     }
 
-    public Task AlterarAsync(int id, Recurso recurso)
+    public async Task AlterarAsync(int id, Recurso recurso)
     {
-        throw new NotImplementedException();
+        var recursoExistente = await RecuperarPorIdAsync(id);
+        if (recursoExistente == null)
+        {
+            throw new KeyNotFoundException($"Recurso com ID {id} não encontrado.");
+        }
+        recursoExistente.Update(recurso);
     }
 
-    public Task InativarAsync(int id)
+    public async Task InativarAsync(int id)
     {
-        var recurso = RecuperarPorIdAsync(id);
-        recurso.Result.Inativar();
-        return Task.CompletedTask;
+        var recurso = await RecuperarPorIdAsync(id);
+        recurso.Inativar();
     }
 }

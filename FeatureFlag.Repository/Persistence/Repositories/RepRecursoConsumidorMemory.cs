@@ -7,7 +7,7 @@ public class RepRecursoConsumidorMemory : IRepRecursoConsumidor
 {
     private static readonly List<RecursoConsumidor> RecursosConsumidores = new List<RecursoConsumidor>();
     
-    public Task<List<RecursoConsumidor>> RecuperarTodosAsync(string query)
+    public Task<List<RecursoConsumidor>> RecuperarTodosAsync()
     {
         var resultado = RecursosConsumidores
             .ToList();
@@ -32,9 +32,14 @@ public class RepRecursoConsumidorMemory : IRepRecursoConsumidor
         return Task.FromResult(recursoConsumidor.Id);
     }
 
-    public Task AlterarAsync(int id, RecursoConsumidor recursoConsumidor)
+    public async Task AlterarAsync(int id, RecursoConsumidor recursoConsumidor)
     {
-        throw new NotImplementedException();
+        var recursoConsumidorExistente = await RecuperarPorIdAsync(id);
+        if (recursoConsumidorExistente == null)
+        {
+            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
+        }
+        recursoConsumidorExistente.Update(recursoConsumidor);
     }
 
     public Task InativarAsync(int id)

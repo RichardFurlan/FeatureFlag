@@ -26,9 +26,14 @@ public class RepConsumidorMemory : IRepConsumidor
         return Task.FromResult(consumidor.Id);
     }
 
-    public Task AlterarAsync(int id, Consumidor consumidor)
+    public async Task AlterarAsync(int id, Consumidor consumidor)
     {
-        throw new NotImplementedException();
+        var consumidorExistente = await RecuperarPorIdAsync(id);
+        if (consumidorExistente == null)
+        {
+            throw new KeyNotFoundException($"Consumidor com ID {id} não encontrado.");
+        }
+        consumidorExistente.Update(consumidor);
     }
 
 

@@ -1,4 +1,5 @@
 using FeatureFlag.Application.Aplicacao;
+using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
@@ -78,7 +79,7 @@ public class AplicRecursoTest
         _repConsumidorMemory.Setup(c => c.RecuperarPorIdAsync(consumidorIdentificacao)).ReturnsAsync(consumidor);
 
         // Act
-        var result = await _aplicRecurso.VerificaRecursoAsync(recursoId, consumidorIdentificacao);
+        var result = await _aplicRecurso.VerificaRecursoAtivoParaConsumidorAsync(recursoId, consumidorIdentificacao);
 
         // Assert
         Assert.NotNull(result);
@@ -118,5 +119,72 @@ public class AplicRecursoTest
 
         Assert.Equal(createRecursoELiberacaoInputModel.PercentualLiberacao, percentualHabilitado, precision: 0);
     }
+    
+   [Fact]
+    public async Task AlterarPercentualDeLiberacaoDeRecurso_DeveAlterarPercentualCorretamente()
+    {
+        // Arrange
+        var recursoId = 1;
+        var percentualLiberacao = 50.0m;
+
+        var alterarPercentualRecursoDto = new AlterarPercentualDeLiberacaoRecursoDto(recursoId, percentualLiberacao);
+
+        var consumidores = new List<Consumidor>
+        {
+            new Consumidor("Cons1", "Desc1", null, null),
+            new Consumidor("Cons2", "Desc2", null, null),
+            new Consumidor("Cons3", "Desc3", null, null),
+            new Consumidor("Cons4", "Desc4", null, null)
+        };
+        
+        
+        var recurso = new Recurso("Recurso1", "Descricao1", consumidores, null);
+        
+        _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(recursoId)).ReturnsAsync(recurso);
+        _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
+        _repRecursoConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<int>(), It.IsAny<RecursoConsumidor>())).Returns(Task.CompletedTask);
+        _repRecursoMockMemory.Setup(rc => rc.AlterarAsync(It.IsAny<int>(), It.IsAny<Recurso>())).Returns(Task.CompletedTask);
+        _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<int>(), It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
+        var recursoConsumidorList = new List<RecursoConsumidor>();
+        _repRecursoConsumidorMemory.Setup(rc => rc.InserirAsync(It.IsAny<RecursoConsumidor>()))
+            .Callback<RecursoConsumidor>(rc => recursoConsumidorList.Add(rc));
+
+        // Act
+        await _aplicRecurso.AlterarPercentualDeLiberacaoDeRecurso(alterarPercentualRecursoDto);
+
+        // Assert
+        _repRecursoMockMemory.Verify(r => r.RecuperarPorIdAsync(recursoId), Times.Once);
+        _repConsumidorMemory.Verify(c => c.RecuperarTodosAsync(), Times.Once);
+        
+        var habilitados = recursoConsumidorList.Count(rc => rc.Status == EnumStatusRecursoConsumidor.Habilitado);
+        var percentualHabilitado = (decimal)habilitados / consumidores.Count * 100;
+
+        Assert.Equal(percentualLiberacao, percentualHabilitado, precision: 0);
+
+        _repRecursoConsumidorMemory.Verify(rc => rc.AlterarAsync(It.IsAny<int>(), It.IsAny<RecursoConsumidor>()), Times.Exactly(recurso.RecursoConsumidores.Count));
+        _repRecursoConsumidorMemory.Verify(rc => rc.InserirAsync(It.IsAny<RecursoConsumidor>()), Times.Exactly(consumidores.Count - recurso.RecursoConsumidores.Count));
+    }
+
+    [Fact]
+    public async Task Alterar_RecursoExistente()
+    {
+        // Arrange
+        var recurso = new Recurso("Ident1", "Desc1");
+
+        var inputModel = new AlterarRecursoDto("IdentAlterada", "DescAlterada", null);
+    
+        _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync(recurso);
+        _repRecursoMockMemory.Setup(r => r.AlterarAsync(It.IsAny<int>(), It.IsAny<Recurso>())).Returns(Task.CompletedTask);
+
+
+        // Act
+        await _aplicRecurso.AlterarAsync(recurso.Id, inputModel);
+
+        // Assert
+        Assert.Equal("IdentAlterada", recurso.Identificacao);
+        Assert.Equal("DescAlterada", recurso.Descricao);
+        _repRecursoMockMemory.Verify(r => r.AlterarAsync(It.IsAny<int>(), It.IsAny<Recurso>()), Times.Once);
+    }
+
 
 }

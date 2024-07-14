@@ -76,14 +76,16 @@ public class AplicConsumidorTest
     public async Task Alterar_ConsumidorExistente()
     {
         // Arrange
-        var consumidor = new Consumidor("Ident1", "Desc1", null, null);
+        var consumidor = new Consumidor("Ident1", "Desc1");
 
         var inputModel = new AlterarConsumidorDto("IdentAlterada", "DescAlterada", null, null);
 
         _repConsumidorMock.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync(consumidor);
+        _repConsumidorMock.Setup(r => r.AlterarAsync(It.IsAny<int>(), It.IsAny<Consumidor>()))
+            .Returns(Task.CompletedTask);
 
         // Act
-        await _aplicConsumidor.AlterarAsync(0, inputModel);
+        await _aplicConsumidor.AlterarAsync(consumidor.Id, inputModel);
 
         // Assert
         Assert.Equal("IdentAlterada", consumidor.Identificacao);

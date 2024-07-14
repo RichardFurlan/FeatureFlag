@@ -4,7 +4,7 @@ namespace FeatureFlag.Domain.Repositories;
 
 public interface IRepRecursoConsumidor
 {
-    Task<List<RecursoConsumidor>> RecuperarTodosAsync(string query);
+    Task<List<RecursoConsumidor>> RecuperarTodosAsync();
     Task<List<RecursoConsumidor>> RecuperarTodosPorConsumidor(int id);
     Task<RecursoConsumidor> RecuperarPorIdAsync(int id);
     Task<int> InserirAsync(RecursoConsumidor recursoConsumidor);

@@ -80,17 +80,19 @@ public class AplicConsumidor : IAplicConsumidor
         var viewModel = new RecuperarRecursosPorConsumidorDto(consumidor.Identificacao, recursosStatus);
         return viewModel;
     }
-
-
-
-
+    
     #endregion
     
     #region AlterarAsync
     public async Task AlterarAsync(int id, AlterarConsumidorDto alterarConsumidorDto)
     {
-        var consumidor = await _repConsumidor.RecuperarPorIdAsync(id);
-        consumidor.Update(alterarConsumidorDto.Identificacao, alterarConsumidorDto.Descricao);
+        var consumidorExistente = await _repConsumidor.RecuperarPorIdAsync(id);
+        
+        var consumidorAlterar = new Consumidor(alterarConsumidorDto.Identificacao, alterarConsumidorDto.Descricao,
+            alterarConsumidorDto.Recursos, alterarConsumidorDto.RecursosConsumidores);
+        
+        consumidorExistente.Update(consumidorAlterar);
+        await _repConsumidor.AlterarAsync(id, consumidorAlterar);
     }
     #endregion
 
