@@ -56,9 +56,9 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #endregion
 
     #region InserirAsync
-    public async Task<int> InserirAsync(CriarRecursoConsumidorDto criarConsumidorDto)
+    public async Task<int> InserirAsync(CriarRecursoConsumidorDto criarRecursoConsumidorDto)
     {
-        var recursoConsumidor = new RecursoConsumidor(criarConsumidorDto.CodigoRecurso, criarConsumidorDto.CodigoConsumidor, criarConsumidorDto.Status);
+        var recursoConsumidor = new RecursoConsumidor(criarRecursoConsumidorDto.CodigoRecurso, criarRecursoConsumidorDto.CodigoConsumidor, criarRecursoConsumidorDto.Status);
         var codigoRecursoConsumidor = await _repRecursoConsumidor.InserirAsync(recursoConsumidor);
         return codigoRecursoConsumidor;
     }

@@ -1,4 +1,5 @@
 using FeatureFlag.Application.Aplicacao;
+using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
 using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
@@ -100,6 +101,19 @@ public class AplicRecursoConsumidorTest
         _aplicRecursoMock.Verify(r => r.RecuperarPorIdAsync(It.IsAny<int>()), Times.Once);
         _aplicConsumidorMock.Verify(c => c.RecuperarPorIdAsync(It.IsAny<int>()), Times.Once);
     }
-    
+
+    [Fact]
+    public async Task InserirAsync_NovoRecursoConsumidor()
+    {
+        // Arrange
+        var criarRecursoConsumidorDto = new CriarRecursoConsumidorDto(1, 1, EnumStatusRecursoConsumidor.Habilitado);
+        _repRecursoConsumidorMock.Setup(rc => rc.InserirAsync(It.IsAny<RecursoConsumidor>())).ReturnsAsync(1);
+
+        var result = await _aplicRecursoConsumidor.InserirAsync(criarRecursoConsumidorDto);
+        
+        //Assert 
+        Assert.Equal(1, result);
+        _repRecursoConsumidorMock.Verify(rc => rc.InserirAsync(It.IsAny<RecursoConsumidor>()), Times.Once);
+    }
     
 }
