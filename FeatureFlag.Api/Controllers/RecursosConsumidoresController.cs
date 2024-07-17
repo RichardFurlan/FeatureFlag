@@ -1,3 +1,4 @@
+using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
 using FeatureFlag.Application.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
 using Microsoft.AspNetCore.Mvc;
