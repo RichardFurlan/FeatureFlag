@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0-preview.6.24327.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
@@ -20,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FeatureFlag.Application\FeatureFlag.Application.csproj" />
+      <ProjectReference Include="..\FeatureFlag.Repository\FeatureFlag.Repository.csproj" />
     </ItemGroup>
 
 </Project>

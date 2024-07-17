@@ -1,6 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Repository.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// var Configuration  = builder.Configuration;
+// builder.Services.AddDbContext<FeatureFlagDbContext>(options =>
+//     options.UseNpsql(Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<FeatureFlagDbContext>(options =>
+    options.UseInMemoryDatabase("FeatureFlagDatabase"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
