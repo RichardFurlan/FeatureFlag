@@ -9,13 +9,5 @@ public class RecursoConsumidorConfigurations : IEntityTypeConfiguration<RecursoC
     public void Configure(EntityTypeBuilder<RecursoConsumidor> builder)
     {
         builder.HasKey(rc => rc.Id);
-
-        builder.HasOne<Consumidor>()
-            .WithMany(c => c.RecursoConsumidores)
-            .HasForeignKey(rc => rc.CodigoConsumidor);
-        
-        builder.HasOne<Recurso>()
-            .WithMany(r => r.RecursoConsumidores)
-            .HasForeignKey(rc => rc.CodigoRecurso);
     }
 }
