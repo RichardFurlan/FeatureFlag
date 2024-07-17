@@ -18,5 +18,10 @@ public class FeatureFlagDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        modelBuilder.Entity<Recurso>()
+            .HasMany(r => r.Consumidores)
+            .WithMany(c => c.Recursos)
+            .UsingEntity<RecursoConsumidor>();
     }
 }
