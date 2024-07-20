@@ -1,51 +1,53 @@
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository.Persistence.Repositories;
 
 public class RepRecursoConsumidorMemory : IRepRecursoConsumidor
 {
+    private readonly FeatureFlagDbContext _dbContext;
     private static readonly List<RecursoConsumidor> RecursosConsumidores = new List<RecursoConsumidor>();
+
+    public RepRecursoConsumidorMemory(FeatureFlagDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
     
-    public Task<List<RecursoConsumidor>> RecuperarTodosAsync()
+    public async Task<List<RecursoConsumidor>> RecuperarTodosAsync()
     {
-        var resultado = RecursosConsumidores
-            .ToList();
-        return Task.FromResult(resultado);
+        var resultado = await _dbContext.RecursosConsumidores.ToListAsync();
+        return await Task.FromResult(resultado);
     }
 
-    public Task<List<RecursoConsumidor>> RecuperarTodosPorConsumidor(int id)
+    public async Task<List<RecursoConsumidor>> RecuperarTodosPorConsumidorAsync(int id)
     {
-        var resultado = RecursosConsumidores.FindAll(rc => rc.CodigoConsumidor == id);
-        return Task.FromResult(resultado);
+        var resultado = await _dbContext.RecursosConsumidores.Where(rc => rc.CodigoConsumidor.Equals(id)).ToListAsync();
+        return await Task.FromResult(resultado);
     }
 
-    public Task<RecursoConsumidor> RecuperarPorIdAsync(int id)
+    public async Task<RecursoConsumidor?> RecuperarPorIdAsync(int id)
     {
-        var index = RecursosConsumidores.FindIndex(rc => rc.Id == id);
-        return Task.FromResult(RecursosConsumidores[index]);
+        var recursoConsumidor = await _dbContext.RecursosConsumidores.FindAsync(id);
+        return await Task.FromResult(recursoConsumidor);
     }
 
-    public Task<int> InserirAsync(RecursoConsumidor recursoConsumidor)
+    public async Task<int> InserirAsync(RecursoConsumidor recursoConsumidor)
     {
-        RecursosConsumidores.Add(recursoConsumidor);
-        return Task.FromResult(recursoConsumidor.Id);
+        _dbContext.RecursosConsumidores.Add(recursoConsumidor);
+        await _dbContext.SaveChangesAsync();
+        return await Task.FromResult(recursoConsumidor.Id);
     }
 
-    public async Task AlterarAsync(int id, RecursoConsumidor recursoConsumidor)
+    public async Task AlterarAsync(RecursoConsumidor recursoConsumidor)
     {
-        var recursoConsumidorExistente = await RecuperarPorIdAsync(id);
-        if (recursoConsumidorExistente == null)
-        {
-            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
-        }
-        recursoConsumidorExistente.Update(recursoConsumidor);
+        _dbContext.Update(recursoConsumidor);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public Task InativarAsync(int id)
+    public async Task InativarAsync(RecursoConsumidor recursoConsumidor)
     {
-        var recursoConsumidor = RecuperarPorIdAsync(id);
-        recursoConsumidor.Result.Inativar();
-        return Task.CompletedTask;
+        _dbContext.Update(recursoConsumidor);
+        await _dbContext.SaveChangesAsync();
     }
 }

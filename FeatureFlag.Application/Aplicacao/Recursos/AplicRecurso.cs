@@ -140,7 +140,7 @@ public class AplicRecurso : IAplicRecurso
         foreach (var rce in recursoConsumidoresExistentes)
         {
             rce.Desabilitar();
-            await _repRecursoConsumidor.AlterarAsync(rce.Id, rce);
+            await _repRecursoConsumidor.AlterarAsync(rce);
         }
         
         foreach (var consumidor in todosConsumidores)
@@ -159,7 +159,7 @@ public class AplicRecurso : IAplicRecurso
             else
             {
                 recursoConsumidor.DefinirStatus(status);
-                await _repRecursoConsumidor.AlterarAsync(recursoConsumidor.Id, recursoConsumidor);
+                await _repRecursoConsumidor.AlterarAsync(recursoConsumidor);
             }
         };
 

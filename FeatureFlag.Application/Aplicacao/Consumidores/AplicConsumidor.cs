@@ -4,6 +4,7 @@ using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
+using Repository.Persistence;
 
 namespace FeatureFlag.Application.Aplicacao;
 
@@ -13,12 +14,14 @@ public class AplicConsumidor : IAplicConsumidor
     private readonly IRepConsumidor _repConsumidor;
     private readonly IRepRecursoConsumidor _repRecursoConsumidor;
     private readonly IRepRecurso _repRecurso;
+    private readonly FeatureFlagDbContext _dbContext;
 
-    public AplicConsumidor(IRepConsumidor repConsumidor, IRepRecursoConsumidor repRecursoConsumidor, IRepRecurso repRecurso)
+    public AplicConsumidor(IRepConsumidor repConsumidor, IRepRecursoConsumidor repRecursoConsumidor, IRepRecurso repRecurso, FeatureFlagDbContext dbContext)
     {
         _repConsumidor = repConsumidor;
         _repRecursoConsumidor = repRecursoConsumidor;
         _repRecurso = repRecurso;
+        _dbContext = dbContext;
     }
     #endregion
 
@@ -64,7 +67,7 @@ public class AplicConsumidor : IAplicConsumidor
             throw new Exception($"Consumidor com ID {id} não encontrado.");
         }
 
-        var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosPorConsumidor(id);
+        var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosPorConsumidorAsync(id);
         var recursosStatus = new List<RecuperarRecursosStatusDto>();
 
 
@@ -92,7 +95,9 @@ public class AplicConsumidor : IAplicConsumidor
             alterarConsumidorDto.Recursos, alterarConsumidorDto.RecursosConsumidores);
         
         consumidorExistente.Update(consumidorAlterar);
-        await _repConsumidor.AlterarAsync(id, consumidorAlterar);
+
+        await _dbContext.SaveChangesAsync();
+        // await _repConsumidor.AlterarAsync(id, consumidorAlterar);
     }
     #endregion
 
