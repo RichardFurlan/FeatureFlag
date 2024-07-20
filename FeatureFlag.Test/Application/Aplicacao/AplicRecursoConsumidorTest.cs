@@ -115,5 +115,45 @@ public class AplicRecursoConsumidorTest
         Assert.Equal(1, result);
         _repRecursoConsumidorMock.Verify(rc => rc.InserirAsync(It.IsAny<RecursoConsumidor>()), Times.Once);
     }
+
+    [Fact]
+    public async Task AlterarAsync_Deve_Atualizar_RecursoConsumidor()
+    {
+        //Arrange
+        var recursoConsumidorExistente = new RecursoConsumidor(1, 1, EnumStatusRecursoConsumidor.Habilitado);
+        var alterarDto = new AlterarRecursoConsumidorDto(2, 2, EnumStatusRecursoConsumidor.Desabilitado);
+
+        _repRecursoConsumidorMock.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(recursoConsumidorExistente);
+        
+        //act
+        await _aplicRecursoConsumidor.AlterarAsync(recursoConsumidorExistente.Id, alterarDto);
+        
+        //Assert
+        Assert.Equal(2, recursoConsumidorExistente.CodigoRecurso);
+        Assert.Equal(2, recursoConsumidorExistente.CodigoConsumidor);
+        Assert.Equal(EnumStatusRecursoConsumidor.Desabilitado, recursoConsumidorExistente.Status);
+        
+        _repRecursoConsumidorMock.Verify(r => r.RecuperarPorIdAsync(It.IsAny<int>()), Times.Once);
+        _repRecursoConsumidorMock.Verify(r => r.AlterarAsync(It.IsAny<RecursoConsumidor>()), Times.Once);
+    }
     
+    [Fact]
+    public async Task InativarAsync_Deve_Inativar_RecursoConsumidor()
+    {
+        //Arrange
+        var recursoConsumidorExistente = new RecursoConsumidor(1, 1, EnumStatusRecursoConsumidor.Habilitado);
+
+        _repRecursoConsumidorMock.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(recursoConsumidorExistente);
+        
+        //act
+        await _aplicRecursoConsumidor.InativarAsync(recursoConsumidorExistente.Id);
+        
+        //Assert
+        Assert.True(recursoConsumidorExistente.Inativo);
+        
+        _repRecursoConsumidorMock.Verify(r => r.RecuperarPorIdAsync(It.IsAny<int>()), Times.Once);
+        _repRecursoConsumidorMock.Verify(r => r.InativarAsync(It.IsAny<RecursoConsumidor>()), Times.Once);
+    }
 }

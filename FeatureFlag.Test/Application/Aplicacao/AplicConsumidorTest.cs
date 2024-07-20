@@ -3,7 +3,9 @@ using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
 using FeatureFlag.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using Repository.Persistence;
 using Repository.Persistence.Repositories;
 
 namespace FeatureFlag.Test.Application.Aplicacao;
@@ -13,6 +15,7 @@ public class AplicConsumidorTest
     private readonly Mock<IRepConsumidor> _repConsumidorMock;
     private readonly Mock<IRepRecursoConsumidor> _repRecursoConsumidorMock;
     private readonly Mock<IRepRecurso> _repRecursoMock;
+    private readonly Mock<FeatureFlagDbContext> _dbContextMock;
     private readonly AplicConsumidor _aplicConsumidor;
 
     public AplicConsumidorTest()
@@ -20,7 +23,8 @@ public class AplicConsumidorTest
         _repConsumidorMock = new Mock<IRepConsumidor>();
         _repRecursoConsumidorMock = new Mock<IRepRecursoConsumidor>();
         _repRecursoMock = new Mock<IRepRecurso>();
-        _aplicConsumidor = new AplicConsumidor(_repConsumidorMock.Object, _repRecursoConsumidorMock.Object, _repRecursoMock.Object);
+        _dbContextMock = new Mock<FeatureFlagDbContext>(new DbContextOptions<FeatureFlagDbContext>());
+        _aplicConsumidor = new AplicConsumidor(_repConsumidorMock.Object, _repRecursoConsumidorMock.Object, _repRecursoMock.Object, _dbContextMock.Object);
     }
     
     [Fact]
@@ -77,12 +81,10 @@ public class AplicConsumidorTest
     {
         // Arrange
         var consumidor = new Consumidor("Ident1", "Desc1");
-
         var inputModel = new AlterarConsumidorDto("IdentAlterada", "DescAlterada", null, null);
 
         _repConsumidorMock.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync(consumidor);
-        _repConsumidorMock.Setup(r => r.AlterarAsync(It.IsAny<int>(), It.IsAny<Consumidor>()))
-            .Returns(Task.CompletedTask);
+        _dbContextMock.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
         // Act
         await _aplicConsumidor.AlterarAsync(consumidor.Id, inputModel);
@@ -91,6 +93,7 @@ public class AplicConsumidorTest
         Assert.Equal("IdentAlterada", consumidor.Identificacao);
         Assert.Equal("DescAlterada", consumidor.Descricao);
         _repConsumidorMock.Verify(r => r.RecuperarPorIdAsync(It.IsAny<int>()), Times.Once);
+        _dbContextMock.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
     
     [Fact]
@@ -122,7 +125,7 @@ public class AplicConsumidorTest
         var recurso2 = new Recurso("Rec2", "Descricao2", null, null);
 
         _repConsumidorMock.Setup(r => r.RecuperarPorIdAsync(consumidor.Id)).ReturnsAsync(consumidor);
-        _repRecursoConsumidorMock.Setup(r => r.RecuperarTodosPorConsumidor(consumidor.Id)).ReturnsAsync(recursoConsumidorList);
+        _repRecursoConsumidorMock.Setup(r => r.RecuperarTodosPorConsumidorAsync(consumidor.Id)).ReturnsAsync(recursoConsumidorList);
         _repRecursoMock.Setup(r => r.RecuperarPorIdAsync(1)).ReturnsAsync(recurso1);
         _repRecursoMock.Setup(r => r.RecuperarPorIdAsync(2)).ReturnsAsync(recurso2);
 

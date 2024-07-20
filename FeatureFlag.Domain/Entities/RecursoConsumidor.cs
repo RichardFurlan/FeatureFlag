@@ -20,7 +20,7 @@ public class RecursoConsumidor : BaseEntity
     {
         CodigoRecurso = recursoConsumidor.CodigoRecurso;
         CodigoConsumidor = recursoConsumidor.CodigoConsumidor;
-        recursoConsumidor.DefinirStatus(recursoConsumidor.Status);
+        DefinirStatus(recursoConsumidor.Status);
     }
 
     public void Desabilitar()
@@ -44,4 +44,5 @@ public class RecursoConsumidor : BaseEntity
             Desabilitar();
         }
     }
+    
 }

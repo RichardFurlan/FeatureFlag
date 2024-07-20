@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FeatureFlag.Domain\FeatureFlag.Domain.csproj" />
+      <ProjectReference Include="..\FeatureFlag.Repository\FeatureFlag.Repository.csproj" />
     </ItemGroup>
 
 </Project>

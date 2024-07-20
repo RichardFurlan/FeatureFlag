@@ -47,6 +47,10 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     public async Task<RecuperarRecursoConsumidorDto> RecuperarPorIdAsync(int id)
     {
         var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorIdAsync(id);
+        if (recursoConsumidor is null)
+        {
+            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
+        }
         var recurso = await _aplicRecurso.RecuperarPorIdAsync(recursoConsumidor.CodigoRecurso);
         var consumidor = await _aplicConsumidor.RecuperarPorIdAsync(recursoConsumidor.CodigoConsumidor);
 
@@ -67,13 +71,17 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #region AlterarAsync
     public async Task AlterarAsync(int id, AlterarRecursoConsumidorDto alterarConsumidorDto)
     {
-        var recursoConsumidorExistente = await _repRecursoConsumidor.RecuperarPorIdAsync(id);
+        var recursoConsumidor= await _repRecursoConsumidor.RecuperarPorIdAsync(id);
+        if (recursoConsumidor == null)
+        {
+            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
+        }
         
-        var recursoConsumidor = new RecursoConsumidor(alterarConsumidorDto.CodigoRecurso,
+        var recursoConsumidorUpdate = new RecursoConsumidor(alterarConsumidorDto.CodigoRecurso,
             alterarConsumidorDto.CodigoConsumidor, alterarConsumidorDto.Status);
-        recursoConsumidorExistente.Update(recursoConsumidor);
         
-        await _repRecursoConsumidor.AlterarAsync(id, recursoConsumidor);
+        recursoConsumidor.Update(recursoConsumidorUpdate);
+        await _repRecursoConsumidor.AlterarAsync(recursoConsumidor);
     }
     #endregion
 
@@ -81,8 +89,12 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     public async Task InativarAsync(int id)
     {
         var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorIdAsync(id);
+        if (recursoConsumidor == null)
+        {
+            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
+        }
         recursoConsumidor.Inativar();
-        await _repRecursoConsumidor.InativarAsync(id);
+        await _repRecursoConsumidor.InativarAsync(recursoConsumidor);
     }
     #endregion
 
