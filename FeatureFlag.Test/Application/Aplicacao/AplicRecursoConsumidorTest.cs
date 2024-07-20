@@ -1,4 +1,5 @@
 using FeatureFlag.Application.Aplicacao;
+using FeatureFlag.Application.Aplicacao.RecursosConsumidores;
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
 using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Domain.Entities;

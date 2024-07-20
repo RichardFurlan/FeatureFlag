@@ -1,44 +1,47 @@
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository.Persistence.Repositories;
 
 public class RepRecursoMemory : IRepRecurso
 {
     private static readonly List<Recurso> Recurso = new List<Recurso>();
+    private readonly FeatureFlagDbContext _dbContext;
 
-    public Task<List<Recurso>> RecuperarTodosAsync()
+    public RepRecursoMemory(FeatureFlagDbContext dbContext)
     {
-        var resultado = Recurso
-            .ToList();
-        return Task.FromResult(resultado);
+        _dbContext = dbContext;
     }
 
-    public Task<Recurso> RecuperarPorIdAsync(int id)
+    public async Task<List<Recurso>> RecuperarTodosAsync()
     {
-        var index = Recurso.FindIndex(r => r.Id == id);
-        return Task.FromResult(Recurso[index]);
+        var resultado = await _dbContext.Recursos.ToListAsync();
+        return resultado;
     }
 
-    public Task<int> InserirAsync(Recurso recurso)
+    public async Task<Recurso?> RecuperarPorIdAsync(int id)
     {
-        Recurso.Add(recurso);
-        return Task.FromResult(recurso.Id);
+        var recurso = await _dbContext.Recursos.SingleOrDefaultAsync(r => r.Id == id);
+        return recurso;
     }
 
-    public async Task AlterarAsync(int id, Recurso recurso)
+    public async Task<int> InserirAsync(Recurso recurso)
     {
-        var recursoExistente = await RecuperarPorIdAsync(id);
-        if (recursoExistente == null)
-        {
-            throw new KeyNotFoundException($"Recurso com ID {id} não encontrado.");
-        }
-        recursoExistente.Update(recurso);
+        await _dbContext.Recursos.AddAsync(recurso);
+        await _dbContext.SaveChangesAsync();
+        return recurso.Id;
     }
 
-    public async Task InativarAsync(int id)
+    public async Task AlterarAsync(Recurso recurso)
     {
-        var recurso = await RecuperarPorIdAsync(id);
-        recurso.Inativar();
+        _dbContext.Recursos.Update(recurso);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task InativarAsync(Recurso recurso)
+    {
+        _dbContext.Recursos.Update(recurso);
+        await _dbContext.SaveChangesAsync();
     }
 }

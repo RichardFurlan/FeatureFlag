@@ -1,15 +1,13 @@
 using FeatureFlag.Application.Aplicacao.Interfaces;
 using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
-using FeatureFlag.Application.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
-using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
 
-namespace FeatureFlag.Application.Aplicacao;
+namespace FeatureFlag.Application.Aplicacao.Recursos;
 
 public class AplicRecurso : IAplicRecurso
 {
@@ -169,11 +167,18 @@ public class AplicRecurso : IAplicRecurso
     #region AlterarAsync
     public async Task AlterarAsync(int id, AlterarRecursoDto alterarRecursoDto)
     {
-        var recursoExistente = await _repRecurso.RecuperarPorIdAsync(id);
-        var recursoAlterar = new Recurso(alterarRecursoDto.Identificacao, alterarRecursoDto.Descricao);
+        var recurso = await _repRecurso.RecuperarPorIdAsync(id);
+        if (recurso == null)
+        {
+            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
+        }
         
-        recursoExistente.Update(recursoAlterar);
-        await _repRecurso.AlterarAsync(id, recursoAlterar);
+        var recursoAlterar = new Recurso(
+            alterarRecursoDto.Identificacao, 
+            alterarRecursoDto.Descricao);
+        
+        recurso.Update(recursoAlterar);
+        await _repRecurso.AlterarAsync(recurso);
     }
     #endregion
 
@@ -181,8 +186,12 @@ public class AplicRecurso : IAplicRecurso
     public async Task InativarAsync(int id)
     {
         var recurso = await _repRecurso.RecuperarPorIdAsync(id);
-        await _repRecurso.InativarAsync(id);
+        if (recurso == null)
+        {
+            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
+        }
         recurso.Inativar();
+        await _repRecurso.InativarAsync(recurso);
     }
 
     #endregion

@@ -91,8 +91,7 @@ public class AplicConsumidor : IAplicConsumidor
     {
         var consumidorExistente = await _repConsumidor.RecuperarPorIdAsync(id);
         
-        var consumidorAlterar = new Consumidor(alterarConsumidorDto.Identificacao, alterarConsumidorDto.Descricao,
-            alterarConsumidorDto.Recursos, alterarConsumidorDto.RecursosConsumidores);
+        var consumidorAlterar = new Consumidor(alterarConsumidorDto.Identificacao, alterarConsumidorDto.Descricao);
         
         consumidorExistente.Update(consumidorAlterar);
 
