@@ -17,37 +17,37 @@ public class RepRecursoConsumidorMemory : IRepRecursoConsumidor
     public async Task<List<RecursoConsumidor>> RecuperarTodosAsync()
     {
         var resultado = await _dbContext.RecursosConsumidores.ToListAsync();
-        return await Task.FromResult(resultado);
+        return resultado;
     }
 
     public async Task<List<RecursoConsumidor>> RecuperarTodosPorConsumidorAsync(int id)
     {
         var resultado = await _dbContext.RecursosConsumidores.Where(rc => rc.CodigoConsumidor.Equals(id)).ToListAsync();
-        return await Task.FromResult(resultado);
+        return resultado;
     }
 
     public async Task<RecursoConsumidor?> RecuperarPorIdAsync(int id)
     {
-        var recursoConsumidor = await _dbContext.RecursosConsumidores.FindAsync(id);
-        return await Task.FromResult(recursoConsumidor);
+        var recursoConsumidor = await _dbContext.RecursosConsumidores.SingleOrDefaultAsync(rc => rc.Id == id);
+        return recursoConsumidor;
     }
 
     public async Task<int> InserirAsync(RecursoConsumidor recursoConsumidor)
     {
-        _dbContext.RecursosConsumidores.Add(recursoConsumidor);
+        await _dbContext.RecursosConsumidores.AddAsync(recursoConsumidor);
         await _dbContext.SaveChangesAsync();
-        return await Task.FromResult(recursoConsumidor.Id);
+        return recursoConsumidor.Id;
     }
 
     public async Task AlterarAsync(RecursoConsumidor recursoConsumidor)
     {
-        _dbContext.Update(recursoConsumidor);
+        _dbContext.RecursosConsumidores.Update(recursoConsumidor);
         await _dbContext.SaveChangesAsync();
     }
 
     public async Task InativarAsync(RecursoConsumidor recursoConsumidor)
     {
-        _dbContext.Update(recursoConsumidor);
+        _dbContext.RecursosConsumidores.Update(recursoConsumidor);
         await _dbContext.SaveChangesAsync();
     }
 }

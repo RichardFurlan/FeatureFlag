@@ -81,7 +81,7 @@ public class AplicConsumidorTest
     {
         // Arrange
         var consumidor = new Consumidor("Ident1", "Desc1");
-        var inputModel = new AlterarConsumidorDto("IdentAlterada", "DescAlterada", null, null);
+        var inputModel = new AlterarConsumidorDto("IdentAlterada", "DescAlterada");
 
         _repConsumidorMock.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync(consumidor);
         _dbContextMock.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);

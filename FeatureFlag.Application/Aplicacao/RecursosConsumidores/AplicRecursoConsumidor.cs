@@ -1,13 +1,11 @@
 using FeatureFlag.Application.Aplicacao.Interfaces;
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
-using FeatureFlag.Application.DTOs;
-using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
 
-namespace FeatureFlag.Application.Aplicacao;
+namespace FeatureFlag.Application.Aplicacao.RecursosConsumidores;
 
 public class AplicRecursoConsumidor : IAplicRecursoConsumidor
 {
@@ -77,10 +75,10 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
             throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
         }
         
-        var recursoConsumidorUpdate = new RecursoConsumidor(alterarConsumidorDto.CodigoRecurso,
+        var recursoConsumidorAlterar = new RecursoConsumidor(alterarConsumidorDto.CodigoRecurso,
             alterarConsumidorDto.CodigoConsumidor, alterarConsumidorDto.Status);
         
-        recursoConsumidor.Update(recursoConsumidorUpdate);
+        recursoConsumidor.Update(recursoConsumidorAlterar);
         await _repRecursoConsumidor.AlterarAsync(recursoConsumidor);
     }
     #endregion
