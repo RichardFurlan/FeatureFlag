@@ -84,7 +84,6 @@ public class AplicConsumidorTest
         var inputModel = new AlterarConsumidorDto("IdentAlterada", "DescAlterada");
 
         _repConsumidorMock.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync(consumidor);
-        _dbContextMock.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
         // Act
         await _aplicConsumidor.AlterarAsync(consumidor.Id, inputModel);
@@ -93,7 +92,7 @@ public class AplicConsumidorTest
         Assert.Equal("IdentAlterada", consumidor.Identificacao);
         Assert.Equal("DescAlterada", consumidor.Descricao);
         _repConsumidorMock.Verify(r => r.RecuperarPorIdAsync(It.IsAny<int>()), Times.Once);
-        _dbContextMock.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _repConsumidorMock.Verify(r => r.AlterarAsync(It.IsAny<Consumidor>()));
     }
     
     [Fact]

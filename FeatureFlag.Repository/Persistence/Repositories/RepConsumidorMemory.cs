@@ -1,46 +1,47 @@
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository.Persistence.Repositories;
 
 public class RepConsumidorMemory : IRepConsumidor
 {
     private static readonly List<Consumidor> Consumidores = new List<Consumidor>();
-    public Task<List<Consumidor>> RecuperarTodosAsync()
+    private readonly FeatureFlagDbContext _dbContext;
+
+    public RepConsumidorMemory(FeatureFlagDbContext dbContext)
     {
-        var resultado = Consumidores
-            .ToList();
-        
-        return Task.FromResult(resultado);
+        _dbContext = dbContext;
+    }
+    public async Task<List<Consumidor>> RecuperarTodosAsync()
+    {
+        var resultado = await _dbContext.Consumidores.ToListAsync();
+        return resultado;
     }
 
-    public Task<Consumidor> RecuperarPorIdAsync(int id)
+    public async Task<Consumidor?> RecuperarPorIdAsync(int id)
     {
-        var index = Consumidores.FindIndex(c => c.Id == id);
-        return Task.FromResult(Consumidores[index]);
+        var consumidor = await _dbContext.Consumidores.SingleOrDefaultAsync(c => c.Id == id);
+        return consumidor;
     }
 
-    public Task<int> InserirAsync(Consumidor consumidor)
+    public async Task<int> InserirAsync(Consumidor consumidor)
     { 
-        Consumidores.Add(consumidor);
-        return Task.FromResult(consumidor.Id);
+        await _dbContext.Consumidores.AddAsync(consumidor);
+        await _dbContext.SaveChangesAsync();
+        return consumidor.Id;
     }
 
-    public async Task AlterarAsync(int id, Consumidor consumidor)
+    public async Task AlterarAsync(Consumidor consumidor)
     {
-        var consumidorExistente = await RecuperarPorIdAsync(id);
-        if (consumidorExistente == null)
-        {
-            throw new KeyNotFoundException($"Consumidor com ID {id} não encontrado.");
-        }
-        consumidorExistente.Update(consumidor);
+        _dbContext.Consumidores.Update(consumidor);
+        await _dbContext.SaveChangesAsync();
     }
 
 
-    public Task InativarAsync(int id)
+    public async Task InativarAsync(Consumidor consumidor)
     {
-        var consumidor = RecuperarPorIdAsync(id);
-        consumidor.Result.Inativar();
-        return Task.CompletedTask;
+        _dbContext.Consumidores.Update(consumidor);
+        await _dbContext.SaveChangesAsync();
     }
 }
