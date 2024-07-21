@@ -89,14 +89,17 @@ public class AplicConsumidor : IAplicConsumidor
     #region AlterarAsync
     public async Task AlterarAsync(int id, AlterarConsumidorDto alterarConsumidorDto)
     {
-        var consumidorExistente = await _repConsumidor.RecuperarPorIdAsync(id);
+        var consumidor = await _repConsumidor.RecuperarPorIdAsync(id);
+        if (consumidor == null)
+        {
+            throw new KeyNotFoundException($"Consumidor com ID {id} não encontrado.");
+        }
         
         var consumidorAlterar = new Consumidor(alterarConsumidorDto.Identificacao, alterarConsumidorDto.Descricao);
         
-        consumidorExistente.Update(consumidorAlterar);
+        consumidor.Update(consumidorAlterar);
 
-        await _dbContext.SaveChangesAsync();
-        // await _repConsumidor.AlterarAsync(id, consumidorAlterar);
+        await _repConsumidor.AlterarAsync(consumidor);
     }
     #endregion
 
@@ -104,7 +107,13 @@ public class AplicConsumidor : IAplicConsumidor
     public async Task InativarAsync(int id)
     {
         var consumidor = await _repConsumidor.RecuperarPorIdAsync(id);
+        if (consumidor == null)
+        {
+            throw new KeyNotFoundException($"Consumidor com ID {id} não encontrado.");
+        }
         consumidor.Inativar();
+
+        await _repConsumidor.InativarAsync(consumidor);
     }
     #endregion
 }

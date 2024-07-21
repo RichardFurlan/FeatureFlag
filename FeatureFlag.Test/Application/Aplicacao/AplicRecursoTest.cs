@@ -181,7 +181,7 @@ public class AplicRecursoTest
         _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
         _repRecursoConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>())).Returns(Task.CompletedTask);
         _repRecursoMockMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Recurso>())).Returns(Task.CompletedTask);
-        _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<int>(), It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
+        _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
         var recursoConsumidorList = new List<CriarRecursoConsumidorDto>();
         _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDto>()))
             .Callback<CriarRecursoConsumidorDto>(rc => recursoConsumidorList.Add(rc));
@@ -226,7 +226,7 @@ public class AplicRecursoTest
         _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
         _repRecursoConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>())).Returns(Task.CompletedTask);
         _repRecursoMockMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Recurso>())).Returns(Task.CompletedTask);
-        _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<int>(), It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
+        _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
         var recursoConsumidorList = new List<CriarRecursoConsumidorDto>();
         _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDto>()))
             .Callback<CriarRecursoConsumidorDto>(rc => recursoConsumidorList.Add(rc));

@@ -170,7 +170,7 @@ public class AplicRecurso : IAplicRecurso
         var recurso = await _repRecurso.RecuperarPorIdAsync(id);
         if (recurso == null)
         {
-            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
+            throw new KeyNotFoundException($"Recurso com ID {id} não encontrado.");
         }
         
         var recursoAlterar = new Recurso(
@@ -188,7 +188,7 @@ public class AplicRecurso : IAplicRecurso
         var recurso = await _repRecurso.RecuperarPorIdAsync(id);
         if (recurso == null)
         {
-            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
+            throw new KeyNotFoundException($"Recurso com ID {id} não encontrado.");
         }
         recurso.Inativar();
         await _repRecurso.InativarAsync(recurso);
