@@ -40,7 +40,7 @@ public class AplicRecursoTest
         _repRecursoMockMemory.Setup(r => r.RecuperarTodosAsync()).ReturnsAsync(recursos);
 
         // Act
-        var result = await _aplicRecurso.RecuperarTodosAsync(string.Empty);
+        var result = await _aplicRecurso.RecuperarTodosAsync();
 
         // Assert
         Assert.Equal(2, result.Count);

@@ -58,16 +58,16 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #endregion
 
     #region InserirAsync
-    public async Task<int> InserirAsync(CriarRecursoConsumidorDto criarRecursoConsumidorDto)
+    public async Task<int> InserirAsync(CriarRecursoConsumidorDto dto)
     {
-        var recursoConsumidor = new RecursoConsumidor(criarRecursoConsumidorDto.CodigoRecurso, criarRecursoConsumidorDto.CodigoConsumidor, criarRecursoConsumidorDto.Status);
+        var recursoConsumidor = new RecursoConsumidor(dto.CodigoRecurso, dto.CodigoConsumidor, dto.Status);
         var codigoRecursoConsumidor = await _repRecursoConsumidor.InserirAsync(recursoConsumidor);
         return codigoRecursoConsumidor;
     }
     #endregion
 
     #region AlterarAsync
-    public async Task AlterarAsync(int id, AlterarRecursoConsumidorDto alterarConsumidorDto)
+    public async Task AlterarAsync(int id, AlterarRecursoConsumidorDto dto)
     {
         var recursoConsumidor= await _repRecursoConsumidor.RecuperarPorIdAsync(id);
         if (recursoConsumidor == null)
@@ -75,8 +75,8 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
             throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
         }
         
-        var recursoConsumidorAlterar = new RecursoConsumidor(alterarConsumidorDto.CodigoRecurso,
-            alterarConsumidorDto.CodigoConsumidor, alterarConsumidorDto.Status);
+        var recursoConsumidorAlterar = new RecursoConsumidor(dto.CodigoRecurso,
+            dto.CodigoConsumidor, dto.Status);
         
         recursoConsumidor.Update(recursoConsumidorAlterar);
         await _repRecursoConsumidor.AlterarAsync(recursoConsumidor);
