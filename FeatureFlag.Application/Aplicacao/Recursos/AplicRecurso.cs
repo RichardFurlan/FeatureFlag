@@ -27,7 +27,7 @@ public class AplicRecurso : IAplicRecurso
     #endregion
     
     #region RecuperarTodosAsync
-    public async Task<List<RecuperarRecursoDto>> RecuperarTodosAsync(string query)
+    public async Task<List<RecuperarRecursoDto>> RecuperarTodosAsync()
     {
         var recursos = await _repRecurso.RecuperarTodosAsync();
         var viewModelList = recursos.Select(r => new RecuperarRecursoDto(r.Identificacao, r.Descricao)).ToList();
