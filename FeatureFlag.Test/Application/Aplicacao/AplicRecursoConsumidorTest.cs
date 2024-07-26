@@ -73,7 +73,7 @@ public class AplicRecursoConsumidorTest
         _aplicConsumidorMock.Verify(c => c.RecuperarPorIdAsync(It.IsAny<int>()), Times.Exactly(2));
     }
     
-        [Fact]
+    [Fact]
     public async Task RecuperarPorId_DeveRetornarRecursoConsumidorViewModel()
     {
         // Arrange
@@ -138,6 +138,20 @@ public class AplicRecursoConsumidorTest
         _repRecursoConsumidorMock.Verify(r => r.RecuperarPorIdAsync(It.IsAny<int>()), Times.Once);
         _repRecursoConsumidorMock.Verify(r => r.AlterarAsync(It.IsAny<RecursoConsumidor>()), Times.Once);
     }
+
+    [Fact]
+    public async Task AlterarAsync_DeveLancarExcecao_QuandoRecursoConsumidorNaoExistir()
+    {
+        //Arrange
+        var alterarDto = new AlterarRecursoConsumidorDto(2, 2, EnumStatusRecursoConsumidor.Desabilitado);
+        _repRecursoConsumidorMock.Setup(rc => rc.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync((RecursoConsumidor)null);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => _aplicRecursoConsumidor.AlterarAsync(1, alterarDto));
+        
+        _repRecursoConsumidorMock.Verify(rc => rc.RecuperarPorIdAsync(It.IsAny<int>()), Times.Once);
+        _repRecursoConsumidorMock.Verify(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>()), Times.Never);
+    }
     
     [Fact]
     public async Task InativarAsync_Deve_Inativar_RecursoConsumidor()
@@ -156,5 +170,18 @@ public class AplicRecursoConsumidorTest
         
         _repRecursoConsumidorMock.Verify(r => r.RecuperarPorIdAsync(It.IsAny<int>()), Times.Once);
         _repRecursoConsumidorMock.Verify(r => r.InativarAsync(It.IsAny<RecursoConsumidor>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task InativarAsync_DeveLancarExcecao_QuandoRecursoConsumidorNaoExistir()
+    {
+        //Arrange
+        _repRecursoConsumidorMock.Setup(rc => rc.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync((RecursoConsumidor)null);
+        
+        //Act & Assert
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => _aplicRecursoConsumidor.InativarAsync(1));
+        
+        _repRecursoConsumidorMock.Verify(rc => rc.RecuperarPorIdAsync(It.IsAny<int>()), Times.Once);
+        _repRecursoConsumidorMock.Verify(rc => rc.InativarAsync(It.IsAny<RecursoConsumidor>()), Times.Never);
     }
 }
