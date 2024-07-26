@@ -7,7 +7,7 @@ namespace FeatureFlag.Application.Aplicacao;
 
 public interface IAplicRecurso
 {
-    Task<List<RecuperarRecursoDto>> RecuperarTodosAsync(string query);
+    Task<List<RecuperarRecursoDto>> RecuperarTodosAsync();
     Task<RecuperarRecursoDto> RecuperarPorIdAsync(int id);
     Task<RecuperarRecursoAtivoDto> VerificaRecursoAtivoParaConsumidorAsync(int recursoId, int cunsumidorId);
     Task<int> InserirAsync(CriarRecursoDto criarRecursoDto);
