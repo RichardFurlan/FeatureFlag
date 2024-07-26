@@ -1,5 +1,6 @@
 using FeatureFlag.Application.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
+using FeatureFlag.Domain.Interefaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlag.Controllers;
@@ -7,33 +8,90 @@ namespace FeatureFlag.Controllers;
 [Route("api/consumidores")]
 public class ConsumidoresController : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> ListarTodos()
+    #region ctor
+    private readonly IAplicConsumidor _aplicConsumidor;
+    public ConsumidoresController(IAplicConsumidor aplicConsumidor)
     {
-        return Ok();
+        _aplicConsumidor = aplicConsumidor;
+    }
+    #endregion
+
+    [HttpGet]
+    public async Task<IActionResult> RecuperarTodosAsync()
+    {
+        try
+        {
+            var dto = await _aplicConsumidor.RecuperarTodosAsync();
+            return Ok(dto);
+        }
+        catch (Exception e)
+        {
+            //TODO: Adicionar logger 
+            Console.WriteLine(e);
+            throw;
+        }
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> ListarPorId(int id)
+    public async Task<IActionResult> RecuperarPorIdAsync(int id)
     {
-        return Ok();
+        try
+        {
+            var dto = await _aplicConsumidor.RecuperarPorIdAsync(id);
+            return Ok(dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     [HttpPost]
-    public async Task<IActionResult> Inserir([FromBody] CriarConsumidorDto criarConsumidorDto)
+    public async Task<IActionResult> InserirAsync([FromBody] CriarConsumidorDto dto)
     {
-        return CreatedAtAction(nameof(ListarPorId), new {id = 1}, criarConsumidorDto);
+        try
+        {
+            var id = await _aplicConsumidor.InserirAsync(dto);
+            
+            return CreatedAtAction(nameof(RecuperarPorIdAsync), id, dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarConsumidorDto alterarConsumidorDto)
+    public async Task<IActionResult> AlterarAsync(int id, [FromBody] AlterarConsumidorDto dto)
     {
-        return NoContent();
+        try
+        {
+            await _aplicConsumidor.AlterarAsync(id, dto);
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Inativar(int id)
+    public async Task<IActionResult> InativarAsync(int id)
     {
-        return NoContent();
+        try
+        {
+            await _aplicConsumidor.InativarAsync(id);
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
+    
 }
