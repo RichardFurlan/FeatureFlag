@@ -2,6 +2,10 @@ namespace FeatureFlag.Domain.Entities;
 
 public class Consumidor : BaseEntity
 {
+    public Consumidor()
+    {
+        
+    }
     public Consumidor(string identificacao, string descricao, List<Recurso>? recursos = null, List<RecursoConsumidor>? recursoConsumidores = null)
     {
         Identificacao = identificacao ?? throw new ArgumentNullException(nameof(identificacao));
