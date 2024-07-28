@@ -6,6 +6,7 @@ using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
+using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
 using Moq;
 
@@ -17,6 +18,7 @@ public class AplicRecursoTest
     private readonly Mock<IRepConsumidor> _repConsumidorMemory;
     private readonly Mock<IRepRecursoConsumidor> _repRecursoConsumidorMemory;
     private readonly Mock<IAplicRecursoConsumidor> _aplicRecursoConsumidor;
+    private readonly Mock<IAplicConsumidor> _aplicConsumidor;
     private readonly AplicRecurso _aplicRecurso;
 
     public AplicRecursoTest()
@@ -25,7 +27,8 @@ public class AplicRecursoTest
         _repConsumidorMemory = new Mock<IRepConsumidor>();
         _repRecursoConsumidorMemory = new Mock<IRepRecursoConsumidor>();
         _aplicRecursoConsumidor = new Mock<IAplicRecursoConsumidor>();
-        _aplicRecurso = new AplicRecurso(_repRecursoMockMemory.Object, _repConsumidorMemory.Object, _repRecursoConsumidorMemory.Object, _aplicRecursoConsumidor.Object);
+        _aplicConsumidor = new Mock<IAplicConsumidor>();
+        _aplicRecurso = new AplicRecurso(_repRecursoMockMemory.Object, _repConsumidorMemory.Object, _repRecursoConsumidorMemory.Object, _aplicRecursoConsumidor.Object, _aplicConsumidor.Object);
     }
     
     [Fact]
@@ -68,29 +71,25 @@ public class AplicRecursoTest
     public async Task VerificaRecurso_DeveRetornarRecursoAtivoViewModel()
     {
         // Arrange
-        var recursoId = 1;
-        var consumidorIdentificacao = 1;
         
-        var recurso = new Recurso("Rec1", "Descricao1", 
-            new List<Consumidor>(), 
-            new List<RecursoConsumidor>());
-        var consumidor = new Consumidor("Consu1", "Desc1", null, null);
-        var recursoConsumidor = new RecursoConsumidor(recursoId, consumidor.Id, EnumStatusRecursoConsumidor.Habilitado);
+        var recurso = new Recurso("Recurso1", "Descricao1");
+        var consumidor = new Consumidor("Consumidor1", "Descricao1", null, null);
+        var recursoConsumidor = new RecursoConsumidor(recurso.Id, consumidor.Id, EnumStatusRecursoConsumidor.Habilitado);
 
         recurso.RecursoConsumidores.Add(recursoConsumidor);
         consumidor.RecursoConsumidores.Add(recursoConsumidor);
 
-        _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(recursoId)).ReturnsAsync(recurso);
-        _repConsumidorMemory.Setup(c => c.RecuperarPorIdAsync(consumidorIdentificacao)).ReturnsAsync(consumidor);
+        _repRecursoMockMemory.Setup(r => r.RecuperarPorIdentificacaoAsync(recurso.Identificacao)).ReturnsAsync(recurso);
+        _repConsumidorMemory.Setup(c => c.RecuperarPorIdentificacaoAsync(consumidor.Identificacao)).ReturnsAsync(consumidor);
 
         // Act
-        var result = await _aplicRecurso.VerificaRecursoAtivoParaConsumidorAsync(recursoId, consumidorIdentificacao);
+        var result = await _aplicRecurso.VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(recurso.Identificacao, consumidor.Identificacao);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Rec1", result.IdentificacaoRecurso);
+        Assert.Equal("Recurso1", result.IdentificacaoRecurso);
         Assert.Equal("Descricao1", result.DescricaoRecurso);
-        Assert.Equal("Consu1", result.IdentificacaoConsumidor);
+        Assert.Equal("Consumidor1", result.IdentificacaoConsumidor);
     }
     
     [Fact]
