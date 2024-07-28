@@ -5,11 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-// var Configuration  = builder.Configuration;
-// builder.Services.AddDbContext<FeatureFlagDbContext>(options =>
-//     options.UseNpsql(Configuration.GetConnectionString("DefaultConnection")));
+var dataBase  = builder.Configuration.GetConnectionString("Database");
 builder.Services.AddDbContext<FeatureFlagDbContext>(options =>
-    options.UseInMemoryDatabase("FeatureFlagDatabase"));
+    options.UseNpgsql(dataBase));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
