@@ -25,6 +25,12 @@ public class RepConsumidorMemory : IRepConsumidor
         return consumidor;
     }
 
+    public async Task<Consumidor?> RecuperarPorIdentificacaoAsync(string identificacaoConsumidor)
+    {
+        var consumidor = await _dbContext.Consumidores.SingleOrDefaultAsync(c => c.Identificacao == identificacaoConsumidor);
+        return consumidor;
+    }
+
     public async Task<int> InserirAsync(Consumidor consumidor)
     { 
         await _dbContext.Consumidores.AddAsync(consumidor);

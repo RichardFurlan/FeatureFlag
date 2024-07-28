@@ -26,6 +26,12 @@ public class RepRecursoMemory : IRepRecurso
         return recurso;
     }
 
+    public async Task<Recurso?> RecuperarPorIdentificacaoAsync(string identificacaoRecurso)
+    {
+        var recurso = await _dbContext.Recursos.SingleOrDefaultAsync(r => r.Identificacao == identificacaoRecurso);
+        return recurso;
+    }
+
     public async Task<int> InserirAsync(Recurso recurso)
     {
         await _dbContext.Recursos.AddAsync(recurso);
