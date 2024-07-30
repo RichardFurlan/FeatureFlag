@@ -61,6 +61,21 @@ public class ConsumidoresController : ControllerBase
             return NotFound();
         }
     }
+    
+    [HttpGet("{identificacaoConsumidor}/recurso/{identificacaoRecurso}")]
+    public async Task<IActionResult> VerificaRecursoHabilitadoParaConsumidor(string identificacaoConsumidor, string identificacaoRecurso)
+    {
+        try
+        {
+            var dto = await _aplicConsumidor.VerificaRecursoHabilitadoParaConsumidor(identificacaoConsumidor, identificacaoRecurso);
+            return Ok(dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return NotFound();
+        }
+    }
 
     [HttpPost]
     public async Task<IActionResult> Inserir([FromBody] CriarConsumidorDto dto)
