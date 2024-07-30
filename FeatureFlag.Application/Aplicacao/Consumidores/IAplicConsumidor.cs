@@ -9,7 +9,7 @@ public interface IAplicConsumidor
     Task<List<RecuperarConsumidorDto>> RecuperarTodosAsync();
     Task<RecuperarConsumidorDto> RecuperarPorIdAsync(int id);
     Task<int> InserirAsync(CriarConsumidorDto criarConsumidorDto);
-    Task<RecuperarRecursosPorConsumidorDto> RecuperaRecursosPorConsumidorAsync(int id);
+    Task<RecuperarRecursosPorConsumidorDto> RecuperaRecursosPorConsumidorAsync(string identificacao);
     Task AlterarAsync(int id, AlterarConsumidorDto alterarConsumidorDto);
     Task InativarAsync(int id);
 }

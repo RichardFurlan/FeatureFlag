@@ -1,4 +1,4 @@
-using FeatureFlag.Application.Aplicacao;
+using FeatureFlag.Application.Aplicacao.Factory;
 using FeatureFlag.Application.Aplicacao.Interfaces;
 using FeatureFlag.Application.Aplicacao.Recursos;
 using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
@@ -17,6 +17,7 @@ public class AplicRecursoTest
     private readonly Mock<IRepRecurso> _repRecursoMockMemory;
     private readonly Mock<IRepConsumidor> _repConsumidorMemory;
     private readonly Mock<IRepRecursoConsumidor> _repRecursoConsumidorMemory;
+    private readonly Mock<IServiceFactory> _service;
     private readonly Mock<IAplicRecursoConsumidor> _aplicRecursoConsumidor;
     private readonly Mock<IAplicConsumidor> _aplicConsumidor;
     private readonly AplicRecurso _aplicRecurso;
@@ -26,9 +27,10 @@ public class AplicRecursoTest
         _repRecursoMockMemory = new Mock<IRepRecurso>();
         _repConsumidorMemory = new Mock<IRepConsumidor>();
         _repRecursoConsumidorMemory = new Mock<IRepRecursoConsumidor>();
+        _service = new Mock<IServiceFactory>();
         _aplicRecursoConsumidor = new Mock<IAplicRecursoConsumidor>();
         _aplicConsumidor = new Mock<IAplicConsumidor>();
-        _aplicRecurso = new AplicRecurso(_repRecursoMockMemory.Object, _repConsumidorMemory.Object, _repRecursoConsumidorMemory.Object, _aplicRecursoConsumidor.Object, _aplicConsumidor.Object);
+        _aplicRecurso = new AplicRecurso(_repRecursoMockMemory.Object, _repConsumidorMemory.Object, _repRecursoConsumidorMemory.Object,_service.Object, _aplicConsumidor.Object);
     }
     
     [Fact]
@@ -37,8 +39,8 @@ public class AplicRecursoTest
         // Arrange
         var recursos = new List<Recurso>
         {
-            new Recurso("Rec1", "Descricao1", null, null),
-            new Recurso("Rec2", "Descricao2", null, null)
+            new Recurso("Rec1", "Descricao1"),
+            new Recurso("Rec2", "Descricao2")
         };
         _repRecursoMockMemory.Setup(r => r.RecuperarTodosAsync()).ReturnsAsync(recursos);
 
@@ -55,7 +57,7 @@ public class AplicRecursoTest
     public async Task RecuperarPorId_DeveRetornarRecursoViewModel()
     {
         // Arrange
-        var recurso = new Recurso("Rec1", "Descricao1", null, null);
+        var recurso = new Recurso("Rec1", "Descricao1");
         _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync(recurso);
 
         // Act
@@ -73,7 +75,7 @@ public class AplicRecursoTest
         // Arrange
         
         var recurso = new Recurso("Recurso1", "Descricao1");
-        var consumidor = new Consumidor("Consumidor1", "Descricao1", null, null);
+        var consumidor = new Consumidor("Consumidor1", "Descricao1");
         var recursoConsumidor = new RecursoConsumidor(recurso.Id, consumidor.Id, EnumStatusRecursoConsumidor.Habilitado);
 
         recurso.RecursoConsumidores.Add(recursoConsumidor);
@@ -99,10 +101,10 @@ public class AplicRecursoTest
         var createRecursoELiberacaoInputModel = new CriarRecursoELiberacaoDto("Rec1", "Descricao1", 50);
         var consumidores = new List<Consumidor>
         {
-            new Consumidor("Cons1", "Desc1", null, null ),
-            new Consumidor("Cons2", "Desc2", null, null ),
-            new Consumidor("Cons3", "Desc3", null, null ),
-            new Consumidor("Cons4", "Desc4", null, null ),
+            new Consumidor("Cons1", "Desc1"),
+            new Consumidor("Cons2", "Desc2"),
+            new Consumidor("Cons3", "Desc3" ),
+            new Consumidor("Cons4", "Desc4"),
         };
         
         _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
@@ -131,10 +133,10 @@ public class AplicRecursoTest
         var createRecursoELiberacaoInputModel = new CriarRecursoELiberacaoDto("Rec1", "Descricao1", 75);
         var consumidores = new List<Consumidor>
         {
-            new Consumidor("Cons1", "Desc1", null, null ),
-            new Consumidor("Cons2", "Desc2", null, null ),
-            new Consumidor("Cons3", "Desc3", null, null ),
-            new Consumidor("Cons4", "Desc4", null, null ),
+            new Consumidor("Cons1", "Desc1"),
+            new Consumidor("Cons2", "Desc2"),
+            new Consumidor("Cons3", "Desc3"),
+            new Consumidor("Cons4", "Desc4"),
         };
         
         _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
@@ -167,14 +169,14 @@ public class AplicRecursoTest
 
         var consumidores = new List<Consumidor>
         {
-            new Consumidor("Cons1", "Desc1", null, null),
-            new Consumidor("Cons2", "Desc2", null, null),
-            new Consumidor("Cons3", "Desc3", null, null),
-            new Consumidor("Cons4", "Desc4", null, null)
+            new Consumidor("Cons1", "Desc1"),
+            new Consumidor("Cons2", "Desc2"),
+            new Consumidor("Cons3", "Desc3"),
+            new Consumidor("Cons4", "Desc4")
         };
         
         
-        var recurso = new Recurso("Recurso1", "Descricao1", consumidores, null);
+        var recurso = new Recurso("Recurso1", "Descricao1", consumidores);
         
         _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(recursoId)).ReturnsAsync(recurso);
         _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
@@ -212,14 +214,14 @@ public class AplicRecursoTest
 
         var consumidores = new List<Consumidor>
         {
-            new Consumidor("Cons1", "Desc1", null, null),
-            new Consumidor("Cons2", "Desc2", null, null),
-            new Consumidor("Cons3", "Desc3", null, null),
-            new Consumidor("Cons4", "Desc4", null, null)
+            new Consumidor("Cons1", "Desc1"),
+            new Consumidor("Cons2", "Desc2"),
+            new Consumidor("Cons3", "Desc3"),
+            new Consumidor("Cons4", "Desc4")
         };
         
         
-        var recurso = new Recurso("Recurso1", "Descricao1", consumidores, null);
+        var recurso = new Recurso("Recurso1", "Descricao1", consumidores);
         
         _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(recursoId)).ReturnsAsync(recurso);
         _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
