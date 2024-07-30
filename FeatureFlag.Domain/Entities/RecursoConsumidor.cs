@@ -4,6 +4,10 @@ namespace FeatureFlag.Domain.Entities;
 
 public class RecursoConsumidor : BaseEntity
 {
+    public RecursoConsumidor()
+    {
+        
+    }
     public RecursoConsumidor(int? codigoRecurso, int? codigoConsumidor, EnumStatusRecursoConsumidor? status)
     {
         CodigoRecurso = codigoRecurso ?? CodigoRecurso;

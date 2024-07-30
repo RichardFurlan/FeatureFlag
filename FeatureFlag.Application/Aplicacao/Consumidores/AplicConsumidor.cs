@@ -1,12 +1,10 @@
-using FeatureFlag.Application.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
-using Repository.Persistence;
 
-namespace FeatureFlag.Application.Aplicacao;
+namespace FeatureFlag.Application.Aplicacao.Consumidores;
 
 public class AplicConsumidor : IAplicConsumidor
 {
@@ -14,14 +12,11 @@ public class AplicConsumidor : IAplicConsumidor
     private readonly IRepConsumidor _repConsumidor;
     private readonly IRepRecursoConsumidor _repRecursoConsumidor;
     private readonly IRepRecurso _repRecurso;
-    private readonly FeatureFlagDbContext _dbContext;
-
-    public AplicConsumidor(IRepConsumidor repConsumidor, IRepRecursoConsumidor repRecursoConsumidor, IRepRecurso repRecurso, FeatureFlagDbContext dbContext)
+    public AplicConsumidor(IRepConsumidor repConsumidor, IRepRecursoConsumidor repRecursoConsumidor, IRepRecurso repRecurso)
     {
         _repConsumidor = repConsumidor;
         _repRecursoConsumidor = repRecursoConsumidor;
         _repRecurso = repRecurso;
-        _dbContext = dbContext;
     }
     #endregion
 
@@ -48,10 +43,7 @@ public class AplicConsumidor : IAplicConsumidor
     {
         var consumidor = new Consumidor(
             criarConsumidorDto.Identificacao, 
-            criarConsumidorDto.Descricao,
-            null,
-            null
-        );
+            criarConsumidorDto.Descricao);
         var consumidorId = await _repConsumidor.InserirAsync(consumidor);
 
         return consumidorId;
@@ -59,15 +51,15 @@ public class AplicConsumidor : IAplicConsumidor
     #endregion
 
     #region RecuperaRecursosPorConsumidorAsync
-    public async Task<RecuperarRecursosPorConsumidorDto> RecuperaRecursosPorConsumidorAsync(int id)
+    public async Task<RecuperarRecursosPorConsumidorDto> RecuperaRecursosPorConsumidorAsync(string identificacao)
     {
-        var consumidor = await _repConsumidor.RecuperarPorIdAsync(id);
+        var consumidor = await _repConsumidor.RecuperarPorIdentificacaoAsync(identificacao);
         if (consumidor == null)
         {
-            throw new Exception($"Consumidor com ID {id} não encontrado.");
+            throw new Exception($"Consumidor com Identificacao {identificacao} não encontrado.");
         }
 
-        var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosPorConsumidorAsync(id);
+        var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosPorConsumidorAsync(consumidor.Id);
         var recursosStatus = new List<RecuperarRecursosStatusDto>();
 
 

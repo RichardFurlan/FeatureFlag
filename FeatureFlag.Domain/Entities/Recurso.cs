@@ -2,6 +2,10 @@ namespace FeatureFlag.Domain.Entities;
 
 public class Recurso : BaseEntity
 {
+    public Recurso()
+    {
+        
+    }
     public Recurso(string identificacao, string descricao, List<Consumidor>? consumidores = null, List<RecursoConsumidor>? recursoConsumidores = null)
     {
         Identificacao = identificacao;

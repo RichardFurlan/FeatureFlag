@@ -1,32 +1,52 @@
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository.Persistence.Repositories;
 
-public class RepRecursoConsumidor 
+public class RepRecursoConsumidor : IRepRecursoConsumidor
 {
-    public Task<List<RecursoConsumidor>> ListarTodosAsync(string query)
+    private readonly FeatureFlagDbContext _dbContext;
+
+    public RepRecursoConsumidor(FeatureFlagDbContext dbContext)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
+    }
+    
+    public async Task<List<RecursoConsumidor>> RecuperarTodosAsync()
+    {
+        var resultado = await _dbContext.RecursosConsumidores.ToListAsync();
+        return resultado;
     }
 
-    public Task<RecursoConsumidor> ListarPorIdAsync(int id)
+    public async Task<List<RecursoConsumidor>> RecuperarTodosPorConsumidorAsync(int id)
     {
-        throw new NotImplementedException();
+        var resultado = await _dbContext.RecursosConsumidores.Where(rc => rc.CodigoConsumidor.Equals(id)).ToListAsync();
+        return resultado;
     }
 
-    public Task InserirAsync(RecursoConsumidor recursoConsumidor)
+    public async Task<RecursoConsumidor?> RecuperarPorIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var recursoConsumidor = await _dbContext.RecursosConsumidores.SingleOrDefaultAsync(rc => rc.Id == id);
+        return recursoConsumidor;
     }
 
-    public Task AlterarAsync(int id, RecursoConsumidor recursoConsumidor)
+    public async Task<int> InserirAsync(RecursoConsumidor recursoConsumidor)
     {
-        throw new NotImplementedException();
+        await _dbContext.RecursosConsumidores.AddAsync(recursoConsumidor);
+        await _dbContext.SaveChangesAsync();
+        return recursoConsumidor.Id;
     }
 
-    public Task InativarAsync(int id)
+    public async Task AlterarAsync(RecursoConsumidor recursoConsumidor)
     {
-        throw new NotImplementedException();
+        _dbContext.RecursosConsumidores.Update(recursoConsumidor);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task InativarAsync(RecursoConsumidor recursoConsumidor)
+    {
+        _dbContext.RecursosConsumidores.Update(recursoConsumidor);
+        await _dbContext.SaveChangesAsync();
     }
 }

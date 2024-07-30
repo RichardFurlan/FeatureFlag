@@ -1,32 +1,52 @@
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository.Persistence.Repositories;
 
-public class RepRecurso 
+public class RepRecurso : IRepRecurso
 {
-    public Task<List<Recurso>> ListarTodosAsync(string query)
+    private readonly FeatureFlagDbContext _dbContext;
+
+    public RepRecurso(FeatureFlagDbContext dbContext)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
     }
 
-    public Task<Recurso> ListarPorIdAsync(int id)
+    public async Task<List<Recurso>> RecuperarTodosAsync()
     {
-        throw new NotImplementedException();
+        var resultado = await _dbContext.Recursos.ToListAsync();
+        return resultado;
     }
 
-    public Task InserirAsync(Recurso recurso)
+    public async Task<Recurso?> RecuperarPorIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var recurso = await _dbContext.Recursos.SingleOrDefaultAsync(r => r.Id == id);
+        return recurso;
     }
 
-    public Task AlterarAsync(int id, Recurso recurso)
+    public async Task<Recurso?> RecuperarPorIdentificacaoAsync(string identificacaoRecurso)
     {
-        throw new NotImplementedException();
+        var recurso = await _dbContext.Recursos.SingleOrDefaultAsync(r => r.Identificacao == identificacaoRecurso);
+        return recurso;
     }
 
-    public Task InativarAsync(int id)
+    public async Task<int> InserirAsync(Recurso recurso)
     {
-        throw new NotImplementedException();
+        await _dbContext.Recursos.AddAsync(recurso);
+        await _dbContext.SaveChangesAsync();
+        return recurso.Id;
+    }
+
+    public async Task AlterarAsync(Recurso recurso)
+    {
+        _dbContext.Recursos.Update(recurso);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task InativarAsync(Recurso recurso)
+    {
+        _dbContext.Recursos.Update(recurso);
+        await _dbContext.SaveChangesAsync();
     }
 }

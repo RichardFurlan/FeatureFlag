@@ -1,6 +1,36 @@
-﻿services:
+﻿version: '3.8'
+
+volumes:
+  pgdata: {}
+
+services:
   featureflag:
     image: featureflag
+    container_name: featureflag
     build:
       context: .
-      dockerfile: FeatureFlag/Dockerfile
+      dockerfile: FeatureFlag.Api/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      - db
+      - cache
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_DB: featureflag
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  cache:
+    image: redis:latest
+    container_name: cache
+    restart: always
+    ports:
+      - "6379:6379"

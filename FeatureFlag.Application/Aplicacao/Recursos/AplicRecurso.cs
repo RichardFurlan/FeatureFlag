@@ -1,3 +1,4 @@
+using FeatureFlag.Application.Aplicacao.Factory;
 using FeatureFlag.Application.Aplicacao.Interfaces;
 using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
@@ -5,6 +6,7 @@ using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
+using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
 
 namespace FeatureFlag.Application.Aplicacao.Recursos;
@@ -15,19 +17,23 @@ public class AplicRecurso : IAplicRecurso
     private readonly IRepRecurso _repRecurso;
     private readonly IRepConsumidor _repConsumidores;
     private readonly IRepRecursoConsumidor _repRecursoConsumidor;
-    private readonly IAplicRecursoConsumidor _aplicRecursoConsumidor;
+    private readonly IServiceFactory _serviceFactory;
+    private IAplicConsumidor _aplicConsumidor;
 
-    public AplicRecurso(IRepRecurso repRecurso, IRepConsumidor repConsumidor, IRepRecursoConsumidor repRecursoConsumidor, IAplicRecursoConsumidor aplicRecursoConsumidor)
+    public AplicRecurso(IRepRecurso repRecurso, IRepConsumidor repConsumidor, IRepRecursoConsumidor repRecursoConsumidor, IServiceFactory serviceFactory, IAplicConsumidor aplicConsumidor)
     {
         _repRecurso = repRecurso;
         _repConsumidores = repConsumidor;
         _repRecursoConsumidor = repRecursoConsumidor;
-        _aplicRecursoConsumidor = aplicRecursoConsumidor;
+        _serviceFactory  = serviceFactory;
+        _aplicConsumidor = aplicConsumidor;
     }
+    
+    private IAplicRecursoConsumidor AplicRecursoConsumidor => _serviceFactory.Create<IAplicRecursoConsumidor>();
     #endregion
     
     #region RecuperarTodosAsync
-    public async Task<List<RecuperarRecursoDto>> RecuperarTodosAsync(string query)
+    public async Task<List<RecuperarRecursoDto>> RecuperarTodosAsync()
     {
         var recursos = await _repRecurso.RecuperarTodosAsync();
         var viewModelList = recursos.Select(r => new RecuperarRecursoDto(r.Identificacao, r.Descricao)).ToList();
@@ -44,26 +50,35 @@ public class AplicRecurso : IAplicRecurso
     }
     #endregion
 
-    #region VerificaRecursoAtivoParaConsumidorAsync
-    public async Task<RecuperarRecursoAtivoDto> VerificaRecursoAtivoParaConsumidorAsync(int recursoId, int consumidorId)
+    #region VerificaRecursoAtivoParaConsumidorIdentificacaoAsync
+    public async Task<RecuperarRecursoAtivoDto> VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(string identificacaoRecurso, string identificacaoConsumidor)
     {
-        var recurso = await _repRecurso.RecuperarPorIdAsync(recursoId);
+        var recurso = await _repRecurso.RecuperarPorIdentificacaoAsync(identificacaoRecurso);
         if (recurso == null)
         {
-            throw new Exception($"Recurso com ID {recursoId} não encontrado.");
+            throw new Exception($"Recurso com identificação {identificacaoRecurso} não encontrado.");
         }
         
-        var consumidor = await _repConsumidores.RecuperarPorIdAsync(consumidorId);
+        var consumidor = await _repConsumidores.RecuperarPorIdentificacaoAsync(identificacaoConsumidor);
         if (consumidor == null)
         {
-            throw new Exception($"Consumidor com identificação {consumidorId} não encontrado.");
+            var consumidorDto = new CriarConsumidorDto(identificacaoConsumidor, "Consumidor criado pela verificacao");
+            await _aplicConsumidor.InserirAsync(consumidorDto);
+
+            consumidor = await _repConsumidores.RecuperarPorIdentificacaoAsync(identificacaoConsumidor);
+            if (consumidor == null)
+            {
+                throw new Exception($"Falha ao encontrar consumidor criado com a identificacao: {identificacaoConsumidor}");
+            }
+            var recursoConsumidorDto = new CriarRecursoConsumidorDto(recurso.Id, consumidor.Id, EnumStatusRecursoConsumidor.Desabilitado);
+            await AplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
         }
         
         
-        var recursoConsumidor = recurso.RecursoConsumidores.FirstOrDefault(rc => rc.CodigoConsumidor == consumidor.Id);
+        var recursoConsumidor = recurso.RecursoConsumidores.FirstOrDefault(rc => rc.CodigoConsumidor == consumidor.Id && rc.CodigoRecurso == recurso.Id);
         if (recursoConsumidor == null)
         {
-            throw new Exception($"Associação entre o recurso com ID {recursoId} e o consumidor com identificação {consumidorId} não encontrada.");
+            throw new Exception($"Associação entre o recurso com identificação {identificacaoRecurso} e o consumidor com identificação {identificacaoConsumidor} não encontrada.");
         }
         
         var recursoAtivoViewModel = new RecuperarRecursoAtivoDto(
@@ -74,7 +89,6 @@ public class AplicRecurso : IAplicRecurso
         );
         
         return recursoAtivoViewModel;
-
     }
     #endregion
 
@@ -97,7 +111,7 @@ public class AplicRecurso : IAplicRecurso
     #region InserirRecursoELiberacaoAsync
     public async Task<int> InserirRecursoELiberacaoAsync(CriarRecursoELiberacaoDto criarRecursoELiberacaoDto)
     {
-        var recurso = new Recurso(criarRecursoELiberacaoDto.Identificacao, criarRecursoELiberacaoDto.Descricao, null, null);
+        var recurso = new Recurso(criarRecursoELiberacaoDto.Identificacao, criarRecursoELiberacaoDto.Descricao);
         await _repRecurso.InserirAsync(recurso);
 
         var todosConsumidores =  await _repConsumidores.RecuperarTodosAsync();
@@ -111,7 +125,7 @@ public class AplicRecurso : IAplicRecurso
         {
             var status = consumidoresLiberados.Contains(x) ? EnumStatusRecursoConsumidor.Habilitado : EnumStatusRecursoConsumidor.Desabilitado;
             var recursoConsumidorDto = new CriarRecursoConsumidorDto(recurso.Id, x.Id, status);
-            await _aplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
+            await AplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
         });
 
         return recurso.Id;
@@ -152,7 +166,7 @@ public class AplicRecurso : IAplicRecurso
             if (recursoConsumidor == null)
             {
                 var recursoConsumidorDto = new CriarRecursoConsumidorDto(recurso.Id, consumidor.Id, status);
-                await _aplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
+                await AplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
             }
             else
             {

@@ -1,39 +1,149 @@
+using FeatureFlag.Application.Aplicacao;
+using FeatureFlag.Application.Aplicacao.Interfaces;
+using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
 using FeatureFlag.Application.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlag.Controllers;
 [ApiController]
-[Route("api/recursos")]
+[Route("api/[controller]")]
 public class RecursosController : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> ListarTodos()
+    #region ctor
+
+    private readonly IAplicRecurso _aplicRecurso;
+    public RecursosController(IAplicRecurso aplicRecurso)
     {
-        return Ok();
+        _aplicRecurso = aplicRecurso;
+    }
+    
+
+    #endregion
+    
+    [HttpGet]
+    public async Task<IActionResult> RecuperarTodos()
+    {
+        try
+        {
+            var dto = await _aplicRecurso.RecuperarTodosAsync();
+            return Ok(dto);
+        }
+        catch (Exception e)
+        {
+            // TODO: Adicionar logger
+            Console.WriteLine(e);
+            throw;
+        }
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> ListarPorId(int id)
+    public async Task<IActionResult> RecuperarPorId(int id)
     {
-        return Ok();
+        try
+        {
+            var dto = await _aplicRecurso.RecuperarPorIdAsync(id);
+            return Ok(dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Inserir([FromBody] CriarRecursoDto criarRecursoDto)
+    [HttpGet("{identificacaoRecurso}/cunsumidor/{identificacaoConsumidor}")]
+    public async Task<IActionResult> RecuperaRecurso(string identificacaoRecurso, string identificacaoConsumidor)
     {
-        return CreatedAtAction(nameof(ListarPorId), new {id = 1}, criarRecursoDto);
+        try
+        {
+            var dto = await _aplicRecurso.VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(identificacaoRecurso, identificacaoConsumidor);
+            return Ok(dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoDto alterarRecursoDto)
+    [HttpPost("inserir")]
+    public async Task<IActionResult> Inserir([FromBody] CriarRecursoDto dto)
     {
-        return NoContent();
+
+        try
+        {
+            var id = await _aplicRecurso.InserirAsync(dto);
+            return CreatedAtAction(nameof(RecuperarPorId), id, dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    [HttpPost("inserir-liberar")]
+    public async Task<IActionResult> InserirELiberar([FromBody] CriarRecursoELiberacaoDto dto)
+    {
+
+        try
+        {
+            var id = await _aplicRecurso.InserirRecursoELiberacaoAsync(dto);
+            return CreatedAtAction(nameof(RecuperarPorId), id, dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoDto dto)
+    {
+        
+        try
+        {
+            await _aplicRecurso.AlterarAsync(id, dto);
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    [HttpPut("percentual/{id}")]
+    public async Task<IActionResult> AlterarPercentual([FromBody] AlterarPercentualDeLiberacaoRecursoDto dto)
+    {
+        
+        try
+        {
+            await _aplicRecurso.AlterarPercentualDeLiberacaoDeRecurso(dto);
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Inativar(int id)
     {
-        return NoContent();
+        
+        try
+        {
+            await _aplicRecurso.InativarAsync(id);
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }
