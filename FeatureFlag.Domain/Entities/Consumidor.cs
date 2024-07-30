@@ -6,12 +6,14 @@ public class Consumidor : BaseEntity
     {
         
     }
-    public Consumidor(string identificacao, string descricao, List<Recurso>? recursos = null, List<RecursoConsumidor>? recursoConsumidores = null)
+    public Consumidor(string identificacao, string descricao)
     {
         Identificacao = identificacao ?? throw new ArgumentNullException(nameof(identificacao));
         Descricao = descricao ?? throw new ArgumentNullException(nameof(descricao));
-        Recursos = recursos ?? new List<Recurso>();
-        RecursoConsumidores = recursoConsumidores ?? new List<RecursoConsumidor>();
+        
+        
+        Recursos = new List<Recurso>();
+        RecursoConsumidores = new List<RecursoConsumidor>();
     }
 
     public string Identificacao { get; private set; }
