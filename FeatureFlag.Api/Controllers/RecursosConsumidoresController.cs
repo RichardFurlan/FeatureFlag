@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlag.Controllers;
 [ApiController]
-[Route("api/recurso/{recursoId}/consumidor/{consumidorId}")]
+[Route("api")]
 public class RecursosConsumidoresController : ControllerBase
 {
     #region ctor
@@ -20,7 +20,7 @@ public class RecursosConsumidoresController : ControllerBase
     #endregion
     
     [HttpGet]
-    public async Task<IActionResult> RecuperarTodosAsync()
+    public async Task<IActionResult> RecuperarTodos()
     {
         try
         {
@@ -36,7 +36,7 @@ public class RecursosConsumidoresController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> RecuperarPorIdAsync(int id)
+    public async Task<IActionResult> RecuperarPorId(int id)
     {
         try
         {
@@ -51,13 +51,13 @@ public class RecursosConsumidoresController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> InserirAsync([FromBody] CriarRecursoConsumidorDto dto)
+    public async Task<IActionResult> Inserir([FromBody] CriarRecursoConsumidorDto dto)
     {
         
         try
         {
             var id = await _aplicRecursoConsumidor.InserirAsync(dto);
-            return CreatedAtAction(nameof(RecuperarPorIdAsync), id, dto);
+            return CreatedAtAction(nameof(RecuperarPorId), id, dto);
         }
         catch (Exception e)
         {
@@ -82,7 +82,7 @@ public class RecursosConsumidoresController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> InativarAsync(int id)
+    public async Task<IActionResult> Inativar(int id)
     {
         try
         {
