@@ -1,6 +1,12 @@
-﻿services:
+﻿version: '3.8'
+
+volumes:
+  pgdata: {}
+
+services:
   featureflag:
     image: featureflag
+    container_name: featureflag
     build:
       context: .
       dockerfile: FeatureFlag.Api/Dockerfile
@@ -8,16 +14,11 @@
       - "5000:5000"
       - "5001:5001"
     depends_on:
-      - database
+      - db
       - cache
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=database;Port=5432;Username=postgres;Password=postgres;Database=featureflag
-      - Redis__Configuration=redis:6379
-
-  database:
+  db:
     image: postgres:latest
-    container_name: database
+    container_name: db
     environment:
       POSTGRES_DB: featureflag
       POSTGRES_USER: postgres
@@ -25,7 +26,7 @@
     ports:
       - "5432:5432"
     volumes:
-      - ./.containers/database:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
 
   cache:
     image: redis:latest
@@ -33,4 +34,3 @@
     restart: always
     ports:
       - "6379:6379"
-  
