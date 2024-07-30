@@ -1,12 +1,13 @@
 using FeatureFlag.Application.Aplicacao;
 using FeatureFlag.Application.Aplicacao.Interfaces;
+using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
 using FeatureFlag.Application.DTOs;
 using FeatureFlag.Application.DTOs.InputModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlag.Controllers;
 [ApiController]
-[Route("api/recursos")]
+[Route("api/[controller]")]
 public class RecursosController : ControllerBase
 {
     #region ctor
@@ -21,7 +22,7 @@ public class RecursosController : ControllerBase
     #endregion
     
     [HttpGet]
-    public async Task<IActionResult> RecuperarTodosAsync()
+    public async Task<IActionResult> RecuperarTodos()
     {
         try
         {
@@ -37,9 +38,8 @@ public class RecursosController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> RecuperarPorIdAsync(int id)
+    public async Task<IActionResult> RecuperarPorId(int id)
     {
-
         try
         {
             var dto = await _aplicRecurso.RecuperarPorIdAsync(id);
@@ -52,14 +52,13 @@ public class RecursosController : ControllerBase
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> InserirAsync([FromBody] CriarRecursoDto dto)
+    [HttpGet("{identificacaoRecurso}/cunsumidor/{identificacaoConsumidor}")]
+    public async Task<IActionResult> RecuperaRecurso(string identificacaoRecurso, string identificacaoConsumidor)
     {
-
         try
         {
-            var id = await _aplicRecurso.InserirAsync(dto);
-            return CreatedAtAction(nameof(RecuperarPorIdAsync), id, dto);
+            var dto = await _aplicRecurso.VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(identificacaoRecurso, identificacaoConsumidor);
+            return Ok(dto);
         }
         catch (Exception e)
         {
@@ -68,8 +67,40 @@ public class RecursosController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> AlterarAsync(int id, [FromBody] AlterarRecursoDto dto)
+    [HttpPost("inserir")]
+    public async Task<IActionResult> Inserir([FromBody] CriarRecursoDto dto)
+    {
+
+        try
+        {
+            var id = await _aplicRecurso.InserirAsync(dto);
+            return CreatedAtAction(nameof(RecuperarPorId), id, dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    [HttpPost("inserir-liberar")]
+    public async Task<IActionResult> InserirELiberar([FromBody] CriarRecursoELiberacaoDto dto)
+    {
+
+        try
+        {
+            var id = await _aplicRecurso.InserirRecursoELiberacaoAsync(dto);
+            return CreatedAtAction(nameof(RecuperarPorId), id, dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoDto dto)
     {
         
         try
@@ -83,9 +114,25 @@ public class RecursosController : ControllerBase
             throw;
         }
     }
+    
+    [HttpPut("percentual/{id}")]
+    public async Task<IActionResult> AlterarPercentual([FromBody] AlterarPercentualDeLiberacaoRecursoDto dto)
+    {
+        
+        try
+        {
+            await _aplicRecurso.AlterarPercentualDeLiberacaoDeRecurso(dto);
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> InativarAsync(int id)
+    public async Task<IActionResult> Inativar(int id)
     {
         
         try
