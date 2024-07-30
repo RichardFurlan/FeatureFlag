@@ -47,7 +47,7 @@ public class ConsumidoresController : ControllerBase
     //     }
     // }
     
-    [HttpGet("identificacao/{identificacao}")]
+    [HttpGet("RecuperarRecursosPorIdentificacao/{identificacao}")]
     public async Task<IActionResult> RecuperarRecursosPorIdentificacao(string identificacao)
     {
         try
@@ -84,12 +84,12 @@ public class ConsumidoresController : ControllerBase
         {
             var id = await _aplicConsumidor.InserirAsync(dto);
             
-            return CreatedAtAction(nameof(RecuperarPorId), id, dto);
+            return Created();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            return BadRequest();
         }
 
     }
