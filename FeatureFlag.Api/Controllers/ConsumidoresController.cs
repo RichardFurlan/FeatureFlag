@@ -17,7 +17,7 @@ public class ConsumidoresController : ControllerBase
     #endregion
 
     [HttpGet]
-    public async Task<IActionResult> RecuperarTodosAsync()
+    public async Task<IActionResult> RecuperarTodos()
     {
         try
         {
@@ -33,7 +33,7 @@ public class ConsumidoresController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> RecuperarPorIdAsync(int id)
+    public async Task<IActionResult> RecuperarPorId(int id)
     {
         try
         {
@@ -46,15 +46,30 @@ public class ConsumidoresController : ControllerBase
             throw;
         }
     }
+    
+    [HttpGet("identificacao/{identificacao}")]
+    public async Task<IActionResult> RecuperarRecursosPorIdentificacao(string identificacao)
+    {
+        try
+        {
+            var dto = await _aplicConsumidor.RecuperaRecursosPorConsumidorAsync(identificacao);
+            return Ok(dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return NotFound();
+        }
+    }
 
     [HttpPost]
-    public async Task<IActionResult> InserirAsync([FromBody] CriarConsumidorDto dto)
+    public async Task<IActionResult> Inserir([FromBody] CriarConsumidorDto dto)
     {
         try
         {
             var id = await _aplicConsumidor.InserirAsync(dto);
             
-            return CreatedAtAction(nameof(RecuperarPorIdAsync), id, dto);
+            return CreatedAtAction(nameof(RecuperarPorId), id, dto);
         }
         catch (Exception e)
         {
@@ -65,7 +80,7 @@ public class ConsumidoresController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> AlterarAsync(int id, [FromBody] AlterarConsumidorDto dto)
+    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarConsumidorDto dto)
     {
         try
         {
@@ -80,7 +95,7 @@ public class ConsumidoresController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> InativarAsync(int id)
+    public async Task<IActionResult> Inativar(int id)
     {
         try
         {
