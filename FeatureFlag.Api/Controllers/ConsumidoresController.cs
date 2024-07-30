@@ -32,20 +32,20 @@ public class ConsumidoresController : ControllerBase
         }
     }
     
-    [HttpGet("{id}")]
-    public async Task<IActionResult> RecuperarPorId(int id)
-    {
-        try
-        {
-            var dto = await _aplicConsumidor.RecuperarPorIdAsync(id);
-            return Ok(dto);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
+    // [HttpGet("id/{id}")]
+    // public async Task<IActionResult> RecuperarPorId(int id)
+    // {
+    //     try
+    //     {
+    //         var dto = await _aplicConsumidor.RecuperarPorIdAsync(id);
+    //         return Ok(dto);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    //         throw;
+    //     }
+    // }
     
     [HttpGet("identificacao/{identificacao}")]
     public async Task<IActionResult> RecuperarRecursosPorIdentificacao(string identificacao)
