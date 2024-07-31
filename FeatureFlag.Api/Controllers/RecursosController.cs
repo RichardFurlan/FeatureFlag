@@ -32,11 +32,11 @@ public class RecursosController : ControllerBase
         catch (Exception e)
         {
             // TODO: Adicionar logger
-            Console.WriteLine(e);
-            throw;
+            return NotFound();
         }
     }
     
+    //  TODO: Verificar uso do Recuperar por Id
     // [HttpGet("{id}")]
     // public async Task<IActionResult> RecuperarPorId(int id)
     // {
@@ -62,8 +62,8 @@ public class RecursosController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO: Adicionar logger
+            return NotFound();
         }
     }
 
@@ -78,13 +78,13 @@ public class RecursosController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO: Adicionar logger
+            return BadRequest();
         }
     }
     
-    [HttpPost("inserir-liberar")]
-    public async Task<IActionResult> InserirELiberar([FromBody] CriarRecursoELiberacaoDTO dto)
+    [HttpPost("InserirLiberar")]
+    public async Task<IActionResult> InserirLiberar([FromBody] CriarRecursoELiberacaoDTO dto)
     {
 
         try
@@ -95,11 +95,11 @@ public class RecursosController : ControllerBase
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            return BadRequest();
         }
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoDTO dto)
     {
         
@@ -110,12 +110,12 @@ public class RecursosController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO: Adicionar logger
+            return BadRequest();
         }
     }
     
-    [HttpPut("percentual/{id}")]
+    [HttpPut("{id}/alterarPercentual")]
     public async Task<IActionResult> AlterarPercentual([FromBody] AlterarPercentualDeLiberacaoRecursoDto dto)
     {
         
@@ -126,8 +126,8 @@ public class RecursosController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO: Adicionar logger
+            return BadRequest();
         }
     }
 
@@ -142,8 +142,8 @@ public class RecursosController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO: Adicionar logger
+            return BadRequest();
         }
     }
 }

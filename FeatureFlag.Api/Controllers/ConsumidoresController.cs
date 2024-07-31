@@ -27,11 +27,11 @@ public class ConsumidoresController : ControllerBase
         catch (Exception e)
         {
             //TODO: Adicionar logger 
-            Console.WriteLine(e);
-            throw;
+            return NotFound();
         }
     }
     
+    //  TODO: Verificar uso do Recuperar por Id
     // [HttpGet("id/{id}")]
     // public async Task<IActionResult> RecuperarPorId(int id)
     // {
@@ -57,7 +57,7 @@ public class ConsumidoresController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            //TODO: Adicionar logger 
             return NotFound();
         }
     }
@@ -72,7 +72,7 @@ public class ConsumidoresController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            //TODO: Adicionar logger 
             return NotFound();
         }
     }
@@ -83,12 +83,11 @@ public class ConsumidoresController : ControllerBase
         try
         {
             var id = await _aplicConsumidor.InserirAsync(dto);
-            
             return Created();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            //TODO: Adicionar logger 
             return BadRequest();
         }
 
@@ -104,8 +103,8 @@ public class ConsumidoresController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            //TODO: Adicionar logger 
+            return BadRequest();
         }
     }
 
@@ -119,8 +118,8 @@ public class ConsumidoresController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO:  Adicionar logger
+            return BadRequest();
         }
     }
     
