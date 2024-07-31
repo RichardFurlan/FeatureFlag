@@ -6,13 +6,13 @@ namespace FeatureFlag.Domain.Interefaces;
 
 public interface IAplicConsumidor
 {
-    Task<List<RecuperarConsumidorDto>> RecuperarTodosAsync();
-    Task<RecuperarConsumidorDto> RecuperarPorIdAsync(int id);
-    Task<int> InserirAsync(CriarConsumidorDto criarConsumidorDto);
-    Task<RecuperarRecursosPorConsumidorDto> RecuperaRecursosPorConsumidorAsync(string identificacao);
+    Task<List<RecuperarConsumidorDTO>> RecuperarTodosAsync();
+    Task<RecuperarConsumidorDTO> RecuperarPorIdAsync(int id);
+    Task<int> InserirAsync(CriarConsumidorDTO criarConsumidorDto);
+    Task<RecuperarRecursosPorConsumidorDTO> RecuperaRecursosPorConsumidorAsync(string identificacao);
 
     Task<bool> VerificaRecursoHabilitadoParaConsumidor(
         string identificacaoConsumidor, string identificacaoRecurso);
-    Task AlterarAsync(int id, AlterarConsumidorDto alterarConsumidorDto);
+    Task AlterarAsync(int id, AlterarConsumidorDTO alterarConsumidorDto);
     Task InativarAsync(int id);
 }

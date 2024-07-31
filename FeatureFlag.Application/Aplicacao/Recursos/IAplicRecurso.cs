@@ -7,16 +7,16 @@ namespace FeatureFlag.Application.Aplicacao;
 
 public interface IAplicRecurso
 {
-    Task<List<RecuperarRecursoDto>> RecuperarTodosAsync();
-    Task<RecuperarRecursoDto> RecuperarPorIdAsync(int id);
+    Task<List<RecuperarRecursoDTO>> RecuperarTodosAsync();
+    Task<RecuperarRecursoDTO> RecuperarPorIdAsync(int id);
 
-    Task<RecuperarRecursoAtivoDto> VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(string identificacaoRecurso,
+    Task<RecuperarRecursoAtivoDTO> VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(string identificacaoRecurso,
         string identificacaoConsumidor);
-    Task<int> InserirAsync(CriarRecursoDto criarRecursoDto);
-    Task<int> InserirRecursoELiberacaoAsync(CriarRecursoELiberacaoDto criarRecursoELiberacaoDto);
+    Task<int> InserirAsync(CriarRecursoDTO criarRecursoDto);
+    Task<int> InserirRecursoELiberacaoAsync(CriarRecursoELiberacaoDTO criarRecursoELiberacaoDto);
 
     Task AlterarPercentualDeLiberacaoDeRecurso(
         AlterarPercentualDeLiberacaoRecursoDto alterarPercentualDeLiberacaoRecursoDto);
-    Task AlterarAsync(int id, AlterarRecursoDto alterarRecursoDto);
+    Task AlterarAsync(int id, AlterarRecursoDTO alterarRecursoDto);
     Task InativarAsync(int id);
 }

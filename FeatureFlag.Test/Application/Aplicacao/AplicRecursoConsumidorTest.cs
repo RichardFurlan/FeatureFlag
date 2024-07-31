@@ -32,16 +32,16 @@ public class AplicRecursoConsumidorTest
     public async Task RecuperarTodos_DeveRetornarListaRecursoConsumidorViewModel()
     {
         // Arrange
-        var consumidores = new List<RecuperarConsumidorDto>
+        var consumidores = new List<RecuperarConsumidorDTO>
         {
-            new RecuperarConsumidorDto("Ident1", "Desc1"),
-            new RecuperarConsumidorDto("Ident2", "Desc2")
+            new RecuperarConsumidorDTO("Ident1", "Desc1"),
+            new RecuperarConsumidorDTO("Ident2", "Desc2")
         };
         
-        var recursos = new List<RecuperarRecursoDto>
+        var recursos = new List<RecuperarRecursoDTO>
         {
-            new RecuperarRecursoDto("Ident1", "Desc1"),
-            new RecuperarRecursoDto("Ident2", "Desc2")
+            new RecuperarRecursoDTO("Ident1", "Desc1"),
+            new RecuperarRecursoDTO("Ident2", "Desc2")
         };
 
         var recursosConsumidores = new List<RecursoConsumidor>
@@ -77,8 +77,8 @@ public class AplicRecursoConsumidorTest
     public async Task RecuperarPorId_DeveRetornarRecursoConsumidorViewModel()
     {
         // Arrange
-        var consumidorDto = new RecuperarConsumidorDto("Ident1", "Desc1");
-        var recursoDto = new RecuperarRecursoDto("Ident1", "Desc1");
+        var consumidorDto = new RecuperarConsumidorDTO("Ident1", "Desc1");
+        var recursoDto = new RecuperarRecursoDTO("Ident1", "Desc1");
 
         var recursoConsumidor = new RecursoConsumidor(0, 0, EnumStatusRecursoConsumidor.Habilitado);
             
@@ -107,7 +107,7 @@ public class AplicRecursoConsumidorTest
     public async Task InserirAsync_NovoRecursoConsumidor()
     {
         // Arrange
-        var criarRecursoConsumidorDto = new CriarRecursoConsumidorDto(1, 1, EnumStatusRecursoConsumidor.Habilitado);
+        var criarRecursoConsumidorDto = new CriarRecursoConsumidorDTO(1, 1, EnumStatusRecursoConsumidor.Habilitado);
         _repRecursoConsumidorMock.Setup(rc => rc.InserirAsync(It.IsAny<RecursoConsumidor>())).ReturnsAsync(1);
 
         var result = await _aplicRecursoConsumidor.InserirAsync(criarRecursoConsumidorDto);
@@ -122,7 +122,7 @@ public class AplicRecursoConsumidorTest
     {
         //Arrange
         var recursoConsumidorExistente = new RecursoConsumidor(1, 1, EnumStatusRecursoConsumidor.Habilitado);
-        var alterarDto = new AlterarRecursoConsumidorDto(2, 2, EnumStatusRecursoConsumidor.Desabilitado);
+        var alterarDto = new AlterarRecursoConsumidorDTO(2, 2, EnumStatusRecursoConsumidor.Desabilitado);
 
         _repRecursoConsumidorMock.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>()))
             .ReturnsAsync(recursoConsumidorExistente);
@@ -143,7 +143,7 @@ public class AplicRecursoConsumidorTest
     public async Task AlterarAsync_DeveLancarExcecao_QuandoRecursoConsumidorNaoExistir()
     {
         //Arrange
-        var alterarDto = new AlterarRecursoConsumidorDto(2, 2, EnumStatusRecursoConsumidor.Desabilitado);
+        var alterarDto = new AlterarRecursoConsumidorDTO(2, 2, EnumStatusRecursoConsumidor.Desabilitado);
         _repRecursoConsumidorMock.Setup(rc => rc.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync((RecursoConsumidor)null);
 
         // Act & Assert

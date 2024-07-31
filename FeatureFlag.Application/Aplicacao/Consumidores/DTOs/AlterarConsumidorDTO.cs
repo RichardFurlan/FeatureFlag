@@ -2,9 +2,9 @@ using FeatureFlag.Domain.Entities;
 
 namespace FeatureFlag.Application.DTOs.InputModel;
 
-public record AlterarConsumidorDto
+public record AlterarConsumidorDTO
 {
-    public AlterarConsumidorDto(string identificacao, string descricao)
+    public AlterarConsumidorDTO(string identificacao, string descricao)
     {
         Identificacao = identificacao;
         Descricao = descricao;

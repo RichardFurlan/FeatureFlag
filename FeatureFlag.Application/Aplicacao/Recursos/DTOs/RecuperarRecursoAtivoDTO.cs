@@ -2,9 +2,9 @@ using FeatureFlag.Domain.Enums;
 
 namespace FeatureFlag.Application.DTOs.ViewModel;
 
-public record RecuperarRecursoAtivoDto
+public record RecuperarRecursoAtivoDTO
 {
-    public RecuperarRecursoAtivoDto(string identificacaoRecurso, string descricaoRecurso ,string identificacaoConsumidor, bool ativo)
+    public RecuperarRecursoAtivoDTO(string identificacaoRecurso, string descricaoRecurso ,string identificacaoConsumidor, bool ativo)
     {
         IdentificacaoRecurso = identificacaoRecurso;
         DescricaoRecurso = descricaoRecurso;

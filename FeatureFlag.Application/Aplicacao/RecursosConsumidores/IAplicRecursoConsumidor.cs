@@ -7,9 +7,9 @@ namespace FeatureFlag.Application.Aplicacao.Interfaces;
 
 public interface IAplicRecursoConsumidor
 {
-    Task<List<RecuperarRecursoConsumidorDto>> RecuperarTodosAsync();
-    Task<RecuperarRecursoConsumidorDto> RecuperarPorIdAsync(int id);
-    Task<int> InserirAsync(CriarRecursoConsumidorDto criarConsumidorDto);
-    Task AlterarAsync(int id, AlterarRecursoConsumidorDto alterarConsumidorDto);
+    Task<List<RecuperarRecursoConsumidorDTO>> RecuperarTodosAsync();
+    Task<RecuperarRecursoConsumidorDTO> RecuperarPorIdAsync(int id);
+    Task<int> InserirAsync(CriarRecursoConsumidorDTO criarConsumidorDto);
+    Task AlterarAsync(int id, AlterarRecursoConsumidorDTO alterarConsumidorDto);
     Task InativarAsync(int id);
 }

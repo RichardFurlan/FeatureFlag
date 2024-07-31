@@ -23,17 +23,17 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #endregion
 
     #region RecuperarTodosAsync
-    public async Task<List<RecuperarRecursoConsumidorDto>> RecuperarTodosAsync()
+    public async Task<List<RecuperarRecursoConsumidorDTO>> RecuperarTodosAsync()
     {
         var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosAsync();
-        var viewModelList = new List<RecuperarRecursoConsumidorDto>();
+        var viewModelList = new List<RecuperarRecursoConsumidorDTO>();
 
         foreach (var recursoConsumidor in recursosConsumidores)
         {
             var recurso = await _aplicRecurso.RecuperarPorIdAsync(recursoConsumidor.CodigoRecurso);
             var consumidor = await _aplicConsumidor.RecuperarPorIdAsync(recursoConsumidor.CodigoConsumidor);
             
-            var viewModel = new RecuperarRecursoConsumidorDto(recurso, consumidor, recursoConsumidor.Status);
+            var viewModel = new RecuperarRecursoConsumidorDTO(recurso, consumidor, recursoConsumidor.Status);
             viewModelList.Add(viewModel);
         }        
         
@@ -42,7 +42,7 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #endregion
 
     #region RecuperarPorIdAsync
-    public async Task<RecuperarRecursoConsumidorDto> RecuperarPorIdAsync(int id)
+    public async Task<RecuperarRecursoConsumidorDTO> RecuperarPorIdAsync(int id)
     {
         var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorIdAsync(id);
         if (recursoConsumidor is null)
@@ -52,13 +52,13 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
         var recurso = await _aplicRecurso.RecuperarPorIdAsync(recursoConsumidor.CodigoRecurso);
         var consumidor = await _aplicConsumidor.RecuperarPorIdAsync(recursoConsumidor.CodigoConsumidor);
 
-        var viewModel = new RecuperarRecursoConsumidorDto(recurso, consumidor, recursoConsumidor.Status);
+        var viewModel = new RecuperarRecursoConsumidorDTO(recurso, consumidor, recursoConsumidor.Status);
         return viewModel;
     }
     #endregion
 
     #region InserirAsync
-    public async Task<int> InserirAsync(CriarRecursoConsumidorDto dto)
+    public async Task<int> InserirAsync(CriarRecursoConsumidorDTO dto)
     {
         var recursoConsumidor = new RecursoConsumidor(dto.CodigoRecurso, dto.CodigoConsumidor, dto.Status);
         var codigoRecursoConsumidor = await _repRecursoConsumidor.InserirAsync(recursoConsumidor);
@@ -67,7 +67,7 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #endregion
 
     #region AlterarAsync
-    public async Task AlterarAsync(int id, AlterarRecursoConsumidorDto dto)
+    public async Task AlterarAsync(int id, AlterarRecursoConsumidorDTO dto)
     {
         var recursoConsumidor= await _repRecursoConsumidor.RecuperarPorIdAsync(id);
         if (recursoConsumidor == null)

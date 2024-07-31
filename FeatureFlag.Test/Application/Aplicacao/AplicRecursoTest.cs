@@ -98,7 +98,7 @@ public class AplicRecursoTest
     public async Task InserirRecursoELiberacao_DeveCriarRecursoELiberarConformePercentual50()
     {
         // Arrange
-        var createRecursoELiberacaoInputModel = new CriarRecursoELiberacaoDto("Rec1", "Descricao1", 50);
+        var createRecursoELiberacaoInputModel = new CriarRecursoELiberacaoDTO("Rec1", "Descricao1", 50);
         var consumidores = new List<Consumidor>
         {
             new Consumidor("Cons1", "Desc1"),
@@ -109,16 +109,16 @@ public class AplicRecursoTest
         
         _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
         
-        var recursoConsumidorList = new List<CriarRecursoConsumidorDto>();
-        _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDto>()))
-            .Callback<CriarRecursoConsumidorDto>(rc => recursoConsumidorList.Add(rc));
+        var recursoConsumidorList = new List<CriarRecursoConsumidorDTO>();
+        _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()))
+            .Callback<CriarRecursoConsumidorDTO>(rc => recursoConsumidorList.Add(rc));
 
         // Act
         var result = await _aplicRecurso.InserirRecursoELiberacaoAsync(createRecursoELiberacaoInputModel);
 
         // Assert
         _repRecursoMockMemory.Verify(r => r.InserirAsync(It.IsAny<Recurso>()), Times.Once);
-        _aplicRecursoConsumidor.Verify(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDto>()), Times.Exactly(consumidores.Count));
+        _aplicRecursoConsumidor.Verify(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()), Times.Exactly(consumidores.Count));
         
         var habilitados = recursoConsumidorList.Count(rc => rc.Status == EnumStatusRecursoConsumidor.Habilitado);
         var percentualHabilitado = (decimal)habilitados / consumidores.Count * 100;
@@ -130,7 +130,7 @@ public class AplicRecursoTest
     public async Task InserirRecursoELiberacao_DeveCriarRecursoELiberarConformePercentual75()
     {
         // Arrange
-        var createRecursoELiberacaoInputModel = new CriarRecursoELiberacaoDto("Rec1", "Descricao1", 75);
+        var createRecursoELiberacaoInputModel = new CriarRecursoELiberacaoDTO("Rec1", "Descricao1", 75);
         var consumidores = new List<Consumidor>
         {
             new Consumidor("Cons1", "Desc1"),
@@ -141,16 +141,16 @@ public class AplicRecursoTest
         
         _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
         
-        var recursoConsumidorList = new List<CriarRecursoConsumidorDto>();
-        _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDto>()))
-            .Callback<CriarRecursoConsumidorDto>(rc => recursoConsumidorList.Add(rc));
+        var recursoConsumidorList = new List<CriarRecursoConsumidorDTO>();
+        _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()))
+            .Callback<CriarRecursoConsumidorDTO>(rc => recursoConsumidorList.Add(rc));
 
         // Act
         var result = await _aplicRecurso.InserirRecursoELiberacaoAsync(createRecursoELiberacaoInputModel);
 
         // Assert
         _repRecursoMockMemory.Verify(r => r.InserirAsync(It.IsAny<Recurso>()), Times.Once);
-        _aplicRecursoConsumidor.Verify(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDto>()), Times.Exactly(consumidores.Count));
+        _aplicRecursoConsumidor.Verify(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()), Times.Exactly(consumidores.Count));
         
         var habilitados = recursoConsumidorList.Count(rc => rc.Status == EnumStatusRecursoConsumidor.Habilitado);
         var percentualHabilitado = (decimal)habilitados / consumidores.Count * 100;
@@ -183,9 +183,9 @@ public class AplicRecursoTest
         _repRecursoConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>())).Returns(Task.CompletedTask);
         _repRecursoMockMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Recurso>())).Returns(Task.CompletedTask);
         _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
-        var recursoConsumidorList = new List<CriarRecursoConsumidorDto>();
-        _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDto>()))
-            .Callback<CriarRecursoConsumidorDto>(rc => recursoConsumidorList.Add(rc));
+        var recursoConsumidorList = new List<CriarRecursoConsumidorDTO>();
+        _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()))
+            .Callback<CriarRecursoConsumidorDTO>(rc => recursoConsumidorList.Add(rc));
 
         // Act
         await _aplicRecurso.AlterarPercentualDeLiberacaoDeRecurso(alterarPercentualRecursoDto);
@@ -200,7 +200,7 @@ public class AplicRecursoTest
         Assert.Equal(percentualLiberacao, percentualHabilitado, precision: 0);
 
         _repRecursoConsumidorMemory.Verify(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>()), Times.Exactly(recurso.RecursoConsumidores.Count));
-        _aplicRecursoConsumidor.Verify(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDto>()), Times.Exactly(consumidores.Count - recurso.RecursoConsumidores.Count));
+        _aplicRecursoConsumidor.Verify(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()), Times.Exactly(consumidores.Count - recurso.RecursoConsumidores.Count));
     }
     
     [Fact]
@@ -228,9 +228,9 @@ public class AplicRecursoTest
         _repRecursoConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>())).Returns(Task.CompletedTask);
         _repRecursoMockMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Recurso>())).Returns(Task.CompletedTask);
         _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
-        var recursoConsumidorList = new List<CriarRecursoConsumidorDto>();
-        _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDto>()))
-            .Callback<CriarRecursoConsumidorDto>(rc => recursoConsumidorList.Add(rc));
+        var recursoConsumidorList = new List<CriarRecursoConsumidorDTO>();
+        _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()))
+            .Callback<CriarRecursoConsumidorDTO>(rc => recursoConsumidorList.Add(rc));
 
         // Act
         await _aplicRecurso.AlterarPercentualDeLiberacaoDeRecurso(alterarPercentualRecursoDto);
@@ -245,7 +245,7 @@ public class AplicRecursoTest
         Assert.Equal(percentualLiberacao, percentualHabilitado, precision: 0);
 
         _repRecursoConsumidorMemory.Verify(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>()), Times.Exactly(recurso.RecursoConsumidores.Count));
-        _aplicRecursoConsumidor.Verify(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDto>()), Times.Exactly(consumidores.Count - recurso.RecursoConsumidores.Count));
+        _aplicRecursoConsumidor.Verify(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()), Times.Exactly(consumidores.Count - recurso.RecursoConsumidores.Count));
     }
 
     [Fact]
@@ -254,7 +254,7 @@ public class AplicRecursoTest
         // Arrange
         var recurso = new Recurso("Ident1", "Desc1");
 
-        var inputModel = new AlterarRecursoDto("IdentAlterada", "DescAlterada");
+        var inputModel = new AlterarRecursoDTO("IdentAlterada", "DescAlterada");
     
         _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync(recurso);
         _repRecursoMockMemory.Setup(r => r.AlterarAsync(It.IsAny<Recurso>())).Returns(Task.CompletedTask);

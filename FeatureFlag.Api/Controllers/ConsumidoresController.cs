@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlag.Controllers;
 [ApiController]
-[Route("api/consumidores")]
+[Route("api/[controller]")]
 public class ConsumidoresController : ControllerBase
 {
     #region ctor
@@ -78,7 +78,7 @@ public class ConsumidoresController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Inserir([FromBody] CriarConsumidorDto dto)
+    public async Task<IActionResult> Inserir([FromBody] CriarConsumidorDTO dto)
     {
         try
         {
@@ -95,7 +95,7 @@ public class ConsumidoresController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarConsumidorDto dto)
+    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarConsumidorDTO dto)
     {
         try
         {

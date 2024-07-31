@@ -68,7 +68,7 @@ public class RecursosController : ControllerBase
     }
 
     [HttpPost("inserir")]
-    public async Task<IActionResult> Inserir([FromBody] CriarRecursoDto dto)
+    public async Task<IActionResult> Inserir([FromBody] CriarRecursoDTO dto)
     {
 
         try
@@ -84,7 +84,7 @@ public class RecursosController : ControllerBase
     }
     
     [HttpPost("inserir-liberar")]
-    public async Task<IActionResult> InserirELiberar([FromBody] CriarRecursoELiberacaoDto dto)
+    public async Task<IActionResult> InserirELiberar([FromBody] CriarRecursoELiberacaoDTO dto)
     {
 
         try
@@ -100,7 +100,7 @@ public class RecursosController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoDto dto)
+    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoDTO dto)
     {
         
         try

@@ -65,7 +65,7 @@ public class AplicConsumidorTest
     [Fact]
     public async Task Inserir_NovoConsumidor()
     {
-        var inputModel = new CriarConsumidorDto("Ident1", "Desc1");
+        var inputModel = new CriarConsumidorDTO("Ident1", "Desc1");
         _repConsumidorMock.Setup(r => r.InserirAsync(It.IsAny<Consumidor>())).ReturnsAsync(1);
         
         var result = await _aplicConsumidor.InserirAsync(inputModel);
@@ -80,7 +80,7 @@ public class AplicConsumidorTest
     {
         // Arrange
         var consumidor = new Consumidor("Ident1", "Desc1");
-        var inputModel = new AlterarConsumidorDto("IdentAlterada", "DescAlterada");
+        var inputModel = new AlterarConsumidorDTO("IdentAlterada", "DescAlterada");
 
         _repConsumidorMock.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync(consumidor);
 
