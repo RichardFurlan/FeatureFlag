@@ -1,15 +1,16 @@
-using FeatureFlag.Application.Aplicacao.Factory;
-using FeatureFlag.Application.Aplicacao.Interfaces;
+using FeatureFlag.Application.Aplicacao.Recursos;
 using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
+using FeatureFlag.Application.Consumidores;
 using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;
+using FeatureFlag.Application.Factory;
+using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
-using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
 
-namespace FeatureFlag.Application.Aplicacao.Recursos;
+namespace FeatureFlag.Application.Recursos;
 
 public class AplicRecurso : IAplicRecurso
 {
@@ -62,7 +63,7 @@ public class AplicRecurso : IAplicRecurso
         var consumidor = await _repConsumidores.RecuperarPorIdentificacaoAsync(identificacaoConsumidor);
         if (consumidor == null)
         {
-            var consumidorDto = new CriarConsumidorDTO(identificacaoConsumidor, "Consumidor criado pela verificacao");
+            var consumidorDto = new CriarConsumidorDTO(identificacaoConsumidor, identificacaoConsumidor);
             var consumidorId = await _aplicConsumidor.InserirAsync(consumidorDto);
 
             consumidor = await _repConsumidores.RecuperarPorIdAsync(consumidorId);
@@ -104,30 +105,6 @@ public class AplicRecurso : IAplicRecurso
         var recursoId = _repRecurso.InserirAsync(recurso);
 
         return recursoId;
-    }
-    #endregion
-
-    #region InserirRecursoELiberacaoAsync
-    public async Task<int> InserirRecursoELiberacaoAsync(CriarRecursoELiberacaoDTO criarRecursoELiberacaoDto)
-    {
-        var recurso = new Recurso(criarRecursoELiberacaoDto.Identificacao, criarRecursoELiberacaoDto.Descricao);
-        await _repRecurso.InserirAsync(recurso);
-
-        var todosConsumidores =  await _repConsumidores.RecuperarTodosAsync();
-        var totalConsumidores = todosConsumidores.Count;
-        var quantidadeLiberada = (int)(totalConsumidores * criarRecursoELiberacaoDto.PercentualLiberacao / 100);
-
-        var random = new Random();
-        var consumidoresLiberados = todosConsumidores.OrderBy(x => random.Next()).Take(quantidadeLiberada).ToList();
-        
-        todosConsumidores.ForEach(async x =>
-        {
-            var status = consumidoresLiberados.Contains(x) ? EnumStatusRecursoConsumidor.Habilitado : EnumStatusRecursoConsumidor.Desabilitado;
-            var recursoConsumidorDto = new CriarRecursoConsumidorDTO(recurso.Id, x.Id, status);
-            await AplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
-        });
-
-        return recurso.Id;
     }
     #endregion
     
@@ -172,7 +149,7 @@ public class AplicRecurso : IAplicRecurso
                 recursoConsumidor.DefinirStatus(status);
                 await _repRecursoConsumidor.AlterarAsync(recursoConsumidor);
             }
-        };
+        }
 
     }
     #endregion

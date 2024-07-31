@@ -9,12 +9,9 @@ public interface IAplicRecurso
 {
     Task<List<RecuperarRecursoDTO>> RecuperarTodosAsync();
     Task<RecuperarRecursoDTO> RecuperarPorIdAsync(int id);
-
     Task<RecuperarRecursoAtivoDTO> VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(string identificacaoRecurso,
         string identificacaoConsumidor);
     Task<int> InserirAsync(CriarRecursoDTO criarRecursoDto);
-    Task<int> InserirRecursoELiberacaoAsync(CriarRecursoELiberacaoDTO criarRecursoELiberacaoDto);
-
     Task AlterarPercentualDeLiberacaoDeRecurso(
         AlterarPercentualDeLiberacaoRecursoDto alterarPercentualDeLiberacaoRecursoDto);
     Task AlterarAsync(int id, AlterarRecursoDTO alterarRecursoDto);

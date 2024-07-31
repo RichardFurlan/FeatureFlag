@@ -82,22 +82,6 @@ public class RecursosController : ControllerBase
             return BadRequest();
         }
     }
-    
-    [HttpPost("InserirLiberar")]
-    public async Task<IActionResult> InserirLiberar([FromBody] CriarRecursoELiberacaoDTO dto)
-    {
-
-        try
-        {
-            var id = await _aplicRecurso.InserirRecursoELiberacaoAsync(dto);
-            return Created();
-        }
-        catch (Exception e)
-        {
-            // TODO: Adicionar logger
-            return BadRequest();
-        }
-    }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoDTO dto)

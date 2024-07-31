@@ -1,12 +1,13 @@
-using FeatureFlag.Application.Aplicacao.Factory;
-using FeatureFlag.Application.Aplicacao.Interfaces;
 using FeatureFlag.Application.Aplicacao.Recursos;
 using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
+using FeatureFlag.Application.Consumidores;
 using FeatureFlag.Application.DTOs.InputModel;
+using FeatureFlag.Application.Factory;
+using FeatureFlag.Application.Recursos;
+using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
-using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
 using Moq;
 
@@ -92,70 +93,6 @@ public class AplicRecursoTest
         Assert.Equal("Recurso1", result.IdentificacaoRecurso);
         Assert.Equal("Descricao1", result.DescricaoRecurso);
         Assert.Equal("Consumidor1", result.IdentificacaoConsumidor);
-    }
-    
-    [Fact]
-    public async Task InserirRecursoELiberacao_DeveCriarRecursoELiberarConformePercentual50()
-    {
-        // Arrange
-        var createRecursoELiberacaoInputModel = new CriarRecursoELiberacaoDTO("Rec1", "Descricao1", 50);
-        var consumidores = new List<Consumidor>
-        {
-            new Consumidor("Cons1", "Desc1"),
-            new Consumidor("Cons2", "Desc2"),
-            new Consumidor("Cons3", "Desc3" ),
-            new Consumidor("Cons4", "Desc4"),
-        };
-        
-        _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
-        
-        var recursoConsumidorList = new List<CriarRecursoConsumidorDTO>();
-        _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()))
-            .Callback<CriarRecursoConsumidorDTO>(rc => recursoConsumidorList.Add(rc));
-
-        // Act
-        var result = await _aplicRecurso.InserirRecursoELiberacaoAsync(createRecursoELiberacaoInputModel);
-
-        // Assert
-        _repRecursoMockMemory.Verify(r => r.InserirAsync(It.IsAny<Recurso>()), Times.Once);
-        _aplicRecursoConsumidor.Verify(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()), Times.Exactly(consumidores.Count));
-        
-        var habilitados = recursoConsumidorList.Count(rc => rc.Status == EnumStatusRecursoConsumidor.Habilitado);
-        var percentualHabilitado = (decimal)habilitados / consumidores.Count * 100;
-
-        Assert.Equal(createRecursoELiberacaoInputModel.PercentualLiberacao, percentualHabilitado, precision: 0);
-    }
-    
-    [Fact]
-    public async Task InserirRecursoELiberacao_DeveCriarRecursoELiberarConformePercentual75()
-    {
-        // Arrange
-        var createRecursoELiberacaoInputModel = new CriarRecursoELiberacaoDTO("Rec1", "Descricao1", 75);
-        var consumidores = new List<Consumidor>
-        {
-            new Consumidor("Cons1", "Desc1"),
-            new Consumidor("Cons2", "Desc2"),
-            new Consumidor("Cons3", "Desc3"),
-            new Consumidor("Cons4", "Desc4"),
-        };
-        
-        _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
-        
-        var recursoConsumidorList = new List<CriarRecursoConsumidorDTO>();
-        _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()))
-            .Callback<CriarRecursoConsumidorDTO>(rc => recursoConsumidorList.Add(rc));
-
-        // Act
-        var result = await _aplicRecurso.InserirRecursoELiberacaoAsync(createRecursoELiberacaoInputModel);
-
-        // Assert
-        _repRecursoMockMemory.Verify(r => r.InserirAsync(It.IsAny<Recurso>()), Times.Once);
-        _aplicRecursoConsumidor.Verify(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()), Times.Exactly(consumidores.Count));
-        
-        var habilitados = recursoConsumidorList.Count(rc => rc.Status == EnumStatusRecursoConsumidor.Habilitado);
-        var percentualHabilitado = (decimal)habilitados / consumidores.Count * 100;
-
-        Assert.Equal(createRecursoELiberacaoInputModel.PercentualLiberacao, percentualHabilitado, precision: 0);
     }
     
    [Fact]
