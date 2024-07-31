@@ -94,7 +94,7 @@ public class RecursosController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            // TODO: Adicionar logger
             return BadRequest();
         }
     }
