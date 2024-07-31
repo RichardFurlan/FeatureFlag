@@ -123,7 +123,7 @@ public class AplicConsumidorTest
         var recurso2 = new Recurso("Rec2", "Descricao2", null, null);
 
         _repConsumidorMock.Setup(r => r.RecuperarPorIdentificacaoAsync(consumidor.Identificacao)).ReturnsAsync(consumidor);
-        _repRecursoConsumidorMock.Setup(r => r.RecuperarTodosPorConsumidorAsync(consumidor.Id)).ReturnsAsync(recursoConsumidorList);
+        _repRecursoConsumidorMock.Setup(r => r.RecuperarTodosPorCodigoConsumidorAsync(consumidor.Id)).ReturnsAsync(recursoConsumidorList);
         _repRecursoMock.Setup(r => r.RecuperarPorIdAsync(1)).ReturnsAsync(recurso1);
         _repRecursoMock.Setup(r => r.RecuperarPorIdAsync(2)).ReturnsAsync(recurso2);
 

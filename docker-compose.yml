@@ -11,18 +11,21 @@ services:
       context: .
       dockerfile: FeatureFlag.Api/Dockerfile
     ports:
-      - "5000:5000"
-      - "5001:5001"
+      - "8080:8080"
     depends_on:
       - db
       - cache
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Production
+        - ConnectionStrings__Database=Host=db;Port=5432;Database=featureflag;Username=postgres;Password=123456
+  
   db:
     image: postgres:latest
     container_name: db
     environment:
       POSTGRES_DB: featureflag
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: 123456
     ports:
       - "5432:5432"
     volumes:

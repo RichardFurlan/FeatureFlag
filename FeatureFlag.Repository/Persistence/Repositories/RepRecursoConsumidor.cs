@@ -19,9 +19,22 @@ public class RepRecursoConsumidor : IRepRecursoConsumidor
         return resultado;
     }
 
-    public async Task<List<RecursoConsumidor>> RecuperarTodosPorConsumidorAsync(int id)
+    public async Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoConsumidorAsync(int codigoConsumidor)
     {
-        var resultado = await _dbContext.RecursosConsumidores.Where(rc => rc.CodigoConsumidor.Equals(id)).ToListAsync();
+        var resultado = await _dbContext.RecursosConsumidores.Where(rc => rc.CodigoConsumidor.Equals(codigoConsumidor)).ToListAsync();
+        return resultado;
+    }
+    
+    public async Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoRecursoAsync(int codigoRecurso)
+    {
+        var resultado = await _dbContext.RecursosConsumidores.Where(rc => rc.CodigoRecurso.Equals(codigoRecurso)).ToListAsync();
+        return resultado;
+    }
+    
+    public async Task<RecursoConsumidor?> RecuperarPorCodigoRecursoEConsumidorAsync(int codigoRecurso, int codigoConsumidor)
+    {
+        var resultado = await _dbContext.RecursosConsumidores
+            .SingleOrDefaultAsync(rc => rc.CodigoRecurso == codigoRecurso && rc.CodigoConsumidor == codigoConsumidor);
         return resultado;
     }
 

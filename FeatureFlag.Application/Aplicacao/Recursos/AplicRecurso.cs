@@ -63,19 +63,18 @@ public class AplicRecurso : IAplicRecurso
         if (consumidor == null)
         {
             var consumidorDto = new CriarConsumidorDto(identificacaoConsumidor, "Consumidor criado pela verificacao");
-            await _aplicConsumidor.InserirAsync(consumidorDto);
+            var consumidorId = await _aplicConsumidor.InserirAsync(consumidorDto);
 
-            consumidor = await _repConsumidores.RecuperarPorIdentificacaoAsync(identificacaoConsumidor);
+            consumidor = await _repConsumidores.RecuperarPorIdAsync(consumidorId);
             if (consumidor == null)
             {
-                throw new Exception($"Falha ao encontrar consumidor criado com a identificacao: {identificacaoConsumidor}");
+                throw new Exception($"Falha ao encontrar consumidor criado com o Id: {consumidorId}");
             }
             var recursoConsumidorDto = new CriarRecursoConsumidorDto(recurso.Id, consumidor.Id, EnumStatusRecursoConsumidor.Desabilitado);
             await AplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
         }
         
-        
-        var recursoConsumidor = recurso.RecursoConsumidores.FirstOrDefault(rc => rc.CodigoConsumidor == consumidor.Id && rc.CodigoRecurso == recurso.Id);
+        var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorCodigoRecursoEConsumidorAsync(recurso.Id, consumidor.Id);
         if (recursoConsumidor == null)
         {
             throw new Exception($"Associação entre o recurso com identificação {identificacaoRecurso} e o consumidor com identificação {identificacaoConsumidor} não encontrada.");

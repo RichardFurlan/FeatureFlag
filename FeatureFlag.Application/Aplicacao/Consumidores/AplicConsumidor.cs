@@ -1,6 +1,7 @@
 using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Domain.Entities;
+using FeatureFlag.Domain.Enums;
 using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
 
@@ -59,9 +60,8 @@ public class AplicConsumidor : IAplicConsumidor
             throw new Exception($"Consumidor com Identificacao {identificacao} não encontrado.");
         }
 
-        var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosPorConsumidorAsync(consumidor.Id);
+        var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosPorCodigoConsumidorAsync(consumidor.Id);
         var recursosStatus = new List<RecuperarRecursosStatusDto>();
-
 
         foreach (var rc in recursosConsumidores)
         {
@@ -76,6 +76,34 @@ public class AplicConsumidor : IAplicConsumidor
         return viewModel;
     }
     
+    #endregion
+
+    #region VerificaRecursoHabilitadoParaConsumidor
+    public async Task<bool> VerificaRecursoHabilitadoParaConsumidor(
+        string identificacaoConsumidor, string identificacaoRecurso)
+    {
+        var recurso = await _repRecurso.RecuperarPorIdentificacaoAsync(identificacaoRecurso);
+        if (recurso == null)
+        {
+            throw new Exception($"Recurso com Identificacao {identificacaoRecurso} não encontrado.");
+        }
+        
+        var consumidor = await _repConsumidor.RecuperarPorIdentificacaoAsync(identificacaoConsumidor);
+        if (consumidor == null)
+        {
+            throw new Exception($"Consumidor com Identificacao {identificacaoConsumidor} não encontrado.");
+        }
+
+        var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorCodigoRecursoEConsumidorAsync(recurso.Id, consumidor.Id);
+        if (recursoConsumidor == null)
+        {
+            throw new Exception($"O recurso com Identificacao {identificacaoRecurso} não está associado ao consumidor.");
+        }
+
+        var estaLiberado = recursoConsumidor.Status == EnumStatusRecursoConsumidor.Habilitado;
+
+        return estaLiberado;
+    }
     #endregion
     
     #region AlterarAsync

@@ -32,27 +32,42 @@ public class ConsumidoresController : ControllerBase
         }
     }
     
-    [HttpGet("{id}")]
-    public async Task<IActionResult> RecuperarPorId(int id)
-    {
-        try
-        {
-            var dto = await _aplicConsumidor.RecuperarPorIdAsync(id);
-            return Ok(dto);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
+    // [HttpGet("id/{id}")]
+    // public async Task<IActionResult> RecuperarPorId(int id)
+    // {
+    //     try
+    //     {
+    //         var dto = await _aplicConsumidor.RecuperarPorIdAsync(id);
+    //         return Ok(dto);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    //         throw;
+    //     }
+    // }
     
-    [HttpGet("identificacao/{identificacao}")]
+    [HttpGet("RecuperarRecursosPorIdentificacao/{identificacao}")]
     public async Task<IActionResult> RecuperarRecursosPorIdentificacao(string identificacao)
     {
         try
         {
             var dto = await _aplicConsumidor.RecuperaRecursosPorConsumidorAsync(identificacao);
+            return Ok(dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return NotFound();
+        }
+    }
+    
+    [HttpGet("{identificacaoConsumidor}/recurso/{identificacaoRecurso}")]
+    public async Task<IActionResult> VerificaRecursoHabilitadoParaConsumidor(string identificacaoConsumidor, string identificacaoRecurso)
+    {
+        try
+        {
+            var dto = await _aplicConsumidor.VerificaRecursoHabilitadoParaConsumidor(identificacaoConsumidor, identificacaoRecurso);
             return Ok(dto);
         }
         catch (Exception e)
@@ -69,12 +84,12 @@ public class ConsumidoresController : ControllerBase
         {
             var id = await _aplicConsumidor.InserirAsync(dto);
             
-            return CreatedAtAction(nameof(RecuperarPorId), id, dto);
+            return Created();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            return BadRequest();
         }
 
     }
