@@ -13,22 +13,19 @@ public class RepRecurso : IRepRecurso
         _dbContext = dbContext;
     }
 
-    public async Task<List<Recurso>> RecuperarTodosAsync()
+    public Task<List<Recurso>> RecuperarTodosAsync()
     {
-        var resultado = await _dbContext.Recursos.ToListAsync();
-        return resultado;
+        return _dbContext.Recursos.ToListAsync();
     }
 
-    public async Task<Recurso?> RecuperarPorIdAsync(int id)
+    public Task<Recurso?> RecuperarPorIdAsync(int id)
     {
-        var recurso = await _dbContext.Recursos.SingleOrDefaultAsync(r => r.Id == id);
-        return recurso;
+        return _dbContext.Recursos.SingleOrDefaultAsync(r => r.Id == id);
     }
 
-    public async Task<Recurso?> RecuperarPorIdentificacaoAsync(string identificacaoRecurso)
+    public Task<Recurso?> RecuperarPorIdentificacaoAsync(string identificacaoRecurso)
     {
-        var recurso = await _dbContext.Recursos.SingleOrDefaultAsync(r => r.Identificacao == identificacaoRecurso);
-        return recurso;
+        return _dbContext.Recursos.SingleOrDefaultAsync(r => r.Identificacao == identificacaoRecurso);
     }
 
     public async Task<int> InserirAsync(Recurso recurso)

@@ -12,27 +12,24 @@ public class RepConsumidor : IRepConsumidor
     {
         _dbContext = dbContext;
     }
-    public async Task<List<Consumidor>> RecuperarTodosAsync()
+    public Task<List<Consumidor>> RecuperarTodosAsync()
     {
-        var resultado = await _dbContext.Consumidores.ToListAsync();
-        return resultado;
+        return _dbContext.Consumidores.ToListAsync();
     }
 
-    public async Task<Consumidor?> RecuperarPorIdAsync(int id)
+    public Task<Consumidor?> RecuperarPorIdAsync(int id)
     {
-        var consumidor = await _dbContext.Consumidores.SingleOrDefaultAsync(c => c.Id == id);
-        return consumidor;
+        return _dbContext.Consumidores.SingleOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task<Consumidor?> RecuperarPorIdentificacaoAsync(string identificacaoConsumidor)
+    public Task<Consumidor?> RecuperarPorIdentificacaoAsync(string identificacaoConsumidor)
     {
-        var consumidor = await _dbContext.Consumidores.SingleOrDefaultAsync(c => c.Identificacao == identificacaoConsumidor);
-        return consumidor;
+        return _dbContext.Consumidores.SingleOrDefaultAsync(c => c.Identificacao == identificacaoConsumidor);
     }
 
     public async Task<int> InserirAsync(Consumidor consumidor)
     { 
-        await _dbContext.Consumidores.AddAsync(consumidor);
+        await _dbContext.Consumidores.AddAsync(consumidor); 
         await _dbContext.SaveChangesAsync();
         return consumidor.Id;
     }
