@@ -37,22 +37,22 @@ public class RecursosController : ControllerBase
         }
     }
     
-    [HttpGet("{id}")]
-    public async Task<IActionResult> RecuperarPorId(int id)
-    {
-        try
-        {
-            var dto = await _aplicRecurso.RecuperarPorIdAsync(id);
-            return Ok(dto);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
+    // [HttpGet("{id}")]
+    // public async Task<IActionResult> RecuperarPorId(int id)
+    // {
+    //     try
+    //     {
+    //         var dto = await _aplicRecurso.RecuperarPorIdAsync(id);
+    //         return Ok(dto);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    //         throw;
+    //     }
+    // }
 
-    [HttpGet("{identificacaoRecurso}/cunsumidor/{identificacaoConsumidor}")]
+    [HttpGet("{identificacaoRecurso}/consumidor/{identificacaoConsumidor}")]
     public async Task<IActionResult> RecuperaRecurso(string identificacaoRecurso, string identificacaoConsumidor)
     {
         try
@@ -74,7 +74,7 @@ public class RecursosController : ControllerBase
         try
         {
             var id = await _aplicRecurso.InserirAsync(dto);
-            return CreatedAtAction(nameof(RecuperarPorId), id, dto);
+            return Created();
         }
         catch (Exception e)
         {
@@ -90,7 +90,7 @@ public class RecursosController : ControllerBase
         try
         {
             var id = await _aplicRecurso.InserirRecursoELiberacaoAsync(dto);
-            return CreatedAtAction(nameof(RecuperarPorId), id, dto);
+            return Created();
         }
         catch (Exception e)
         {
