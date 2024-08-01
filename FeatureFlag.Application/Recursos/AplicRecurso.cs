@@ -1,10 +1,9 @@
-using FeatureFlag.Application.Aplicacao.Recursos;
-using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
 using FeatureFlag.Application.Consumidores;
-using FeatureFlag.Application.DTOs.InputModel;
+using FeatureFlag.Application.Consumidores.DTOs;
 using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Application.Factory;
+using FeatureFlag.Application.Recursos.DTOs;
 using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
@@ -34,25 +33,25 @@ public class AplicRecurso : IAplicRecurso
     #endregion
     
     #region RecuperarTodosAsync
-    public async Task<List<RecuperarRecursoDTO>> RecuperarTodosAsync()
+    public async Task<List<RecuperarRecursoView>> RecuperarTodosAsync()
     {
         var recursos = await _repRecurso.RecuperarTodosAsync();
-        var viewModelList = recursos.Select(r => new RecuperarRecursoDTO(r.Identificacao, r.Descricao)).ToList();
+        var viewModelList = recursos.Select(r => new RecuperarRecursoView(r.Identificacao, r.Descricao)).ToList();
         return viewModelList;
     }
     #endregion
 
     #region RecuperarPorIdAsync
-    public async Task<RecuperarRecursoDTO> RecuperarPorIdAsync(int id)
+    public async Task<RecuperarRecursoView> RecuperarPorIdAsync(int id)
     {
         var recurso = await _repRecurso.RecuperarPorIdAsync(id);
-        var viewModel = new RecuperarRecursoDTO(recurso.Identificacao, recurso.Descricao);
+        var viewModel = new RecuperarRecursoView(recurso.Identificacao, recurso.Descricao);
         return viewModel;
     }
     #endregion
 
     #region VerificaRecursoAtivoParaConsumidorIdentificacaoAsync
-    public async Task<RecuperarRecursoAtivoDTO> VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(string identificacaoRecurso, string identificacaoConsumidor)
+    public async Task<RecuperarRecursoAtivoView> VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(string identificacaoRecurso, string identificacaoConsumidor)
     {
         var recurso = await _repRecurso.RecuperarPorIdentificacaoAsync(identificacaoRecurso);
         if (recurso == null)
@@ -81,7 +80,7 @@ public class AplicRecurso : IAplicRecurso
             throw new Exception($"Associação entre o recurso com identificação {identificacaoRecurso} e o consumidor com identificação {identificacaoConsumidor} não encontrada.");
         }
         
-        var recursoAtivoViewModel = new RecuperarRecursoAtivoDTO(
+        var recursoAtivoViewModel = new RecuperarRecursoAtivoView(
             recurso.Identificacao, 
             recurso.Descricao, 
             consumidor.Identificacao, 

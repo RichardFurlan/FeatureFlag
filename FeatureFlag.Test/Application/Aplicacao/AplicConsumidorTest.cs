@@ -1,6 +1,6 @@
 using FeatureFlag.Application.Aplicacao;
-using FeatureFlag.Application.Aplicacao.Consumidores;
-using FeatureFlag.Application.DTOs.InputModel;
+using FeatureFlag.Application.Consumidores;
+using FeatureFlag.Application.Consumidores.DTOs;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
 using FeatureFlag.Domain.Repositories;

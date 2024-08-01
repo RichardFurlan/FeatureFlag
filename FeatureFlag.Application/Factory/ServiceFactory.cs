@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FeatureFlag.Application.Aplicacao.Factory;
+namespace FeatureFlag.Application.Factory;
 
 public class ServiceFactory : IServiceFactory
 {

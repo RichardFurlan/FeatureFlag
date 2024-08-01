@@ -1,10 +1,7 @@
-using FeatureFlag.Application.Aplicacao;
-using FeatureFlag.Application.Aplicacao.Consumidores;
-using FeatureFlag.Application.Aplicacao.Factory;
-using FeatureFlag.Application.Aplicacao.Interfaces;
-using FeatureFlag.Application.Aplicacao.Recursos;
-using FeatureFlag.Application.Aplicacao.RecursosConsumidores;
-using FeatureFlag.Domain.Interefaces;
+using FeatureFlag.Application.Consumidores;
+using FeatureFlag.Application.Factory;
+using FeatureFlag.Application.Recursos;
+using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Repository.Persistence;

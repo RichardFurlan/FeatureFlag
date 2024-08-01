@@ -1,10 +1,8 @@
-using FeatureFlag.Domain.Enums;
+namespace FeatureFlag.Application.Recursos.DTOs;
 
-namespace FeatureFlag.Application.DTOs.ViewModel;
-
-public record RecuperarRecursoAtivoDTO
+public record RecuperarRecursoAtivoView
 {
-    public RecuperarRecursoAtivoDTO(string identificacaoRecurso, string descricaoRecurso ,string identificacaoConsumidor, bool ativo)
+    public RecuperarRecursoAtivoView(string identificacaoRecurso, string descricaoRecurso ,string identificacaoConsumidor, bool ativo)
     {
         IdentificacaoRecurso = identificacaoRecurso;
         DescricaoRecurso = descricaoRecurso;

@@ -1,15 +1,13 @@
-namespace FeatureFlag.Application.DTOs.ViewModel;
+namespace FeatureFlag.Application.Recursos.DTOs;
 
-public record RecuperarConsumidorDTO
+public record AlterarRecursoDTO
 {
-    public RecuperarConsumidorDTO(string identificacao, string descricao)
+    public AlterarRecursoDTO(string identificacao, string descricao)
     {
         Identificacao = identificacao;
         Descricao = descricao;
     }
-    
 
     public string Identificacao { get; init; }
     public string Descricao { get; init; }
-    
 };

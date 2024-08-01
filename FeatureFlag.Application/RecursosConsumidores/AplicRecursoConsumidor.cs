@@ -1,11 +1,11 @@
-using FeatureFlag.Application.Aplicacao.Interfaces;
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
+using FeatureFlag.Application.Consumidores;
 using FeatureFlag.Application.DTOs.ViewModel;
+using FeatureFlag.Application.Recursos;
 using FeatureFlag.Domain.Entities;
-using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
 
-namespace FeatureFlag.Application.Aplicacao.RecursosConsumidores;
+namespace FeatureFlag.Application.RecursosConsumidores;
 
 public class AplicRecursoConsumidor : IAplicRecursoConsumidor
 {

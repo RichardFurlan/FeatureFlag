@@ -1,11 +1,10 @@
-using FeatureFlag.Application.DTOs.InputModel;
+using FeatureFlag.Application.Consumidores.DTOs;
 using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
-using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
 
-namespace FeatureFlag.Application.Aplicacao.Consumidores;
+namespace FeatureFlag.Application.Consumidores;
 
 public class AplicConsumidor : IAplicConsumidor
 {
@@ -22,19 +21,19 @@ public class AplicConsumidor : IAplicConsumidor
     #endregion
 
     #region RecuperarTodosAsync
-    public async Task<List<RecuperarConsumidorDTO>> RecuperarTodosAsync()
+    public async Task<List<RecuperarConsumidorView>> RecuperarTodosAsync()
     {
         var consumidores = await _repConsumidor.RecuperarTodosAsync();
-        var viewModelList = consumidores.Select(c => new RecuperarConsumidorDTO(c.Identificacao, c.Descricao)).ToList();
+        var viewModelList = consumidores.Select(c => new RecuperarConsumidorView(c.Identificacao, c.Descricao)).ToList();
         return viewModelList;
     }
     #endregion
 
     #region RecuperarPorIdAsync
-    public async Task<RecuperarConsumidorDTO> RecuperarPorIdAsync(int id)
+    public async Task<RecuperarConsumidorView> RecuperarPorIdAsync(int id)
     {
         var consumidor = await _repConsumidor.RecuperarPorIdAsync(id);
-        var viewModel = new RecuperarConsumidorDTO(consumidor.Identificacao, consumidor.Descricao);
+        var viewModel = new RecuperarConsumidorView(consumidor.Identificacao, consumidor.Descricao);
         return viewModel;
     }
     #endregion
@@ -52,7 +51,7 @@ public class AplicConsumidor : IAplicConsumidor
     #endregion
 
     #region RecuperaRecursosPorConsumidorAsync
-    public async Task<RecuperarRecursosPorConsumidorDTO> RecuperaRecursosPorConsumidorAsync(string identificacao)
+    public async Task<RecuperarRecursosPorConsumidorView> RecuperaRecursosPorConsumidorAsync(string identificacao)
     {
         var consumidor = await _repConsumidor.RecuperarPorIdentificacaoAsync(identificacao);
         if (consumidor == null)
@@ -61,18 +60,18 @@ public class AplicConsumidor : IAplicConsumidor
         }
 
         var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosPorCodigoConsumidorAsync(consumidor.Id);
-        var recursosStatus = new List<RecuperarRecursosStatusDTO>();
+        var recursosStatus = new List<RecuperarRecursosStatusView>();
 
         foreach (var rc in recursosConsumidores)
         {
             var recurso = await _repRecurso.RecuperarPorIdAsync(rc.CodigoRecurso);
             if (recurso != null)
             {
-                recursosStatus.Add(new RecuperarRecursosStatusDTO(recurso.Identificacao, rc.Status));
+                recursosStatus.Add(new RecuperarRecursosStatusView(recurso.Identificacao, rc.Status));
             }
         }
         
-        var viewModel = new RecuperarRecursosPorConsumidorDTO(consumidor.Identificacao, recursosStatus);
+        var viewModel = new RecuperarRecursosPorConsumidorView(consumidor.Identificacao, recursosStatus);
         return viewModel;
     }
     

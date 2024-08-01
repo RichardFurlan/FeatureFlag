@@ -1,15 +1,13 @@
-using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
-using FeatureFlag.Application.DTOs;
-using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.DTOs.ViewModel;
+using FeatureFlag.Application.Recursos.DTOs;
 
-namespace FeatureFlag.Application.Aplicacao;
+namespace FeatureFlag.Application.Recursos;
 
 public interface IAplicRecurso
 {
-    Task<List<RecuperarRecursoDTO>> RecuperarTodosAsync();
-    Task<RecuperarRecursoDTO> RecuperarPorIdAsync(int id);
-    Task<RecuperarRecursoAtivoDTO> VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(string identificacaoRecurso,
+    Task<List<RecuperarRecursoView>> RecuperarTodosAsync();
+    Task<RecuperarRecursoView> RecuperarPorIdAsync(int id);
+    Task<RecuperarRecursoAtivoView> VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(string identificacaoRecurso,
         string identificacaoConsumidor);
     Task<int> InserirAsync(CriarRecursoDTO criarRecursoDto);
     Task AlterarPercentualDeLiberacaoDeRecurso(

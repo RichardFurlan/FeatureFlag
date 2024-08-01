@@ -1,10 +1,11 @@
-using FeatureFlag.Application.Aplicacao;
-using FeatureFlag.Application.Aplicacao.RecursosConsumidores;
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
+using FeatureFlag.Application.Consumidores;
+using FeatureFlag.Application.Consumidores.DTOs;
 using FeatureFlag.Application.DTOs.ViewModel;
+using FeatureFlag.Application.Recursos;
+using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
-using FeatureFlag.Domain.Interefaces;
 using FeatureFlag.Domain.Repositories;
 using Moq;
 
@@ -32,16 +33,16 @@ public class AplicRecursoConsumidorTest
     public async Task RecuperarTodos_DeveRetornarListaRecursoConsumidorViewModel()
     {
         // Arrange
-        var consumidores = new List<RecuperarConsumidorDTO>
+        var consumidores = new List<RecuperarConsumidorView>
         {
-            new RecuperarConsumidorDTO("Ident1", "Desc1"),
-            new RecuperarConsumidorDTO("Ident2", "Desc2")
+            new RecuperarConsumidorView("Ident1", "Desc1"),
+            new RecuperarConsumidorView("Ident2", "Desc2")
         };
         
-        var recursos = new List<RecuperarRecursoDTO>
+        var recursos = new List<RecuperarRecursoView>
         {
-            new RecuperarRecursoDTO("Ident1", "Desc1"),
-            new RecuperarRecursoDTO("Ident2", "Desc2")
+            new RecuperarRecursoView("Ident1", "Desc1"),
+            new RecuperarRecursoView("Ident2", "Desc2")
         };
 
         var recursosConsumidores = new List<RecursoConsumidor>
@@ -61,10 +62,10 @@ public class AplicRecursoConsumidorTest
 
         // Assert
         Assert.Equal(2, result.Count);
-        Assert.Equal("Ident1", result[0].RecuperarRecursoDto.Identificacao);
+        Assert.Equal("Ident1", result[0].RecuperarRecursoView.Identificacao);
         Assert.Equal("Ident1", result[0].RecuperarConsumidor.Identificacao);
         Assert.Equal(EnumStatusRecursoConsumidor.Habilitado, result[0].Status);
-        Assert.Equal("Ident2", result[1].RecuperarRecursoDto.Identificacao);
+        Assert.Equal("Ident2", result[1].RecuperarRecursoView.Identificacao);
         Assert.Equal("Ident2", result[1].RecuperarConsumidor.Identificacao);
         Assert.Equal(EnumStatusRecursoConsumidor.Desabilitado, result[1].Status);
         
@@ -77,8 +78,8 @@ public class AplicRecursoConsumidorTest
     public async Task RecuperarPorId_DeveRetornarRecursoConsumidorViewModel()
     {
         // Arrange
-        var consumidorDto = new RecuperarConsumidorDTO("Ident1", "Desc1");
-        var recursoDto = new RecuperarRecursoDTO("Ident1", "Desc1");
+        var consumidorDto = new RecuperarConsumidorView("Ident1", "Desc1");
+        var recursoDto = new RecuperarRecursoView("Ident1", "Desc1");
 
         var recursoConsumidor = new RecursoConsumidor(0, 0, EnumStatusRecursoConsumidor.Habilitado);
             
@@ -92,9 +93,9 @@ public class AplicRecursoConsumidorTest
         var result = await _aplicRecursoConsumidor.RecuperarPorIdAsync(recursoConsumidor.Id);
 
         // Assert
-        Assert.Equal("Ident1", result.RecuperarRecursoDto.Identificacao);
+        Assert.Equal("Ident1", result.RecuperarRecursoView.Identificacao);
         Assert.Equal("Ident1", result.RecuperarConsumidor.Identificacao);
-        Assert.Equal("Desc1", result.RecuperarRecursoDto.Descricao);
+        Assert.Equal("Desc1", result.RecuperarRecursoView.Descricao);
         Assert.Equal("Desc1", result.RecuperarConsumidor.Descricao);
         Assert.Equal(EnumStatusRecursoConsumidor.Habilitado, result.Status);
         

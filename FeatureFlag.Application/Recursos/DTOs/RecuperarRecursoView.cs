@@ -1,9 +1,9 @@
 namespace FeatureFlag.Application.DTOs.ViewModel;
 
-public record RecuperarRecursoDTO
+public record RecuperarRecursoView
 {
     
-    public RecuperarRecursoDTO(string identificacao, string descricao)
+    public RecuperarRecursoView(string identificacao, string descricao)
     {
         Identificacao = identificacao;
         Descricao = descricao;

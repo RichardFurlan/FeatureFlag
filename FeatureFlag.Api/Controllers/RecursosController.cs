@@ -1,8 +1,5 @@
-using FeatureFlag.Application.Aplicacao;
-using FeatureFlag.Application.Aplicacao.Interfaces;
-using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
-using FeatureFlag.Application.DTOs;
-using FeatureFlag.Application.DTOs.InputModel;
+using FeatureFlag.Application.Recursos;
+using FeatureFlag.Application.Recursos.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlag.Controllers;

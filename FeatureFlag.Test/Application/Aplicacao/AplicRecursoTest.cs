@@ -1,10 +1,8 @@
-using FeatureFlag.Application.Aplicacao.Recursos;
-using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
 using FeatureFlag.Application.Consumidores;
-using FeatureFlag.Application.DTOs.InputModel;
 using FeatureFlag.Application.Factory;
 using FeatureFlag.Application.Recursos;
+using FeatureFlag.Application.Recursos.DTOs;
 using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;

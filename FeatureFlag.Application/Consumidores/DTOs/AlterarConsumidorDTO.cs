@@ -1,6 +1,4 @@
-using FeatureFlag.Domain.Entities;
-
-namespace FeatureFlag.Application.DTOs.InputModel;
+namespace FeatureFlag.Application.Consumidores.DTOs;
 
 public record AlterarConsumidorDTO
 {

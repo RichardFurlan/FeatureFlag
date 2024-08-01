@@ -1,4 +1,4 @@
-namespace FeatureFlag.Application.Aplicacao.Factory;
+namespace FeatureFlag.Application.Factory;
 
 public interface IServiceFactory
 {

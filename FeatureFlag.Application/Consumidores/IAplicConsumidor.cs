@@ -1,15 +1,14 @@
-using FeatureFlag.Application.DTOs;
-using FeatureFlag.Application.DTOs.InputModel;
+using FeatureFlag.Application.Consumidores.DTOs;
 using FeatureFlag.Application.DTOs.ViewModel;
 
-namespace FeatureFlag.Domain.Interefaces;
+namespace FeatureFlag.Application.Consumidores;
 
 public interface IAplicConsumidor
 {
-    Task<List<RecuperarConsumidorDTO>> RecuperarTodosAsync();
-    Task<RecuperarConsumidorDTO> RecuperarPorIdAsync(int id);
+    Task<List<RecuperarConsumidorView>> RecuperarTodosAsync();
+    Task<RecuperarConsumidorView> RecuperarPorIdAsync(int id);
     Task<int> InserirAsync(CriarConsumidorDTO criarConsumidorDto);
-    Task<RecuperarRecursosPorConsumidorDTO> RecuperaRecursosPorConsumidorAsync(string identificacao);
+    Task<RecuperarRecursosPorConsumidorView> RecuperaRecursosPorConsumidorAsync(string identificacao);
 
     Task<bool> VerificaRecursoHabilitadoParaConsumidor(
         string identificacaoConsumidor, string identificacaoRecurso);
