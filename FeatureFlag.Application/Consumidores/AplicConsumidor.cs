@@ -3,6 +3,7 @@ using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
 using FeatureFlag.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace FeatureFlag.Application.Consumidores;
 
@@ -23,7 +24,7 @@ public class AplicConsumidor : IAplicConsumidor
     #region RecuperarTodosAsync
     public async Task<List<RecuperarConsumidorView>> RecuperarTodosAsync()
     {
-        var consumidores = await _repConsumidor.RecuperarTodosAsync();
+        var consumidores = await _repConsumidor.RecuperarTodos().ToListAsync();
         var viewModelList = consumidores.Select(c => new RecuperarConsumidorView(c.Identificacao, c.Descricao)).ToList();
         return viewModelList;
     }
@@ -56,20 +57,24 @@ public class AplicConsumidor : IAplicConsumidor
         var consumidor = await _repConsumidor.RecuperarPorIdentificacaoAsync(identificacao);
         if (consumidor == null)
         {
+            var dto = new CriarConsumidorDTO(identificacao, identificacao);
+            await InserirAsync(dto);
+            
             throw new Exception($"Consumidor com Identificacao {identificacao} não encontrado.");
         }
 
         var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosPorCodigoConsumidorAsync(consumidor.Id);
-        var recursosStatus = new List<RecuperarRecursosStatusView>();
+        var recursoIds = recursosConsumidores
+            .Select(rc => rc.CodigoRecurso);
 
-        foreach (var rc in recursosConsumidores)
-        {
-            var recurso = await _repRecurso.RecuperarPorIdAsync(rc.CodigoRecurso);
-            if (recurso != null)
-            {
-                recursosStatus.Add(new RecuperarRecursosStatusView(recurso.Identificacao, rc.Status));
-            }
-        }
+        var recursos = await _repRecurso.RecuperarTodos().Where(r => recursoIds.Contains(r.Id)).ToListAsync();
+
+        var recursosStatus = recursosConsumidores
+            .Join(recursos,
+                rc => rc.CodigoRecurso,
+                r => r.Id,
+                (rc, r) => new RecuperarRecursosStatusView(r.Identificacao, rc.Status))
+            .ToList();
         
         var viewModel = new RecuperarRecursosPorConsumidorView(consumidor.Identificacao, recursosStatus);
         return viewModel;
