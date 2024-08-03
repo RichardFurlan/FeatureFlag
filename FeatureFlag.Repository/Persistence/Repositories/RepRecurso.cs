@@ -13,9 +13,9 @@ public class RepRecurso : IRepRecurso
         _dbContext = dbContext;
     }
 
-    public Task<List<Recurso>> RecuperarTodosAsync()
+    public IQueryable<Recurso> RecuperarTodos()
     {
-        return _dbContext.Recursos.ToListAsync();
+        return _dbContext.Recursos;
     }
 
     public Task<Recurso?> RecuperarPorIdAsync(int id)

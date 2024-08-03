@@ -13,9 +13,9 @@ public class RepRecursoConsumidor : IRepRecursoConsumidor
         _dbContext = dbContext;
     }
     
-    public Task<List<RecursoConsumidor>> RecuperarTodosAsync()
+    public IQueryable<RecursoConsumidor> RecuperarTodos()
     {
-        return _dbContext.RecursosConsumidores.ToListAsync();
+        return _dbContext.RecursosConsumidores;
     }
 
     public Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoConsumidorAsync(int codigoConsumidor)

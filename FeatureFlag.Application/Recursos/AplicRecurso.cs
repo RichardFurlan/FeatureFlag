@@ -8,6 +8,7 @@ using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
 using FeatureFlag.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace FeatureFlag.Application.Recursos;
 
@@ -35,7 +36,7 @@ public class AplicRecurso : IAplicRecurso
     #region RecuperarTodosAsync
     public async Task<List<RecuperarRecursoView>> RecuperarTodosAsync()
     {
-        var recursos = await _repRecurso.RecuperarTodosAsync();
+        var recursos = await _repRecurso.RecuperarTodos().ToListAsync();
         var viewModelList = recursos.Select(r => new RecuperarRecursoView(r.Identificacao, r.Descricao)).ToList();
         return viewModelList;
     }
@@ -116,7 +117,7 @@ public class AplicRecurso : IAplicRecurso
             throw new Exception($"Recurso com ID {alterarPercentualRecursoDto.CodigoRecurso} não encontrado.");
         }
 
-        var todosConsumidores = await _repConsumidores.RecuperarTodosAsync();
+        var todosConsumidores = await _repConsumidores.RecuperarTodos().ToListAsync();
         var totalConsumidores = todosConsumidores.Count;
         var quantidadeLiberada = (int)(totalConsumidores * alterarPercentualRecursoDto.PercentualLiberacao / 100);
 

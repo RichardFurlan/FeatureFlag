@@ -12,9 +12,9 @@ public class RepConsumidor : IRepConsumidor
     {
         _dbContext = dbContext;
     }
-    public Task<List<Consumidor>> RecuperarTodosAsync()
+    public IQueryable<Consumidor> RecuperarTodos()
     {
-        return _dbContext.Consumidores.ToListAsync();
+        return _dbContext.Consumidores;
     }
 
     public Task<Consumidor?> RecuperarPorIdAsync(int id)

@@ -51,7 +51,7 @@ public class AplicRecursoConsumidorTest
             new RecursoConsumidor(1, 1, EnumStatusRecursoConsumidor.Desabilitado)
         };
         
-        _repRecursoConsumidorMock.Setup(r => r.RecuperarTodosAsync()).ReturnsAsync(recursosConsumidores);
+        _repRecursoConsumidorMock.Setup(r => r.RecuperarTodos()).Returns(recursosConsumidores.AsQueryable);
         _aplicRecursoMock.Setup(r => r.RecuperarPorIdAsync(It.Is<int>(id => id == 0))).ReturnsAsync(recursos[0]);
         _aplicRecursoMock.Setup(r => r.RecuperarPorIdAsync(It.Is<int>(id => id == 1))).ReturnsAsync(recursos[1]);
         _aplicConsumidorMock.Setup(c => c.RecuperarPorIdAsync(It.Is<int>(id => id == 0))).ReturnsAsync(consumidores[0]);
@@ -69,7 +69,7 @@ public class AplicRecursoConsumidorTest
         Assert.Equal("Ident2", result[1].RecuperarConsumidor.Identificacao);
         Assert.Equal(EnumStatusRecursoConsumidor.Desabilitado, result[1].Status);
         
-        _repRecursoConsumidorMock.Verify(r => r.RecuperarTodosAsync(), Times.Once);
+        _repRecursoConsumidorMock.Verify(r => r.RecuperarTodos(), Times.Once);
         _aplicRecursoMock.Verify(r => r.RecuperarPorIdAsync(It.IsAny<int>()), Times.Exactly(2));
         _aplicConsumidorMock.Verify(c => c.RecuperarPorIdAsync(It.IsAny<int>()), Times.Exactly(2));
     }

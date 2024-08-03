@@ -4,6 +4,7 @@ using FeatureFlag.Application.DTOs.ViewModel;
 using FeatureFlag.Application.Recursos;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace FeatureFlag.Application.RecursosConsumidores;
 
@@ -25,7 +26,7 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #region RecuperarTodosAsync
     public async Task<List<RecuperarRecursoConsumidorDTO>> RecuperarTodosAsync()
     {
-        var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodosAsync();
+        var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodos().ToListAsync();
         var viewModelList = new List<RecuperarRecursoConsumidorDTO>();
 
         foreach (var recursoConsumidor in recursosConsumidores)

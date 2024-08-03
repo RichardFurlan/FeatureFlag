@@ -41,7 +41,7 @@ public class AplicRecursoTest
             new Recurso("Rec1", "Descricao1"),
             new Recurso("Rec2", "Descricao2")
         };
-        _repRecursoMockMemory.Setup(r => r.RecuperarTodosAsync()).ReturnsAsync(recursos);
+        _repRecursoMockMemory.Setup(r => r.RecuperarTodos()).Returns(recursos.AsQueryable);
 
         // Act
         var result = await _aplicRecurso.RecuperarTodosAsync();
@@ -114,7 +114,7 @@ public class AplicRecursoTest
         var recurso = new Recurso("Recurso1", "Descricao1", consumidores);
         
         _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(recursoId)).ReturnsAsync(recurso);
-        _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
+        _repConsumidorMemory.Setup(c => c.RecuperarTodos()).Returns(consumidores.AsQueryable);
         _repRecursoConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>())).Returns(Task.CompletedTask);
         _repRecursoMockMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Recurso>())).Returns(Task.CompletedTask);
         _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
@@ -127,7 +127,7 @@ public class AplicRecursoTest
 
         // Assert
         _repRecursoMockMemory.Verify(r => r.RecuperarPorIdAsync(recursoId), Times.Once);
-        _repConsumidorMemory.Verify(c => c.RecuperarTodosAsync(), Times.Once);
+        _repConsumidorMemory.Verify(c => c.RecuperarTodos(), Times.Once);
         
         var habilitados = recursoConsumidorList.Count(rc => rc.Status == EnumStatusRecursoConsumidor.Habilitado);
         var percentualHabilitado = (decimal)habilitados / consumidores.Count * 100;
@@ -159,7 +159,7 @@ public class AplicRecursoTest
         var recurso = new Recurso("Recurso1", "Descricao1", consumidores);
         
         _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(recursoId)).ReturnsAsync(recurso);
-        _repConsumidorMemory.Setup(c => c.RecuperarTodosAsync()).ReturnsAsync(consumidores);
+        _repConsumidorMemory.Setup(c => c.RecuperarTodos()).Returns(consumidores.AsQueryable);
         _repRecursoConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>())).Returns(Task.CompletedTask);
         _repRecursoMockMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Recurso>())).Returns(Task.CompletedTask);
         _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
@@ -172,7 +172,7 @@ public class AplicRecursoTest
 
         // Assert
         _repRecursoMockMemory.Verify(r => r.RecuperarPorIdAsync(recursoId), Times.Once);
-        _repConsumidorMemory.Verify(c => c.RecuperarTodosAsync(), Times.Once);
+        _repConsumidorMemory.Verify(c => c.RecuperarTodos(), Times.Once);
         
         var habilitados = recursoConsumidorList.Count(rc => rc.Status == EnumStatusRecursoConsumidor.Habilitado);
         var percentualHabilitado = (decimal)habilitados / consumidores.Count * 100;

@@ -35,7 +35,7 @@ public class AplicConsumidorTest
             new Consumidor("Ident1", "Desc1"),
             new Consumidor("Ident2", "Desc2")
         };
-        _repConsumidorMock.Setup(r => r.RecuperarTodosAsync()).ReturnsAsync(consumidores);
+        _repConsumidorMock.Setup(r => r.RecuperarTodos()).Returns(consumidores.AsQueryable);
 
         
         // Act

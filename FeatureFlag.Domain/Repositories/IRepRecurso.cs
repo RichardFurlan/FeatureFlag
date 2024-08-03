@@ -4,7 +4,7 @@ namespace FeatureFlag.Domain.Repositories;
 
 public interface IRepRecurso
 {
-    Task<List<Recurso>> RecuperarTodosAsync();
+    IQueryable<Recurso> RecuperarTodos();
     Task<Recurso?> RecuperarPorIdAsync(int id);
     Task<Recurso?> RecuperarPorIdentificacaoAsync(string identificacaoRecurso);
     Task<int> InserirAsync(Recurso recurso);
