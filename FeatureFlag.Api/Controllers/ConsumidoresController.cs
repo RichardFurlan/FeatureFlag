@@ -1,6 +1,7 @@
 using FeatureFlag.Application.Consumidores;
 using FeatureFlag.Application.Consumidores.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FeatureFlag.Controllers;
 [ApiController]
@@ -16,6 +17,7 @@ public class ConsumidoresController : ControllerBase
     #endregion
 
     [HttpGet]
+    [OutputCache( Duration = 60)]
     public async Task<IActionResult> RecuperarTodos()
     {
         try
@@ -47,6 +49,7 @@ public class ConsumidoresController : ControllerBase
     // }
     
     [HttpGet("RecuperarRecursosPorIdentificacao/{identificacao}")]
+    [OutputCache(Duration = 60)]
     public async Task<IActionResult> RecuperarRecursosPorIdentificacao(string identificacao)
     {
         try
@@ -62,6 +65,7 @@ public class ConsumidoresController : ControllerBase
     }
     
     [HttpGet("{identificacaoConsumidor}/recurso/{identificacaoRecurso}")]
+    [OutputCache(Duration = 60)]
     public async Task<IActionResult> VerificaRecursoHabilitadoParaConsumidor(string identificacaoConsumidor, string identificacaoRecurso)
     {
         try

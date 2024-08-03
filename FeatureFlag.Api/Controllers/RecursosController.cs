@@ -1,6 +1,7 @@
 using FeatureFlag.Application.Recursos;
 using FeatureFlag.Application.Recursos.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FeatureFlag.Controllers;
 [ApiController]
@@ -19,6 +20,7 @@ public class RecursosController : ControllerBase
     #endregion
     
     [HttpGet]
+    [OutputCache(Duration = 60)]
     public async Task<IActionResult> RecuperarTodos()
     {
         try
@@ -50,6 +52,7 @@ public class RecursosController : ControllerBase
     // }
 
     [HttpGet("{identificacaoRecurso}/consumidor/{identificacaoConsumidor}")]
+    [OutputCache(Duration = 60)]
     public async Task<IActionResult> RecuperaRecurso(string identificacaoRecurso, string identificacaoConsumidor)
     {
         try

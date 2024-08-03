@@ -18,6 +18,7 @@ services:
     environment:
         - ASPNETCORE_ENVIRONMENT=Production
         - ConnectionStrings__Database=Host=db;Port=5432;Database=featureflag;Username=postgres;Password=123456
+        - ConnectionStrings__Redis=cache:6379
   
   db:
     image: postgres:latest
