@@ -22,9 +22,9 @@ public class AplicConsumidor : IAplicConsumidor
     #endregion
 
     #region RecuperarTodosAsync
-    public async Task<List<RecuperarConsumidorView>> RecuperarTodosAsync()
+    public List<RecuperarConsumidorView> RecuperarTodos()
     {
-        var consumidores = await _repConsumidor.RecuperarTodos().ToListAsync();
+        var consumidores = _repConsumidor.RecuperarTodos().ToList();
         var viewModelList = consumidores.Select(c => new RecuperarConsumidorView(c.Identificacao, c.Descricao)).ToList();
         return viewModelList;
     }
@@ -67,7 +67,7 @@ public class AplicConsumidor : IAplicConsumidor
         var recursoIds = recursosConsumidores
             .Select(rc => rc.CodigoRecurso);
 
-        var recursos = await _repRecurso.RecuperarTodos().Where(r => recursoIds.Contains(r.Id)).ToListAsync();
+        var recursos = _repRecurso.RecuperarTodos().Where(r => recursoIds.Contains(r.Id)).ToList();
 
         var recursosStatus = recursosConsumidores
             .Join(recursos,

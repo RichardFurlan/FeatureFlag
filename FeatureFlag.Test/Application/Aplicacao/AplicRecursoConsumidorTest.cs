@@ -58,7 +58,7 @@ public class AplicRecursoConsumidorTest
         _aplicConsumidorMock.Setup(c => c.RecuperarPorIdAsync(It.Is<int>(id => id == 1))).ReturnsAsync(consumidores[1]);
 
         // Act
-        var result = await _aplicRecursoConsumidor.RecuperarTodosAsync();
+        var result = await _aplicRecursoConsumidor.RecuperarTodos();
 
         // Assert
         Assert.Equal(2, result.Count);

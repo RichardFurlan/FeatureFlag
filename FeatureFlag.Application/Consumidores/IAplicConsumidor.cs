@@ -5,7 +5,7 @@ namespace FeatureFlag.Application.Consumidores;
 
 public interface IAplicConsumidor
 {
-    Task<List<RecuperarConsumidorView>> RecuperarTodosAsync();
+    List<RecuperarConsumidorView> RecuperarTodos();
     Task<RecuperarConsumidorView> RecuperarPorIdAsync(int id);
     Task<int> InserirAsync(CriarConsumidorDTO criarConsumidorDto);
     Task<RecuperarRecursosPorConsumidorView> RecuperaRecursosPorConsumidorAsync(string identificacao);

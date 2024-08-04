@@ -24,9 +24,9 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
     #endregion
 
     #region RecuperarTodosAsync
-    public async Task<List<RecuperarRecursoConsumidorDTO>> RecuperarTodosAsync()
+    public async Task<List<RecuperarRecursoConsumidorDTO>> RecuperarTodos()
     {
-        var recursosConsumidores = await _repRecursoConsumidor.RecuperarTodos().ToListAsync();
+        var recursosConsumidores = _repRecursoConsumidor.RecuperarTodos().ToList();
         var viewModelList = new List<RecuperarRecursoConsumidorDTO>();
 
         foreach (var recursoConsumidor in recursosConsumidores)

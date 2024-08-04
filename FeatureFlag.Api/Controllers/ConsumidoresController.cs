@@ -18,11 +18,11 @@ public class ConsumidoresController : ControllerBase
 
     [HttpGet]
     [OutputCache( Duration = 60)]
-    public async Task<IActionResult> RecuperarTodos()
+    public IActionResult RecuperarTodos()
     {
         try
         {
-            var dto = await _aplicConsumidor.RecuperarTodosAsync();
+            var dto = _aplicConsumidor.RecuperarTodos();
             return Ok(dto);
         }
         catch (Exception e)

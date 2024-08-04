@@ -27,19 +27,20 @@ public class AplicConsumidorTest
     }
     
     [Fact]
-    public async Task RecuperarTodos_DeveRetornarListaConsumidorViewModel()
+    public void RecuperarTodos_DeveRetornarListaConsumidorViewModel()
     {
         // Arrange
         var consumidores = new List<Consumidor>
         {
             new Consumidor("Ident1", "Desc1"),
             new Consumidor("Ident2", "Desc2")
-        };
-        _repConsumidorMock.Setup(r => r.RecuperarTodos()).Returns(consumidores.AsQueryable);
+        }.AsQueryable();
+        
+        _repConsumidorMock.Setup(r => r.RecuperarTodos()).Returns(consumidores);
 
         
         // Act
-        var result = await _aplicConsumidor.RecuperarTodosAsync();
+        var result = _aplicConsumidor.RecuperarTodos();
 
         // Assert
         Assert.Equal(2, result.Count);
@@ -114,18 +115,24 @@ public class AplicConsumidorTest
     {
         // Arrange
         var consumidor = new Consumidor("Cons1", "Desc1");
+        var recursos = new List<Recurso>()
+        {
+            new Recurso("Rec1", "Descricao1"),
+            new Recurso("Rec2", "Descricao2")
+        };
+        
+        typeof(BaseEntity).GetProperty("Id")?.SetValue(recursos[0], 1);
+        typeof(BaseEntity).GetProperty("Id")?.SetValue(recursos[1], 2);
+        
         var recursoConsumidorList = new List<RecursoConsumidor>
         {
             new RecursoConsumidor(1, consumidor.Id, EnumStatusRecursoConsumidor.Habilitado),
             new RecursoConsumidor(2, consumidor.Id, EnumStatusRecursoConsumidor.Desabilitado)
         };
-        var recurso1 = new Recurso("Rec1", "Descricao1", null, null);
-        var recurso2 = new Recurso("Rec2", "Descricao2", null, null);
 
         _repConsumidorMock.Setup(r => r.RecuperarPorIdentificacaoAsync(consumidor.Identificacao)).ReturnsAsync(consumidor);
         _repRecursoConsumidorMock.Setup(r => r.RecuperarTodosPorCodigoConsumidorAsync(consumidor.Id)).ReturnsAsync(recursoConsumidorList);
-        _repRecursoMock.Setup(r => r.RecuperarPorIdAsync(1)).ReturnsAsync(recurso1);
-        _repRecursoMock.Setup(r => r.RecuperarPorIdAsync(2)).ReturnsAsync(recurso2);
+        _repRecursoMock.Setup(r => r.RecuperarTodos()).Returns(recursos.AsQueryable);
 
         // Act
         var result = await _aplicConsumidor.RecuperaRecursosPorConsumidorAsync(consumidor.Identificacao);
@@ -150,3 +157,4 @@ public class AplicConsumidorTest
         Assert.Equal($"Consumidor com Identificacao {identificacaoConsumidor} não encontrado.", exception.Message);
     }
 }
+

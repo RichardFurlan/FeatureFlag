@@ -34,9 +34,9 @@ public class AplicRecurso : IAplicRecurso
     #endregion
     
     #region RecuperarTodosAsync
-    public async Task<List<RecuperarRecursoView>> RecuperarTodosAsync()
+    public List<RecuperarRecursoView> RecuperarTodos()
     {
-        var recursos = await _repRecurso.RecuperarTodos().ToListAsync();
+        var recursos = _repRecurso.RecuperarTodos().ToList();
         var viewModelList = recursos.Select(r => new RecuperarRecursoView(r.Identificacao, r.Descricao)).ToList();
         return viewModelList;
     }
@@ -117,7 +117,7 @@ public class AplicRecurso : IAplicRecurso
             throw new Exception($"Recurso com ID {alterarPercentualRecursoDto.CodigoRecurso} não encontrado.");
         }
 
-        var todosConsumidores = await _repConsumidores.RecuperarTodos().ToListAsync();
+        var todosConsumidores = _repConsumidores.RecuperarTodos().ToList();
         var totalConsumidores = todosConsumidores.Count;
         var quantidadeLiberada = (int)(totalConsumidores * alterarPercentualRecursoDto.PercentualLiberacao / 100);
 

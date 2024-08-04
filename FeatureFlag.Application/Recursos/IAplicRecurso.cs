@@ -5,7 +5,7 @@ namespace FeatureFlag.Application.Recursos;
 
 public interface IAplicRecurso
 {
-    Task<List<RecuperarRecursoView>> RecuperarTodosAsync();
+    List<RecuperarRecursoView> RecuperarTodos();
     Task<RecuperarRecursoView> RecuperarPorIdAsync(int id);
     Task<RecuperarRecursoAtivoView> VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(string identificacaoRecurso,
         string identificacaoConsumidor);

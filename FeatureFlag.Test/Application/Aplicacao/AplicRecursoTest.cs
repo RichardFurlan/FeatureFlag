@@ -29,11 +29,12 @@ public class AplicRecursoTest
         _service = new Mock<IServiceFactory>();
         _aplicRecursoConsumidor = new Mock<IAplicRecursoConsumidor>();
         _aplicConsumidor = new Mock<IAplicConsumidor>();
+        _service.Setup(s => s.Create<IAplicRecursoConsumidor>()).Returns(_aplicRecursoConsumidor.Object);
         _aplicRecurso = new AplicRecurso(_repRecursoMockMemory.Object, _repConsumidorMemory.Object, _repRecursoConsumidorMemory.Object,_service.Object, _aplicConsumidor.Object);
     }
     
     [Fact]
-    public async Task RecuperarTodos_DeveRetornarRecuperarecursoViewModel()
+    public void RecuperarTodos_DeveRetornarRecuperarecursoViewModel()
     {
         // Arrange
         var recursos = new List<Recurso>
@@ -44,7 +45,7 @@ public class AplicRecursoTest
         _repRecursoMockMemory.Setup(r => r.RecuperarTodos()).Returns(recursos.AsQueryable);
 
         // Act
-        var result = await _aplicRecurso.RecuperarTodosAsync();
+        var result = _aplicRecurso.RecuperarTodos();
 
         // Assert
         Assert.Equal(2, result.Count);
@@ -80,8 +81,10 @@ public class AplicRecursoTest
         recurso.RecursoConsumidores.Add(recursoConsumidor);
         consumidor.RecursoConsumidores.Add(recursoConsumidor);
 
-        _repRecursoMockMemory.Setup(r => r.RecuperarPorIdentificacaoAsync(recurso.Identificacao)).ReturnsAsync(recurso);
-        _repConsumidorMemory.Setup(c => c.RecuperarPorIdentificacaoAsync(consumidor.Identificacao)).ReturnsAsync(consumidor);
+        _repRecursoMockMemory.Setup(r => r.RecuperarPorIdentificacaoAsync(It.IsAny<string>())).ReturnsAsync(recurso);
+        _repConsumidorMemory.Setup(c => c.RecuperarPorIdentificacaoAsync(It.IsAny<string>())).ReturnsAsync(consumidor);
+        _repRecursoConsumidorMemory.Setup(rc => rc.RecuperarPorCodigoRecursoEConsumidorAsync(It.IsAny<int>(), It.IsAny<int>()))
+            .ReturnsAsync(recursoConsumidor);
 
         // Act
         var result = await _aplicRecurso.VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(recurso.Identificacao, consumidor.Identificacao);
@@ -114,13 +117,13 @@ public class AplicRecursoTest
         var recurso = new Recurso("Recurso1", "Descricao1", consumidores);
         
         _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(recursoId)).ReturnsAsync(recurso);
-        _repConsumidorMemory.Setup(c => c.RecuperarTodos()).Returns(consumidores.AsQueryable);
+        _repConsumidorMemory.Setup(c => c.RecuperarTodos()).Returns(consumidores.AsQueryable());
         _repRecursoConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>())).Returns(Task.CompletedTask);
-        _repRecursoMockMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Recurso>())).Returns(Task.CompletedTask);
-        _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
+
         var recursoConsumidorList = new List<CriarRecursoConsumidorDTO>();
         _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()))
-            .Callback<CriarRecursoConsumidorDTO>(rc => recursoConsumidorList.Add(rc));
+            .Callback<CriarRecursoConsumidorDTO>(rc => recursoConsumidorList.Add(rc))
+            .ReturnsAsync(1);
 
         // Act
         await _aplicRecurso.AlterarPercentualDeLiberacaoDeRecurso(alterarPercentualRecursoDto);
@@ -159,13 +162,13 @@ public class AplicRecursoTest
         var recurso = new Recurso("Recurso1", "Descricao1", consumidores);
         
         _repRecursoMockMemory.Setup(r => r.RecuperarPorIdAsync(recursoId)).ReturnsAsync(recurso);
-        _repConsumidorMemory.Setup(c => c.RecuperarTodos()).Returns(consumidores.AsQueryable);
+        _repConsumidorMemory.Setup(c => c.RecuperarTodos()).Returns(consumidores.AsQueryable());
         _repRecursoConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<RecursoConsumidor>())).Returns(Task.CompletedTask);
-        _repRecursoMockMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Recurso>())).Returns(Task.CompletedTask);
-        _repConsumidorMemory.Setup(rc => rc.AlterarAsync(It.IsAny<Consumidor>())).Returns(Task.CompletedTask);
+
         var recursoConsumidorList = new List<CriarRecursoConsumidorDTO>();
         _aplicRecursoConsumidor.Setup(rc => rc.InserirAsync(It.IsAny<CriarRecursoConsumidorDTO>()))
-            .Callback<CriarRecursoConsumidorDTO>(rc => recursoConsumidorList.Add(rc));
+            .Callback<CriarRecursoConsumidorDTO>(rc => recursoConsumidorList.Add(rc))
+            .ReturnsAsync(1);
 
         // Act
         await _aplicRecurso.AlterarPercentualDeLiberacaoDeRecurso(alterarPercentualRecursoDto);

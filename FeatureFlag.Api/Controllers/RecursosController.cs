@@ -21,11 +21,11 @@ public class RecursosController : ControllerBase
     
     [HttpGet]
     [OutputCache(Duration = 60)]
-    public async Task<IActionResult> RecuperarTodos()
+    public IActionResult RecuperarTodos()
     {
         try
         {
-            var dto = await _aplicRecurso.RecuperarTodosAsync();
+            var dto = _aplicRecurso.RecuperarTodos();
             return Ok(dto);
         }
         catch (Exception e)
