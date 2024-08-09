@@ -1,5 +1,4 @@
 using FeatureFlag.Application.Consumidores;
-using FeatureFlag.Application.Factory;
 using FeatureFlag.Application.Recursos;
 using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Repositories;
@@ -22,7 +21,6 @@ builder.Services.AddScoped<IRepRecursoConsumidor, RepRecursoConsumidor>();
 builder.Services.AddScoped<IAplicConsumidor, AplicConsumidor>();
 builder.Services.AddScoped<IAplicRecurso, AplicRecurso>();
 builder.Services.AddScoped<IAplicRecursoConsumidor, AplicRecursoConsumidor>();
-builder.Services.AddScoped<IServiceFactory, ServiceFactory>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
