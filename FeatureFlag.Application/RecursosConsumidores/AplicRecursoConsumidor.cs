@@ -1,10 +1,7 @@
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
-using FeatureFlag.Application.Consumidores;
-using FeatureFlag.Application.DTOs.ViewModel;
-using FeatureFlag.Application.Recursos;
 using FeatureFlag.Domain.Entities;
+using FeatureFlag.Domain.Enums;
 using FeatureFlag.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace FeatureFlag.Application.RecursosConsumidores;
 
@@ -12,49 +9,15 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
 {
     #region ctor
     private readonly IRepRecursoConsumidor _repRecursoConsumidor;
-    private readonly IAplicConsumidor _aplicConsumidor;
-    private readonly IAplicRecurso _aplicRecurso;
+    private readonly IRepRecurso _repRecurso;
+    private readonly IRepConsumidor _repConsumidor;
 
-    public AplicRecursoConsumidor(IRepRecursoConsumidor repRecursoConsumidor, IAplicConsumidor aplicConsumidor, IAplicRecurso aplicRecurso)
+
+    public AplicRecursoConsumidor(IRepRecursoConsumidor repRecursoConsumidor, IRepRecurso repRecurso, IRepConsumidor repConsumidor)
     {
         _repRecursoConsumidor = repRecursoConsumidor;
-        _aplicConsumidor = aplicConsumidor;
-        _aplicRecurso = aplicRecurso;
-    }
-    #endregion
-
-    #region RecuperarTodosAsync
-    public async Task<List<RecuperarRecursoConsumidorDTO>> RecuperarTodos()
-    {
-        var recursosConsumidores = _repRecursoConsumidor.RecuperarTodos().ToList();
-        var viewModelList = new List<RecuperarRecursoConsumidorDTO>();
-
-        foreach (var recursoConsumidor in recursosConsumidores)
-        {
-            var recurso = await _aplicRecurso.RecuperarPorIdAsync(recursoConsumidor.CodigoRecurso);
-            var consumidor = await _aplicConsumidor.RecuperarPorIdAsync(recursoConsumidor.CodigoConsumidor);
-            
-            var viewModel = new RecuperarRecursoConsumidorDTO(recurso, consumidor, recursoConsumidor.Status);
-            viewModelList.Add(viewModel);
-        }        
-        
-        return viewModelList;
-    }
-    #endregion
-
-    #region RecuperarPorIdAsync
-    public async Task<RecuperarRecursoConsumidorDTO> RecuperarPorIdAsync(int id)
-    {
-        var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorIdAsync(id);
-        if (recursoConsumidor is null)
-        {
-            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
-        }
-        var recurso = await _aplicRecurso.RecuperarPorIdAsync(recursoConsumidor.CodigoRecurso);
-        var consumidor = await _aplicConsumidor.RecuperarPorIdAsync(recursoConsumidor.CodigoConsumidor);
-
-        var viewModel = new RecuperarRecursoConsumidorDTO(recurso, consumidor, recursoConsumidor.Status);
-        return viewModel;
+        _repRecurso = repRecurso;
+        _repConsumidor = repConsumidor;
     }
     #endregion
 
@@ -66,34 +29,42 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
         return codigoRecursoConsumidor;
     }
     #endregion
-
-    #region AlterarAsync
-    public async Task AlterarAsync(int id, AlterarRecursoConsumidorDTO dto)
+    
+    #region RecuperarRecursoConsumidorAtivo
+    public async Task<RecuperarRecursoConsumidorAtivoDTO> RecuperarRecursoConsumidorAtivo(string identificacaoRecurso, string identificacaoConsumidor)
     {
-        var recursoConsumidor= await _repRecursoConsumidor.RecuperarPorIdAsync(id);
+        var consumidor = await _repConsumidor.RecuperarPorIdentificacaoAsync(identificacaoConsumidor);
+        if (consumidor == null)
+        {
+            var novoConsumidor = new Consumidor(identificacaoConsumidor, identificacaoConsumidor);
+            var consumidorId = await _repConsumidor.InserirAsync(novoConsumidor);
+            consumidor = await _repConsumidor.RecuperarPorIdAsync(consumidorId); 
+        }
+
+        
+        var recurso = await _repRecurso.RecuperarPorIdentificacaoAsync(identificacaoRecurso);
+        if (recurso == null)
+        {
+            throw new Exception($"Recurso com identificação {identificacaoRecurso} não encontrado.");
+        }
+
+        var recursoConsumidor = recurso.ObtemRecursoConsumidor();
         if (recursoConsumidor == null)
         {
-            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
+            var recursoConsumidorDto = new CriarRecursoConsumidorDTO(recurso.Id, consumidor.Id, EnumStatusRecursoConsumidor.Desabilitado);
+            var recursoConsumidorId = await InserirAsync(recursoConsumidorDto);
+            recursoConsumidor = await _repRecursoConsumidor.RecuperarPorIdAsync(recursoConsumidorId);
         }
         
-        var recursoConsumidorAlterar = new RecursoConsumidor(dto.CodigoRecurso,
-            dto.CodigoConsumidor, dto.Status);
         
-        recursoConsumidor.Update(recursoConsumidorAlterar);
-        await _repRecursoConsumidor.AlterarAsync(recursoConsumidor);
-    }
-    #endregion
-
-    #region InativarAsync
-    public async Task InativarAsync(int id)
-    {
-        var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorIdAsync(id);
-        if (recursoConsumidor == null)
-        {
-            throw new KeyNotFoundException($"RecursoConsumidor com ID {id} não encontrado.");
-        }
-        recursoConsumidor.Inativar();
-        await _repRecursoConsumidor.InativarAsync(recursoConsumidor);
+        var recursoAtivoViewModel = new RecuperarRecursoConsumidorAtivoDTO(
+            recurso.Identificacao, 
+            recurso.Descricao, 
+            consumidor.Identificacao, 
+            recursoConsumidor.EstaAtivo()
+        );
+        
+        return recursoAtivoViewModel;
     }
     #endregion
 
