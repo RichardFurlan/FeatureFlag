@@ -26,4 +26,9 @@ public class Recurso : BaseEntity
         Consumidores = recurso.Consumidores;
         RecursoConsumidores = recurso.RecursoConsumidores;
     }
+
+    public RecursoConsumidor? ObtemRecursoConsumidor()
+    {
+        return RecursoConsumidores.FirstOrDefault();
+    }
 }

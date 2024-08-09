@@ -1,9 +1,7 @@
-using FeatureFlag.Application.Aplicacao;
-using FeatureFlag.Application.Aplicacao.Interfaces;
-using FeatureFlag.Application.Aplicacao.Recursos.DTOs;
-using FeatureFlag.Application.DTOs;
-using FeatureFlag.Application.DTOs.InputModel;
+using FeatureFlag.Application.Recursos;
+using FeatureFlag.Application.Recursos.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FeatureFlag.Controllers;
 [ApiController]
@@ -22,21 +20,22 @@ public class RecursosController : ControllerBase
     #endregion
     
     [HttpGet]
-    public async Task<IActionResult> RecuperarTodos()
+    [OutputCache(Duration = 60)]
+    public IActionResult RecuperarTodos()
     {
         try
         {
-            var dto = await _aplicRecurso.RecuperarTodosAsync();
+            var dto = _aplicRecurso.RecuperarTodos();
             return Ok(dto);
         }
         catch (Exception e)
         {
             // TODO: Adicionar logger
-            Console.WriteLine(e);
-            throw;
+            return NotFound();
         }
     }
     
+    //  TODO: Verificar uso do Recuperar por Id
     // [HttpGet("{id}")]
     // public async Task<IActionResult> RecuperarPorId(int id)
     // {
@@ -53,22 +52,23 @@ public class RecursosController : ControllerBase
     // }
 
     [HttpGet("{identificacaoRecurso}/consumidor/{identificacaoConsumidor}")]
-    public async Task<IActionResult> RecuperaRecurso(string identificacaoRecurso, string identificacaoConsumidor)
+    [OutputCache(Duration = 60)]
+    public async Task<IActionResult> VerificaRecursoHabilitado(string identificacaoRecurso, string identificacaoConsumidor)
     {
         try
         {
-            var dto = await _aplicRecurso.VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(identificacaoRecurso, identificacaoConsumidor);
+            var dto = await _aplicRecurso.VerificaRecursoHabilitado(identificacaoRecurso, identificacaoConsumidor);
             return Ok(dto);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO: Adicionar logger
+            return NotFound();
         }
     }
 
     [HttpPost("inserir")]
-    public async Task<IActionResult> Inserir([FromBody] CriarRecursoDto dto)
+    public async Task<IActionResult> Inserir([FromBody] CriarRecursoDTO dto)
     {
 
         try
@@ -78,29 +78,13 @@ public class RecursosController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-    
-    [HttpPost("inserir-liberar")]
-    public async Task<IActionResult> InserirELiberar([FromBody] CriarRecursoELiberacaoDto dto)
-    {
-
-        try
-        {
-            var id = await _aplicRecurso.InserirRecursoELiberacaoAsync(dto);
-            return Created();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
+            // TODO: Adicionar logger
+            return BadRequest();
         }
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoDto dto)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarRecursoDTO dto)
     {
         
         try
@@ -110,12 +94,12 @@ public class RecursosController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO: Adicionar logger
+            return BadRequest();
         }
     }
     
-    [HttpPut("percentual/{id}")]
+    [HttpPut("{id}/alterarPercentual")]
     public async Task<IActionResult> AlterarPercentual([FromBody] AlterarPercentualDeLiberacaoRecursoDto dto)
     {
         
@@ -126,8 +110,8 @@ public class RecursosController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO: Adicionar logger
+            return BadRequest();
         }
     }
 
@@ -142,8 +126,8 @@ public class RecursosController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO: Adicionar logger
+            return BadRequest();
         }
     }
 }

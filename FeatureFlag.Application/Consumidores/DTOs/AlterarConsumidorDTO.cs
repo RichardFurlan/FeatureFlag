@@ -1,8 +1,8 @@
-namespace FeatureFlag.Application.DTOs.InputModel;
+namespace FeatureFlag.Application.Consumidores.DTOs;
 
-public record AlterarRecursoDto
+public record AlterarConsumidorDTO
 {
-    public AlterarRecursoDto(string identificacao, string descricao)
+    public AlterarConsumidorDTO(string identificacao, string descricao)
     {
         Identificacao = identificacao;
         Descricao = descricao;

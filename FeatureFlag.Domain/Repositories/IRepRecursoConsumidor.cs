@@ -4,7 +4,7 @@ namespace FeatureFlag.Domain.Repositories;
 
 public interface IRepRecursoConsumidor
 {
-    Task<List<RecursoConsumidor>> RecuperarTodosAsync();
+    IQueryable<RecursoConsumidor> RecuperarTodos();
     Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoConsumidorAsync(int codigoConsumidor);
     Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoRecursoAsync(int codigoRecurso);
     Task<RecursoConsumidor?> RecuperarPorCodigoRecursoEConsumidorAsync(int codigoRecurso, int codigoConsumidor);

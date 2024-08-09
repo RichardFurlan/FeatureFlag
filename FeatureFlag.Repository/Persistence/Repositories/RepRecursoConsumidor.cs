@@ -13,35 +13,30 @@ public class RepRecursoConsumidor : IRepRecursoConsumidor
         _dbContext = dbContext;
     }
     
-    public async Task<List<RecursoConsumidor>> RecuperarTodosAsync()
+    public IQueryable<RecursoConsumidor> RecuperarTodos()
     {
-        var resultado = await _dbContext.RecursosConsumidores.ToListAsync();
-        return resultado;
+        return _dbContext.RecursosConsumidores;
     }
 
-    public async Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoConsumidorAsync(int codigoConsumidor)
+    public Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoConsumidorAsync(int codigoConsumidor)
     {
-        var resultado = await _dbContext.RecursosConsumidores.Where(rc => rc.CodigoConsumidor.Equals(codigoConsumidor)).ToListAsync();
-        return resultado;
+        return _dbContext.RecursosConsumidores.Where(rc => rc.CodigoConsumidor.Equals(codigoConsumidor)).ToListAsync();
     }
     
-    public async Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoRecursoAsync(int codigoRecurso)
+    public Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoRecursoAsync(int codigoRecurso)
     {
-        var resultado = await _dbContext.RecursosConsumidores.Where(rc => rc.CodigoRecurso.Equals(codigoRecurso)).ToListAsync();
-        return resultado;
+        return _dbContext.RecursosConsumidores.Where(rc => rc.CodigoRecurso.Equals(codigoRecurso)).ToListAsync();
     }
     
-    public async Task<RecursoConsumidor?> RecuperarPorCodigoRecursoEConsumidorAsync(int codigoRecurso, int codigoConsumidor)
+    public Task<RecursoConsumidor?> RecuperarPorCodigoRecursoEConsumidorAsync(int codigoRecurso, int codigoConsumidor)
     {
-        var resultado = await _dbContext.RecursosConsumidores
+        return _dbContext.RecursosConsumidores
             .SingleOrDefaultAsync(rc => rc.CodigoRecurso == codigoRecurso && rc.CodigoConsumidor == codigoConsumidor);
-        return resultado;
     }
 
-    public async Task<RecursoConsumidor?> RecuperarPorIdAsync(int id)
+    public Task<RecursoConsumidor?> RecuperarPorIdAsync(int id)
     {
-        var recursoConsumidor = await _dbContext.RecursosConsumidores.SingleOrDefaultAsync(rc => rc.Id == id);
-        return recursoConsumidor;
+        return _dbContext.RecursosConsumidores.SingleOrDefaultAsync(rc => rc.Id == id);
     }
 
     public async Task<int> InserirAsync(RecursoConsumidor recursoConsumidor)

@@ -1,11 +1,11 @@
-using FeatureFlag.Application.DTOs;
-using FeatureFlag.Application.DTOs.InputModel;
-using FeatureFlag.Domain.Interefaces;
+using FeatureFlag.Application.Consumidores;
+using FeatureFlag.Application.Consumidores.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FeatureFlag.Controllers;
 [ApiController]
-[Route("api/consumidores")]
+[Route("api/[controller]")]
 public class ConsumidoresController : ControllerBase
 {
     #region ctor
@@ -17,21 +17,22 @@ public class ConsumidoresController : ControllerBase
     #endregion
 
     [HttpGet]
-    public async Task<IActionResult> RecuperarTodos()
+    [OutputCache( Duration = 60)]
+    public IActionResult RecuperarTodos()
     {
         try
         {
-            var dto = await _aplicConsumidor.RecuperarTodosAsync();
+            var dto = _aplicConsumidor.RecuperarTodos();
             return Ok(dto);
         }
         catch (Exception e)
         {
             //TODO: Adicionar logger 
-            Console.WriteLine(e);
-            throw;
+            return NotFound();
         }
     }
     
+    //  TODO: Verificar uso do Recuperar por Id
     // [HttpGet("id/{id}")]
     // public async Task<IActionResult> RecuperarPorId(int id)
     // {
@@ -48,6 +49,7 @@ public class ConsumidoresController : ControllerBase
     // }
     
     [HttpGet("RecuperarRecursosPorIdentificacao/{identificacao}")]
+    [OutputCache(Duration = 60)]
     public async Task<IActionResult> RecuperarRecursosPorIdentificacao(string identificacao)
     {
         try
@@ -57,12 +59,13 @@ public class ConsumidoresController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            //TODO: Adicionar logger 
             return NotFound();
         }
     }
     
     [HttpGet("{identificacaoConsumidor}/recurso/{identificacaoRecurso}")]
+    [OutputCache(Duration = 60)]
     public async Task<IActionResult> VerificaRecursoHabilitadoParaConsumidor(string identificacaoConsumidor, string identificacaoRecurso)
     {
         try
@@ -72,30 +75,29 @@ public class ConsumidoresController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            //TODO: Adicionar logger 
             return NotFound();
         }
     }
 
     [HttpPost]
-    public async Task<IActionResult> Inserir([FromBody] CriarConsumidorDto dto)
+    public async Task<IActionResult> Inserir([FromBody] CriarConsumidorDTO dto)
     {
         try
         {
             var id = await _aplicConsumidor.InserirAsync(dto);
-            
             return Created();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            //TODO: Adicionar logger 
             return BadRequest();
         }
 
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarConsumidorDto dto)
+    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarConsumidorDTO dto)
     {
         try
         {
@@ -104,8 +106,8 @@ public class ConsumidoresController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            //TODO: Adicionar logger 
+            return BadRequest();
         }
     }
 
@@ -119,8 +121,8 @@ public class ConsumidoresController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            // TODO:  Adicionar logger
+            return BadRequest();
         }
     }
     

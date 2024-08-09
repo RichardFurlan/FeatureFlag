@@ -1,6 +1,7 @@
 using FeatureFlag.Application.Aplicacao;
-using FeatureFlag.Application.Aplicacao.Consumidores;
-using FeatureFlag.Application.DTOs.InputModel;
+using FeatureFlag.Application.Consumidores;
+using FeatureFlag.Application.Consumidores.DTOs;
+using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
 using FeatureFlag.Domain.Repositories;
@@ -16,6 +17,7 @@ public class AplicConsumidorTest
     private readonly Mock<IRepConsumidor> _repConsumidorMock;
     private readonly Mock<IRepRecursoConsumidor> _repRecursoConsumidorMock;
     private readonly Mock<IRepRecurso> _repRecursoMock;
+    private readonly Mock<IAplicRecursoConsumidor> _aplicRecursoConsumidor;
     private readonly AplicConsumidor _aplicConsumidor;
 
     public AplicConsumidorTest()
@@ -23,23 +25,25 @@ public class AplicConsumidorTest
         _repConsumidorMock = new Mock<IRepConsumidor>();
         _repRecursoConsumidorMock = new Mock<IRepRecursoConsumidor>();
         _repRecursoMock = new Mock<IRepRecurso>();
-        _aplicConsumidor = new AplicConsumidor(_repConsumidorMock.Object, _repRecursoConsumidorMock.Object, _repRecursoMock.Object);
+        _aplicRecursoConsumidor = new Mock<IAplicRecursoConsumidor>();
+        _aplicConsumidor = new AplicConsumidor(_repConsumidorMock.Object, _repRecursoConsumidorMock.Object, _repRecursoMock.Object, _aplicRecursoConsumidor.Object);
     }
     
     [Fact]
-    public async Task RecuperarTodos_DeveRetornarListaConsumidorViewModel()
+    public void RecuperarTodos_DeveRetornarListaConsumidorViewModel()
     {
         // Arrange
         var consumidores = new List<Consumidor>
         {
             new Consumidor("Ident1", "Desc1"),
             new Consumidor("Ident2", "Desc2")
-        };
-        _repConsumidorMock.Setup(r => r.RecuperarTodosAsync()).ReturnsAsync(consumidores);
+        }.AsQueryable();
+        
+        _repConsumidorMock.Setup(r => r.RecuperarTodos()).Returns(consumidores);
 
         
         // Act
-        var result = await _aplicConsumidor.RecuperarTodosAsync();
+        var result = _aplicConsumidor.RecuperarTodos();
 
         // Assert
         Assert.Equal(2, result.Count);
@@ -65,7 +69,7 @@ public class AplicConsumidorTest
     [Fact]
     public async Task Inserir_NovoConsumidor()
     {
-        var inputModel = new CriarConsumidorDto("Ident1", "Desc1");
+        var inputModel = new CriarConsumidorDTO("Ident1", "Desc1");
         _repConsumidorMock.Setup(r => r.InserirAsync(It.IsAny<Consumidor>())).ReturnsAsync(1);
         
         var result = await _aplicConsumidor.InserirAsync(inputModel);
@@ -80,7 +84,7 @@ public class AplicConsumidorTest
     {
         // Arrange
         var consumidor = new Consumidor("Ident1", "Desc1");
-        var inputModel = new AlterarConsumidorDto("IdentAlterada", "DescAlterada");
+        var inputModel = new AlterarConsumidorDTO("IdentAlterada", "DescAlterada");
 
         _repConsumidorMock.Setup(r => r.RecuperarPorIdAsync(It.IsAny<int>())).ReturnsAsync(consumidor);
 
@@ -114,18 +118,24 @@ public class AplicConsumidorTest
     {
         // Arrange
         var consumidor = new Consumidor("Cons1", "Desc1");
+        var recursos = new List<Recurso>()
+        {
+            new Recurso("Rec1", "Descricao1"),
+            new Recurso("Rec2", "Descricao2")
+        };
+        
+        typeof(BaseEntity).GetProperty("Id")?.SetValue(recursos[0], 1);
+        typeof(BaseEntity).GetProperty("Id")?.SetValue(recursos[1], 2);
+        
         var recursoConsumidorList = new List<RecursoConsumidor>
         {
             new RecursoConsumidor(1, consumidor.Id, EnumStatusRecursoConsumidor.Habilitado),
             new RecursoConsumidor(2, consumidor.Id, EnumStatusRecursoConsumidor.Desabilitado)
         };
-        var recurso1 = new Recurso("Rec1", "Descricao1", null, null);
-        var recurso2 = new Recurso("Rec2", "Descricao2", null, null);
 
         _repConsumidorMock.Setup(r => r.RecuperarPorIdentificacaoAsync(consumidor.Identificacao)).ReturnsAsync(consumidor);
         _repRecursoConsumidorMock.Setup(r => r.RecuperarTodosPorCodigoConsumidorAsync(consumidor.Id)).ReturnsAsync(recursoConsumidorList);
-        _repRecursoMock.Setup(r => r.RecuperarPorIdAsync(1)).ReturnsAsync(recurso1);
-        _repRecursoMock.Setup(r => r.RecuperarPorIdAsync(2)).ReturnsAsync(recurso2);
+        _repRecursoMock.Setup(r => r.RecuperarTodos()).Returns(recursos.AsQueryable);
 
         // Act
         var result = await _aplicConsumidor.RecuperaRecursosPorConsumidorAsync(consumidor.Identificacao);
@@ -150,3 +160,4 @@ public class AplicConsumidorTest
         Assert.Equal($"Consumidor com Identificacao {identificacaoConsumidor} não encontrado.", exception.Message);
     }
 }
+

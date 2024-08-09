@@ -48,5 +48,11 @@ public class RecursoConsumidor : BaseEntity
             Desabilitar();
         }
     }
+
+    public bool EstaAtivo()
+    {
+        return Status == EnumStatusRecursoConsumidor.Habilitado;
+
+    }
     
 }

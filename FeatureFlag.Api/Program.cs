@@ -1,10 +1,6 @@
-using FeatureFlag.Application.Aplicacao;
-using FeatureFlag.Application.Aplicacao.Consumidores;
-using FeatureFlag.Application.Aplicacao.Factory;
-using FeatureFlag.Application.Aplicacao.Interfaces;
-using FeatureFlag.Application.Aplicacao.Recursos;
-using FeatureFlag.Application.Aplicacao.RecursosConsumidores;
-using FeatureFlag.Domain.Interefaces;
+using FeatureFlag.Application.Consumidores;
+using FeatureFlag.Application.Recursos;
+using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Repository.Persistence;
@@ -25,11 +21,18 @@ builder.Services.AddScoped<IRepRecursoConsumidor, RepRecursoConsumidor>();
 builder.Services.AddScoped<IAplicConsumidor, AplicConsumidor>();
 builder.Services.AddScoped<IAplicRecurso, AplicRecurso>();
 builder.Services.AddScoped<IAplicRecursoConsumidor, AplicRecursoConsumidor>();
-builder.Services.AddScoped<IServiceFactory, ServiceFactory>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddStackExchangeRedisOutputCache(
+    options =>
+    {
+        options.Configuration = builder.Configuration.GetConnectionString("Redis");
+        options.InstanceName = "FeatureFlagCache";
+    });
+builder.Services.AddOutputCache();
 
 var app = builder.Build();
 
@@ -45,5 +48,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseOutputCache();
 
 app.Run();
