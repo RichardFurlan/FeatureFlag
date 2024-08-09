@@ -53,11 +53,11 @@ public class RecursosController : ControllerBase
 
     [HttpGet("{identificacaoRecurso}/consumidor/{identificacaoConsumidor}")]
     [OutputCache(Duration = 60)]
-    public async Task<IActionResult> RecuperaRecurso(string identificacaoRecurso, string identificacaoConsumidor)
+    public async Task<IActionResult> VerificaRecursoHabilitado(string identificacaoRecurso, string identificacaoConsumidor)
     {
         try
         {
-            var dto = await _aplicRecurso.VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(identificacaoRecurso, identificacaoConsumidor);
+            var dto = await _aplicRecurso.VerificaRecursoHabilitado(identificacaoRecurso, identificacaoConsumidor);
             return Ok(dto);
         }
         catch (Exception e)
