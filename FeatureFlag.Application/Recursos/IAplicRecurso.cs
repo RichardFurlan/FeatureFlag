@@ -7,7 +7,7 @@ public interface IAplicRecurso
 {
     List<RecuperarRecursoView> RecuperarTodos();
     Task<RecuperarRecursoView> RecuperarPorIdAsync(int id);
-    Task<RecuperarRecursoAtivoView> VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(string identificacaoRecurso,
+    Task<RecuperarRecursoAtivoView> VerificaRecursoHabilitado(string identificacaoRecurso,
         string identificacaoConsumidor);
     Task<int> InserirAsync(CriarRecursoDTO criarRecursoDto);
     Task AlterarPercentualDeLiberacaoDeRecurso(

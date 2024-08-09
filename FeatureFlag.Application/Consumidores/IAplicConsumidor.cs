@@ -1,5 +1,4 @@
 using FeatureFlag.Application.Consumidores.DTOs;
-using FeatureFlag.Application.DTOs.ViewModel;
 
 namespace FeatureFlag.Application.Consumidores;
 
@@ -10,7 +9,7 @@ public interface IAplicConsumidor
     Task<int> InserirAsync(CriarConsumidorDTO criarConsumidorDto);
     Task<RecuperarRecursosPorConsumidorView> RecuperaRecursosPorConsumidorAsync(string identificacao);
 
-    Task<bool> VerificaRecursoHabilitadoParaConsumidor(
+    Task<RecuperarRecursoAtivoConsumidorView> VerificaRecursoHabilitadoParaConsumidor(
         string identificacaoConsumidor, string identificacaoRecurso);
     Task AlterarAsync(int id, AlterarConsumidorDTO alterarConsumidorDto);
     Task InativarAsync(int id);

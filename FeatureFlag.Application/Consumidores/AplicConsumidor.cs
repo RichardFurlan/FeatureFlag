@@ -1,9 +1,9 @@
 using FeatureFlag.Application.Consumidores.DTOs;
 using FeatureFlag.Application.DTOs.ViewModel;
+using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Entities;
-using FeatureFlag.Domain.Enums;
 using FeatureFlag.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace FeatureFlag.Application.Consumidores;
 
@@ -13,11 +13,13 @@ public class AplicConsumidor : IAplicConsumidor
     private readonly IRepConsumidor _repConsumidor;
     private readonly IRepRecursoConsumidor _repRecursoConsumidor;
     private readonly IRepRecurso _repRecurso;
-    public AplicConsumidor(IRepConsumidor repConsumidor, IRepRecursoConsumidor repRecursoConsumidor, IRepRecurso repRecurso)
+    private readonly IAplicRecursoConsumidor _aplicRecursoConsumidor;
+    public AplicConsumidor(IRepConsumidor repConsumidor, IRepRecursoConsumidor repRecursoConsumidor, IRepRecurso repRecurso, IAplicRecursoConsumidor aplicRecursoConsumidor)
     {
         _repConsumidor = repConsumidor;
         _repRecursoConsumidor = repRecursoConsumidor;
         _repRecurso = repRecurso;
+        _aplicRecursoConsumidor  = aplicRecursoConsumidor;
     }
     #endregion
 
@@ -83,30 +85,20 @@ public class AplicConsumidor : IAplicConsumidor
     #endregion
 
     #region VerificaRecursoHabilitadoParaConsumidor
-    public async Task<bool> VerificaRecursoHabilitadoParaConsumidor(
+    public async Task<RecuperarRecursoAtivoConsumidorView> VerificaRecursoHabilitadoParaConsumidor(
         string identificacaoConsumidor, string identificacaoRecurso)
     {
-        var recurso = await _repRecurso.RecuperarPorIdentificacaoAsync(identificacaoRecurso);
-        if (recurso == null)
-        {
-            throw new Exception($"Recurso com Identificacao {identificacaoRecurso} não encontrado.");
-        }
+        var dto = await _aplicRecursoConsumidor.RecuperarRecursoConsumidorAtivo(identificacaoRecurso,
+            identificacaoConsumidor);
         
-        var consumidor = await _repConsumidor.RecuperarPorIdentificacaoAsync(identificacaoConsumidor);
-        if (consumidor == null)
-        {
-            throw new Exception($"Consumidor com Identificacao {identificacaoConsumidor} não encontrado.");
-        }
+        var recuperarRecursoAtivoConsumidorView = new RecuperarRecursoAtivoConsumidorView(
+            dto.IdentificacaoRecurso, 
+            dto.DescricaoRecurso, 
+            dto.IdentificacaoConsumidor, 
+            dto.Habilitado
+        );
 
-        var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorCodigoRecursoEConsumidorAsync(recurso.Id, consumidor.Id);
-        if (recursoConsumidor == null)
-        {
-            throw new Exception($"O recurso com Identificacao {identificacaoRecurso} não está associado ao consumidor.");
-        }
-
-        var estaLiberado = recursoConsumidor.Status == EnumStatusRecursoConsumidor.Habilitado;
-
-        return estaLiberado;
+        return recuperarRecursoAtivoConsumidorView;
     }
     #endregion
     

@@ -1,6 +1,7 @@
 using FeatureFlag.Application.Aplicacao;
 using FeatureFlag.Application.Consumidores;
 using FeatureFlag.Application.Consumidores.DTOs;
+using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Entities;
 using FeatureFlag.Domain.Enums;
 using FeatureFlag.Domain.Repositories;
@@ -16,6 +17,7 @@ public class AplicConsumidorTest
     private readonly Mock<IRepConsumidor> _repConsumidorMock;
     private readonly Mock<IRepRecursoConsumidor> _repRecursoConsumidorMock;
     private readonly Mock<IRepRecurso> _repRecursoMock;
+    private readonly Mock<IAplicRecursoConsumidor> _aplicRecursoConsumidor;
     private readonly AplicConsumidor _aplicConsumidor;
 
     public AplicConsumidorTest()
@@ -23,7 +25,8 @@ public class AplicConsumidorTest
         _repConsumidorMock = new Mock<IRepConsumidor>();
         _repRecursoConsumidorMock = new Mock<IRepRecursoConsumidor>();
         _repRecursoMock = new Mock<IRepRecurso>();
-        _aplicConsumidor = new AplicConsumidor(_repConsumidorMock.Object, _repRecursoConsumidorMock.Object, _repRecursoMock.Object);
+        _aplicRecursoConsumidor = new Mock<IAplicRecursoConsumidor>();
+        _aplicConsumidor = new AplicConsumidor(_repConsumidorMock.Object, _repRecursoConsumidorMock.Object, _repRecursoMock.Object, _aplicRecursoConsumidor.Object);
     }
     
     [Fact]
