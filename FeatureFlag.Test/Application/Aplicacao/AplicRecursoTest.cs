@@ -1,6 +1,4 @@
 using FeatureFlag.Application.Aplicacao.RecursosConsumidores.DTOs;
-using FeatureFlag.Application.Consumidores;
-using FeatureFlag.Application.Factory;
 using FeatureFlag.Application.Recursos;
 using FeatureFlag.Application.Recursos.DTOs;
 using FeatureFlag.Application.RecursosConsumidores;
@@ -16,9 +14,7 @@ public class AplicRecursoTest
     private readonly Mock<IRepRecurso> _repRecursoMockMemory;
     private readonly Mock<IRepConsumidor> _repConsumidorMemory;
     private readonly Mock<IRepRecursoConsumidor> _repRecursoConsumidorMemory;
-    private readonly Mock<IServiceFactory> _service;
     private readonly Mock<IAplicRecursoConsumidor> _aplicRecursoConsumidor;
-    private readonly Mock<IAplicConsumidor> _aplicConsumidor;
     private readonly AplicRecurso _aplicRecurso;
 
     public AplicRecursoTest()
@@ -26,11 +22,8 @@ public class AplicRecursoTest
         _repRecursoMockMemory = new Mock<IRepRecurso>();
         _repConsumidorMemory = new Mock<IRepConsumidor>();
         _repRecursoConsumidorMemory = new Mock<IRepRecursoConsumidor>();
-        _service = new Mock<IServiceFactory>();
         _aplicRecursoConsumidor = new Mock<IAplicRecursoConsumidor>();
-        _aplicConsumidor = new Mock<IAplicConsumidor>();
-        _service.Setup(s => s.Create<IAplicRecursoConsumidor>()).Returns(_aplicRecursoConsumidor.Object);
-        _aplicRecurso = new AplicRecurso(_repRecursoMockMemory.Object, _repConsumidorMemory.Object, _repRecursoConsumidorMemory.Object,_service.Object, _aplicConsumidor.Object);
+        _aplicRecurso = new AplicRecurso(_repRecursoMockMemory.Object, _repConsumidorMemory.Object, _repRecursoConsumidorMemory.Object, _aplicRecursoConsumidor.Object);
     }
     
     [Fact]
@@ -87,7 +80,7 @@ public class AplicRecursoTest
             .ReturnsAsync(recursoConsumidor);
 
         // Act
-        var result = await _aplicRecurso.VerificaRecursoAtivoParaConsumidorIdentificacaoAsync(recurso.Identificacao, consumidor.Identificacao);
+        var result = await _aplicRecurso.VerificaRecursoHabilitado(recurso.Identificacao, consumidor.Identificacao);
 
         // Assert
         Assert.NotNull(result);
