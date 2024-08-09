@@ -1,8 +1,8 @@
-namespace FeatureFlag.Application.Recursos.DTOs;
+namespace FeatureFlag.Application.Consumidores.DTOs;
 
-public record RecuperarRecursoAtivoView
+public record RecuperarRecursoAtivoConsumidorView
 {
-    public RecuperarRecursoAtivoView(string identificacaoRecurso, string descricaoRecurso ,string identificacaoConsumidor, bool habilitado)
+    public RecuperarRecursoAtivoConsumidorView(string identificacaoRecurso, string descricaoRecurso ,string identificacaoConsumidor, bool habilitado)
     {
         IdentificacaoRecurso = identificacaoRecurso;
         DescricaoRecurso = descricaoRecurso;
