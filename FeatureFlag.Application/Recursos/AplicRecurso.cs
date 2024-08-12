@@ -66,9 +66,7 @@ public class AplicRecurso : IAplicRecurso
     {
         var recurso = new Recurso(
             criarRecursoDto.Identificacao, 
-            criarRecursoDto.Descricao,
-            null,
-            null
+            criarRecursoDto.Descricao
         );
 
         var recursoId = _repRecurso.InserirAsync(recurso);
@@ -86,41 +84,57 @@ public class AplicRecurso : IAplicRecurso
             throw new Exception($"Recurso com ID {alterarPercentualRecursoDto.CodigoRecurso} não encontrado.");
         }
 
-        var todosConsumidores = _repConsumidores.RecuperarTodos().ToList();
-        var totalConsumidores = todosConsumidores.Count;
-        var quantidadeLiberada = (int)(totalConsumidores * alterarPercentualRecursoDto.PercentualLiberacao / 100);
+        var todosConsumidores = _repConsumidores.RecuperarTodos();
+        var totalConsumidores = todosConsumidores.Count();
 
-        var random = new Random();
-        var consumidoresLiberados = todosConsumidores.OrderBy(td => random.Next()).Take(quantidadeLiberada).ToList();
-
-        var recursoConsumidoresExistentes = recurso.RecursoConsumidores;
-        foreach (var rce in recursoConsumidoresExistentes)
-        {
-            rce.Desabilitar();
-            await _repRecursoConsumidor.AlterarAsync(rce);
-        }
+        var recursoConsumidores = _repRecursoConsumidor.RecuperarTodosPorCodigoRecursoAsync(recurso.Id);
+        var quantidadeHabilitados = recursoConsumidores.Count(rc => rc.Status == EnumStatusRecursoConsumidor.Habilitado);
         
-        foreach (var consumidor in todosConsumidores)
+        var quantidadeDesejada  = (int)Math.Floor(totalConsumidores * alterarPercentualRecursoDto.PercentualLiberacao / 100);
+
+        if (quantidadeHabilitados > quantidadeDesejada)
         {
-            var status = consumidoresLiberados.Contains(consumidor)
-                ? EnumStatusRecursoConsumidor.Habilitado
-                : EnumStatusRecursoConsumidor.Desabilitado;
-
-            var recursoConsumidor = recurso.RecursoConsumidores.SingleOrDefault(rc => rc.CodigoConsumidor == consumidor.Id);
-
-            if (recursoConsumidor == null)
+            var excedente = quantidadeHabilitados - quantidadeDesejada;
+            var habilitados = recursoConsumidores
+                .Where(rc => rc.Status == EnumStatusRecursoConsumidor.Habilitado)
+                .OrderBy(_ => Guid.NewGuid())
+                .Take(excedente)
+                .ToList();
+            
+            foreach (var rc in habilitados)
             {
-                var recursoConsumidorDto = new CriarRecursoConsumidorDTO(recurso.Id, consumidor.Id, status);
-                await _aplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
-            }
-            else
-            {
-                recursoConsumidor.DefinirStatus(status);
-                await _repRecursoConsumidor.AlterarAsync(recursoConsumidor);
+                rc.DefinirStatus(EnumStatusRecursoConsumidor.Desabilitado);
+                await _repRecursoConsumidor.AlterarAsync(rc);
             }
         }
+        else if (quantidadeHabilitados < quantidadeDesejada)
+        {
+            var diferenca = quantidadeDesejada - quantidadeHabilitados;
+            var naoHabilitados = todosConsumidores
+                .Where(c => !recursoConsumidores.Any(rc =>
+                    rc.CodigoConsumidor == c.Id && rc.Status == EnumStatusRecursoConsumidor.Habilitado))
+                .OrderBy(_ => Guid.NewGuid())
+                .Take(diferenca)
+                .ToList();
 
+            foreach (var consumidor in naoHabilitados)
+            {
+                var recursoConsumidor = recursoConsumidores.FirstOrDefault(rc => rc.CodigoConsumidor == consumidor.Id);
+                if (recursoConsumidor == null)
+                {
+                    var recursoConsumidorDto = new CriarRecursoConsumidorDTO(recurso.Id, consumidor.Id,
+                        EnumStatusRecursoConsumidor.Habilitado);
+                    await _aplicRecursoConsumidor.InserirAsync(recursoConsumidorDto);
+                }
+                else
+                {
+                    recursoConsumidor.DefinirStatus(EnumStatusRecursoConsumidor.Habilitado);
+                    await _repRecursoConsumidor.AlterarAsync(recursoConsumidor);
+                }
+            }
+        }
     }
+    
     #endregion
     
     #region AlterarAsync
