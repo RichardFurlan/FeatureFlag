@@ -6,7 +6,7 @@ public interface IRepRecursoConsumidor
 {
     IQueryable<RecursoConsumidor> RecuperarTodos();
     Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoConsumidorAsync(int codigoConsumidor);
-    Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoRecursoAsync(int codigoRecurso);
+    IQueryable<RecursoConsumidor> RecuperarTodosPorCodigoRecursoAsync(int codigoRecurso);
     Task<RecursoConsumidor?> RecuperarPorCodigoRecursoEConsumidorAsync(int codigoRecurso, int codigoConsumidor);
     Task<RecursoConsumidor?> RecuperarPorIdAsync(int id);
     Task<int> InserirAsync(RecursoConsumidor recursoConsumidor);

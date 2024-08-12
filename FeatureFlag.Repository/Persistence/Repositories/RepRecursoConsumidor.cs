@@ -23,9 +23,9 @@ public class RepRecursoConsumidor : IRepRecursoConsumidor
         return _dbContext.RecursosConsumidores.Where(rc => rc.CodigoConsumidor.Equals(codigoConsumidor)).ToListAsync();
     }
     
-    public Task<List<RecursoConsumidor>> RecuperarTodosPorCodigoRecursoAsync(int codigoRecurso)
+    public IQueryable<RecursoConsumidor> RecuperarTodosPorCodigoRecursoAsync(int codigoRecurso)
     {
-        return _dbContext.RecursosConsumidores.Where(rc => rc.CodigoRecurso.Equals(codigoRecurso)).ToListAsync();
+        return _dbContext.RecursosConsumidores.Where(rc => rc.CodigoRecurso.Equals(codigoRecurso)).AsQueryable();
     }
     
     public Task<RecursoConsumidor?> RecuperarPorCodigoRecursoEConsumidorAsync(int codigoRecurso, int codigoConsumidor)
