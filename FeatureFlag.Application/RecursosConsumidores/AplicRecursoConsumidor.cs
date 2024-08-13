@@ -48,10 +48,13 @@ public class AplicRecursoConsumidor : IAplicRecursoConsumidor
             throw new Exception($"Recurso com identificação {identificacaoRecurso} não encontrado.");
         }
 
-        var recursoConsumidor = recurso.ObtemRecursoConsumidor();
+        var recursoConsumidor = await _repRecursoConsumidor.RecuperarPorCodigoRecursoEConsumidorAsync(recurso.Id, consumidor.Id);
         if (recursoConsumidor == null)
         {
-            var recursoConsumidorDto = new CriarRecursoConsumidorDTO(recurso.Id, consumidor.Id, EnumStatusRecursoConsumidor.Desabilitado);
+            var recursoConsumidorDto = new CriarRecursoConsumidorDTO(
+                recurso.Id, 
+                consumidor.Id, 
+                EnumStatusRecursoConsumidor.Desabilitado);
             var recursoConsumidorId = await InserirAsync(recursoConsumidorDto);
             recursoConsumidor = await _repRecursoConsumidor.RecuperarPorIdAsync(recursoConsumidorId);
         }
