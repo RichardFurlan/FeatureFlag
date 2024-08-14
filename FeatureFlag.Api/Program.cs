@@ -3,8 +3,10 @@ using FeatureFlag.Application.Recursos;
 using FeatureFlag.Application.RecursosConsumidores;
 using FeatureFlag.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Repository.Infra.CacheStorage;
 using Repository.Persistence;
 using Repository.Persistence.Repositories;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,10 @@ builder.Services.AddScoped<IRepRecursoConsumidor, RepRecursoConsumidor>();
 builder.Services.AddScoped<IAplicConsumidor, AplicConsumidor>();
 builder.Services.AddScoped<IAplicRecurso, AplicRecurso>();
 builder.Services.AddScoped<IAplicRecursoConsumidor, AplicRecursoConsumidor>();
+builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(
+    builder.Configuration.GetConnectionString("Redis")));
+builder.Services.AddScoped<ICacheService, CacheService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
