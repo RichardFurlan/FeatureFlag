@@ -2,6 +2,7 @@ using FeatureFlag.Application.Consumidores;
 using FeatureFlag.Application.Consumidores.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using Repository.Infra.CacheStorage;
 
 namespace FeatureFlag.Controllers;
 [ApiController]
@@ -10,19 +11,29 @@ public class ConsumidoresController : ControllerBase
 {
     #region ctor
     private readonly IAplicConsumidor _aplicConsumidor;
-    public ConsumidoresController(IAplicConsumidor aplicConsumidor)
+    private readonly ICacheService _cacheService;
+    public ConsumidoresController(IAplicConsumidor aplicConsumidor, ICacheService cacheService)
     {
         _aplicConsumidor = aplicConsumidor;
+        _cacheService = cacheService;
     }
     #endregion
 
     [HttpGet]
     [OutputCache( Duration = 60)]
-    public IActionResult RecuperarTodos()
+    public async Task<IActionResult> RecuperarTodos()
     {
         try
         {
+            const string cacheKey = "Consumidores_RecuperarTodos";
+            var cachedData = await _cacheService.GetAsync<List<RecuperarConsumidorView>>(cacheKey);
+            if (cachedData != null)
+            {
+                return Ok(cachedData);
+            }
             var dto = _aplicConsumidor.RecuperarTodos();
+            await _cacheService.SetAsync(cacheKey, dto, TimeSpan.FromMinutes(5));
+
             return Ok(dto);
         }
         catch (Exception e)
